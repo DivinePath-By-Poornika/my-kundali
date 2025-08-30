@@ -2,41 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Swiss Ephemeris Test</title>
+  <title>Swiss Ephemeris Demo 🚀</title>
 </head>
 <body>
   <h1>Swiss Ephemeris Demo 🚀</h1>
-  <pre id="output"></pre>
+  <pre id="output">Loading...</pre>
 
-  <!-- Swiss Ephemeris JS load karna -->
+  <!-- Swiss Ephemeris load -->
   <script src="swe/swisseph.js"></script>
   <script>
-    // Wait until Swiss Ephemeris is ready
-    Module.onRuntimeInitialized = () => {
-      const swe = Module;
+    // Ensure Swiss Ephemeris runs only after fully ready
+    window.Module = {
+      onRuntimeInitialized: function () {
+        const swe = Module;
+        const out = document.getElementById("output");
 
-      // Output element
-      const out = document.getElementById("output");
+        try {
+          // Example Julian Date (J2000 epoch)
+          const jd = 2451545.0;
+          const iflag = swe.SEFLG_SWIEPH;
+          let xx = new Float64Array(6); // positions
+          let serr = "";
 
-      // Julian Date (example: J2000 epoch = 2451545.0)
-      const jd = 2451545.0;
+          // Call Swiss Ephemeris
+          const result = swe.swe_calc_ut(jd, swe.SE_SUN, iflag, xx, serr);
 
-      // Array to hold results
-      let xx = new Float64Array(6); // position, speed
-      let serr = ""; // error message
-
-      // Call Swiss Ephemeris function
-      const iflag = swe.SEFLG_SWIEPH;
-      const result = swe.swe_calc_ut(jd, swe.SE_SUN, iflag, xx, serr);
-
-      // Show results on screen
-      out.textContent = `
-        Julian Date: ${jd}
-        Result Code: ${result}
-        Sun Position (longitude): ${xx[0]}
-        Latitude: ${xx[1]}
-        Distance: ${xx[2]}
-      `;
+          out.textContent =
+            "Julian Date: " + jd + "\n" +
+            "Result Code: " + result + "\n" +
+            "Sun Longitude: " + xx[0] + "°\n" +
+            "Sun Latitude: " + xx[1] + "°\n" +
+            "Distance (AU): " + xx[2] + "\n" +
+            "Error: " + serr;
+        } catch (err) {
+          out.textContent = "⚠️ Error: " + err;
+        }
+      }
     };
   </script>
 </body>
