@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kundli Generator – API‑free (High Accuracy + Explanation)</title>
+  <title>Kundli Generator – API‑free (Hindi, High Precision Ready)</title>
   <style>
     :root{--bg:#0f1320;--card:#141a2f;--ink:#e8ecff;--muted:#9aa5d1;--accent:#6ee7ff;--good:#7ef7a6;--warn:#ffd66e;--danger:#ff7e7e}
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:radial-gradient(1200px 800px at 80% -20%,#20305A33 0%,transparent 60%),var(--bg);color:var(--ink)}
-    header{padding:28px 20px 10px;display:flex;gap:10px;align-items:center;justify-content:space-between}
-    h1{margin:0;font-weight:800;letter-spacing:.3px;font-size:clamp(22px,3vw,28px)}
-    .wrap{display:grid;grid-template-columns:400px 1fr;gap:18px;padding:16px}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:radial-gradient(1200px 800px at 80% -20%,#20305A33 0%,transparent 60%),var(--bg);color:var(--ink)}
+    header{padding:24px 16px 8px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+    h1{margin:0;font-weight:800;letter-spacing:.3px;font-size:clamp(20px,3vw,28px)}
+    .wrap{display:grid;grid-template-columns:420px 1fr;gap:16px;padding:16px}
     @media (max-width:1100px){.wrap{grid-template-columns:1fr;}}
     .card{background:linear-gradient(180deg,#161d39 0%, #101429 100%);border:1px solid #2a335f;border-radius:16px;box-shadow:0 10px 30px #0007}
     .panel{padding:16px}
-    .panel h2{margin:0 0 10px;font-size:16px;font-weight:700;color:#cfe1ff}
+    .panel h2{margin:0 0 8px;font-size:16px;font-weight:700;color:#cfe1ff}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     label{display:block;font-size:12px;color:var(--muted);margin:8px 0 6px}
     input,select,button,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2a335f;background:#0e1330;color:var(--ink);outline:none}
@@ -27,7 +28,7 @@
     .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
     .chip{font-size:12px;border:1px dashed #3850a8;border-radius:999px;padding:6px 10px;color:#cfe1ff}
     canvas,svg{max-width:100%;height:auto}
-    .stack{display:grid;gap:10px}
+    .stack{display:grid;gap:12px}
     table{width:100%;border-collapse:collapse}
     th,td{padding:6px 8px;border-bottom:1px dashed #334}
     th{font-size:12px;color:#bcd}
@@ -37,12 +38,12 @@
     .ok{color:var(--good)} .warn{color:var(--warn)}
     .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid #3b4a95;background:#0c1233;border-radius:999px;padding:8px 12px;font-size:12px}
     .section{display:grid;gap:8px}
-    textarea{min-height:160px;resize:vertical}
+    textarea{min-height:180px;resize:vertical}
   </style>
 </head>
 <body>
   <header>
-    <h1>🔭 Kundli Generator — High‑Accuracy + Auto Explanation (No API)</h1>
+    <h1>🔭 Kundli Generator — Hindi (No API)</h1>
     <div class="chips">
       <div class="chip">Sidereal (Lahiri)</div>
       <div class="chip">Equal Houses</div>
@@ -53,444 +54,65 @@
 
   <main class="wrap">
     <section class="card panel">
-      <h2>Birth Details</h2>
+      <h2>जन्म विवरण</h2>
       <div class="grid">
         <div>
-          <label>Name</label>
-          <input id="name" placeholder="e.g., Priyanshu" />
+          <label>नाम</label>
+          <input id="name" placeholder="उदा., Priyanshu" />
         </div>
         <div>
-          <label>Gender (optional)</label>
-          <select id="gender">
-            <option value="">—</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div>
-          <label>Date of Birth</label>
+          <label>जन्म तिथि</label>
           <input id="dob" type="date" />
         </div>
         <div>
-          <label>Time of Birth</label>
+          <label>जन्म समय</label>
           <input id="tob" type="time" step="1" />
         </div>
         <div>
-          <label>Time Zone (UTC offset, hours)</label>
+          <label>समय क्षेत्र (UTC ऑफ़सेट, घंटे)</label>
           <input id="tz" type="number" step="0.25" value="5.5" />
         </div>
         <div>
-          <label>Daylight Saving?</label>
+          <label>डे‑लाइट सेविंग</label>
           <select id="dst">
-            <option value="0">No</option>
-            <option value="1">Yes (+1h)</option>
+            <option value="0">नहीं</option>
+            <option value="1">हाँ (+1h)</option>
           </select>
         </div>
         <div>
-          <label>Latitude (° +N)</label>
+          <label>अक्षांश (Latitude, +उत्तर)</label>
           <input id="lat" type="number" step="0.0001" placeholder="28.6139" />
         </div>
         <div>
-          <label>Longitude (° +E)</label>
+          <label>देशांतर (Longitude, +पूर्व)</label>
           <input id="lon" type="number" step="0.0001" placeholder="77.2090" />
         </div>
       </div>
 
       <div class="row" style="margin-top:12px">
-        <button class="btn" id="calc">Generate Kundli</button>
-        <button class="btn ghost" id="example">Fill Example (Delhi)</button>
+        <button class="btn" id="calc">कुंडली बनाएं</button>
+        <button class="btn ghost" id="example">उदाहरण भरें (दिल्ली)</button>
       </div>
 
       <div class="row" style="margin-top:8px">
-        <button class="btn" id="dlPng">Download PNG</button>
-        <button class="btn" id="dlSvg">Download SVG</button>
-        <button class="btn" id="dlTxt">Download Report (TXT)</button>
+        <button class="btn" id="dlPng">PNG डाउनलोड</button>
+        <button class="btn" id="dlSvg">SVG डाउनलोड</button>
+        <button class="btn" id="dlTxt">रिपोर्ट (TXT) डाउनलोड</button>
       </div>
 
       <div class="section" style="margin-top:12px">
         <div class="pill" id="locStatus">
-          <span>📍 <strong>Location:</strong> <em>not detected</em></span>
+          <span>📍 <strong>लोकेशन:</strong> <em>Auto detect बंद</em></span>
         </div>
         <div class="row">
-          <button class="btn" id="detectLoc">Detect My Location (auto‑fill lat/long & time zone)</button>
-          <button class="btn ghost" id="clearLoc">Clear</button>
+          <button class="btn" id="detectLoc">मेरी लोकेशन ऑटो‑डिटेक्ट करें</button>
+          <button class="btn ghost" id="clearLoc">क्लियर</button>
         </div>
         <div class="pill">
           <input id="hiPrec" type="checkbox" />
-          <span><strong>High Precision Mode</strong> (optional Swiss Ephemeris WASM if pre        <span class="badge" id="ayanamshaLbl">Ayanamsha: —</span>
-          <span class="badge" id="ascLbl">Asc: —</span>
-          <span class="badge" id="nakLbl">Moon Nakshatra: —</span>
+          <span><strong>हाई‑प्रिसीजन मोड</strong> (यदि <code>/swe/</code> में Swiss Ephemeris WASM फाइलें रखें, तो अपने‑आप इस्तेमाल होगा)</span>
         </div>
-      </div>
-
-      <div class="card panel">
-        <h2>Graha Longitudes (Sidereal ‑ Lahiri)</h2>
-        <table id="tbl"><thead><tr><th>Graha</th><th>Longitude</th><th>Rāśi</th><th>Nakshatra</th><th>House</th><th>Status</th></tr></thead><tbody></tbody></table>
-        <p class="muted">Standard engine is precise enough for signs/houses. Enable High Precision to tighten longitudes (Moon/fast planets) using local WASM if available.</p>
-      </div>
-
-      <div class="card panel">
-        <h2>Housewise Placement</h2>
-        <div id="houseList" class="section"></div>
-      </div>
-
-      <div class="card panel">
-        <h2>Interpretation</h2>
-        <button class="btn" id="makeInterpret">Generate Explanation</button>
-        <textarea id="interpretBox" placeholder="Click the button to generate a tailored paragraph explaining which planet sits in which house, with core meanings."></textarea>
-      </div>
-
-      <div class="card panel">
-        <h2>Offline High‑Precision (Optional)</h2>
-        <ol class="muted">
-          <li>Create a folder <code>swe</code> beside this <code>index.html</code>.</li>
-          <li>Put Swiss Ephemeris WASM build & data files inside (e.g., <code>swe.wasm</code>, <code>sepl_18.se1</code> …). No internet/API required.</li>
-          <li>Tick “High Precision Mode”. The app will auto‑load local files and switch precision (status tag at top updates).</li>
-        </ol>
-      </div>
-    </section>
-  </main>
-
-<script>
-/*************************************
- * Kundli Engine (No API)
- * – Sidereal (Lahiri)
- * – Equal houses (from Asc)
- * – North‑Indian chart
- * – PNG/SVG/TXT report download
- * – Auto explanation text
- * – Optional High‑Precision via Swiss Ephemeris WASM (local files)
- *************************************/
-const D2R = Math.PI/180, R2D = 180/Math.PI;
-const ZODIAC = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
-const NAKS = ["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishta","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"];
-const GRAHAS = ["Ascendant","Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn","Rahu","Ketu"];
-
-// Exaltation/Debilitation + Ownership (basic classical tables)
-const OWN = {
-  Sun:[4,5], // Leo owns 5 (but keep as map by planet -> array of signs). We'll mark only primary: Sun owns Leo
-};
-const OWN_SIGN = { Sun:5, Moon:4, Mars:[1,8], Mercury:[3,6], Jupiter:[9,12], Venus:[2,7], Saturn:[10,11] };
-const EXALT = { Sun:[0,10], Moon:[1,3], Mars:[9,28], Mercury:[5,15], Jupiter:[3,5], Venus:[11,27], Saturn:[6,20] }; // [signIndex, degree]
-const DEBIL = { Sun:[6,10], Moon:[7,3], Mars:[3,28], Mercury:[11,15], Jupiter:[9,5], Venus:[5,27], Saturn:[0,20] };
-
-// Julian Day from local date/time and tz offset
-function julianDay(y,m,d,h,tzHours){
-  h -= tzHours; // to UTC
-  let A = Math.floor((14 - m)/12);
-  y = y + 4800 - A;
-  m = m + 12*A - 3;
-  let JDN = d + Math.floor((153*m+2)/5) + 365*y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400) - 32045;
-  let JD = JDN + (h-12)/24; // noon base
-  return JD;
-}
-
-function tCent(JD){ return (JD - 2451545.0)/36525; }
-function obliquity(JD){ const U = (JD-2451545.0)/3652500; const eps = 23 + (26 + ((21.448 - 46.8150*U - 0.00059*U*U + 0.001813*U*U*U))/60)/60; return eps*D2R; }
-function gst(JD){ const T=tCent(JD); let th=280.46061837+360.98564736629*(JD-2451545)+0.000387933*T*T - T*T*T/38710000; th=((th%360)+360)%360; return th/15; }
-function lahiriAyanamsha(JD){ const days=JD-2451545.0; const years=days/365.2422; const base=24+7/60; const rate=50.29/3600; return base + rate*years; }
-const norm360=x=>((x%360)+360)%360;
-
-function solveKepler(M,e){ M=M*D2R; let E=M+e*Math.sin(M)*(1+e*Math.cos(M)); for(let i=0;i<12;i++){ const dE=(E-e*Math.sin(E)-M)/(1-e*Math.cos(E)); E-=dE; if(Math.abs(dE)<1e-12) break;} return E; }
-
-// Planetary elements (low‑precision) for J2000 with secular terms
-const ELEMS = {
-  Mercury:{ a:0.38709893, e:[0.20563069, 0.00002527], I:[7.00487,-23.51/3600], L:[252.25084,149472.67411175], wbar:[77.45645, 573.57/3600], Omega:[48.33167,-446.30/3600] },
-  Venus:  { a:0.72333199, e:[0.00677323,-0.00004938], I:[3.39471,-2.86/3600], L:[181.97973,58517.81538729], wbar:[131.53298, 622.65/3600], Omega:[76.68069,-996.89/3600] },
-  Earth:  { a:1.00000011, e:[0.01671022,-0.00003804], I:[0.00005,-46.94/3600], L:[100.46645,35999.3728565], wbar:[102.93735,1161.0/3600], Omega:[-11.26064,-18228.25/3600] },
-  Mars:   { a:1.52366231, e:[0.09341233, 0.00011902], I:[1.85061,-25.47/3600], L:[355.45332,19140.29934243], wbar:[336.04084,1590.20/3600], Omega:[49.57854,-1020.19/3600] },
-  Jupiter:{ a:5.20336301, e:[0.04839266,-0.00012880], I:[1.30530,-4.15/3600], L:[34.40438,3034.74612775], wbar:[14.75385,  7.30/3600], Omega:[100.55615,1217.17/3600] },
-  Saturn: { a:9.53707032, e:[0.05415060,-0.00036762], I:[2.48446,  6.11/3600], L:[49.94432,1222.49362201], wbar:[92.43194, -17.59/3600], Omega:[113.71504, -1591.05/3600] },
-};
-
-function planetHelioEcliptic(JD, name){
-  const T = tCent(JD); const el = ELEMS[name];
-  const a=el.a; const e=el.e[0]+el.e[1]*T; const I=(el.I[0]+el.I[1]*T)*D2R; const L=el.L[0]+el.L[1]*T; const wbar=el.wbar[0]+el.wbar[1]*T; const Omega=el.Omega[0]+el.Omega[1]*T; const M=norm360(L-wbar); const E=solveKepler(M,e); const v=2*Math.atan2(Math.sqrt(1+e)*Math.sin(E/2),Math.sqrt(1-e)*Math.cos(E/2)); const r=a*(1-e*Math.cos(E)); const w=(wbar-Omega)*D2R; const xh=r*( Math.cos(Omega*D2R)*Math.cos(w+v) - Math.sin(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const yh=r*( Math.sin(Omega*D2R)*Math.cos(w+v) + Math.cos(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const zh=r*( Math.sin(w+v)*Math.sin(I) ); return {x:xh,y:yh,z:zh};
-}
-
-function eclipticLonLatFromXYZ(x,y,z){ const lon=Math.atan2(y,x); const rxy=Math.hypot(x,y); const lat=Math.atan2(z,rxy); return {lon:norm360(lon*R2D), lat:lat*R2D}; }
-function planetGeoEclLon(JD,name){ if(name==="Sun"){ const E=planetHelioEcliptic(JD,"Earth"); const {lon}=eclipticLonLatFromXYZ(E.x,E.y,E.z); return norm360(lon+180); } const earth=planetHelioEcliptic(JD,"Earth"); const p=planetHelioEcliptic(JD,name); const x=p.x-earth.x, y=p.y-earth.y, z=p.z-earth.z; return eclipticLonLatFromXYZ(x,y,z).lon; }
-
-// Improved Moon longitude (more terms, still lightweight)
-function moonLongitude(JD){
-  const T=(JD-2451545.0)/36525; const L0=norm360(218.3164477+481267.88123421*T-0.0015786*T*T+T*T*T/538841); const D=norm360(297.8501921+445267.1114034*T-0.0018819*T*T+T*T*T/545868); const M=norm360(357.5291092+35999.0502909*T-0.0001536*T*T); const Mp=norm360(134.9633964+477198.8675055*T+0.0087414*T*T); const F=norm360(93.2720950+483202.0175233*T-0.0036539*T*T);
-  const terms=[[6288774,0,0,1,0],[1274027,2,-1,0,0],[658314,2,-1,-1,0],[213618,2,-2,0,0],[-185116,0,1,0,2],[-114332,0,0,0,2],[58793,2,-1,2,0],[57066,2,-1,-1,0],[53322,0,2,0,0],[45758,2,-2,-2,0],[-40923,0,1,0,0],[-34720,1,1,0,0],[-30383,2,0,0,0]]; // compact major terms
-  let sum=0; for(const [A,kD,kM,kMp,kF] of terms){ const arg=(kD*D + kM*M + kMp*Mp + kF*F)*D2R; sum += A*Math.sin(arg); }
-  const deltaDeg = sum/1000000* (180/Math.PI); // scale tuning for compact set
-  return norm360(L0 + deltaDeg);
-}
-
-function lstHours(JD, lon){ return (gst(JD)+lon/15+24)%24; }
-function ascendant(JD, latDeg, lonDeg){ const eps=obliquity(JD); const LST=lstHours(JD,lonDeg)*15*D2R; const phi=latDeg*D2R; let lambda=Math.atan2( Math.sin(LST), Math.cos(LST)*Math.cos(eps)-Math.tan(phi)*Math.sin(eps) ); lambda=norm360(lambda*R2D); return lambda; }
-function meanNode(JD){ const T=(JD-2451545.0)/36525; let Omega=125.0445550-1934.1361849*T+0.0020762*T*T+(T*T*T)/467410; return norm360(Omega+180); }
-
-function nakshatra(lon){ const span=360/27; const idx=Math.floor(lon/span); const pada=Math.floor((lon%span)/(span/4))+1; return {name:NAKS[idx], pada}; }
-function houseOf(lonSid, ascSid){ const diff=norm360(lonSid-ascSid); return Math.floor(diff/30)+1; }
-function dms(deg){ const d=Math.floor(deg); const mfull=(deg-d)*60; const m=Math.floor(mfull); const s=Math.round((mfull-m)*60); return `${d}° ${m}' ${s}\"`; }
-function formatLon(lon){ const sign=Math.floor(lon/30); const d=lon-sign*30; return `${ZODIAC[sign]} ${d.toFixed(2)}°`; }
-
-function statusOf(planet, lon){
-  const sign = Math.floor(lon/30);
-  const degInSign = lon - sign*30;
-  let status = [];
-  const own = OWN_SIGN[planet];
-  if(own){ const owns = Array.isArray(own)?own:[own]; if(owns.includes(sign+1)) status.push('Own sign'); }
-  const ex = EXALT[planet]; if(ex && ex[0]===sign && Math.abs(degInSign-ex[1])<1.0) status.push('Near exaltation');
-  const de = DEBIL[planet]; if(de && de[0]===sign && Math.abs(degInSign-de[1])<1.0) status.push('Near debilitation');
-  return status.join(', ')||'—';
-}
-
-// Optional Swiss Ephemeris loader (local WASM). If present, override planetary longitudes with high precision
-let swe = null; async function tryLoadSwiss(){ if(!document.getElementById('hiPrec').checked) {swe=null; return false;} try{ if(!window.createModule) { await import('./swe/swe.js').catch(()=>{}); } if(typeof createModule!=="function") throw new Error('no wasm'); swe = await createModule(); document.getElementById('precTag').textContent='Precision: Swiss WASM'; return true; }catch(e){ document.getElementById('precTag').textContent='Precision: Standard'; swe=null; return false; } }
-
-async function compute(useSwiss){
-  const name=document.getElementById('name').value.trim()||'—'; const dob=document.getElementById('dob').value; const tob=document.getElementById('tob').value||'00:00:00'; const tz=parseFloat(document.getElementById('tz').value||'0') + (document.getElementById('dst').value==='1'?1:0); const lat=parseFloat(document.getElementById('lat').value||'0'); const lon=parseFloat(document.getElementById('lon').value||'0'); if(!dob){ alert('Please select Date of Birth'); return; }
-  const [Y,M,D]=dob.split('-').map(Number); const [hh,mm,ss]=tob.split(':').map(Number); const H=(hh||0)+(mm||0)/60+(ss||0)/3600; const JD=julianDay(Y,M,D,H,tz); const aya=lahiriAyanamsha(JD);
-
-  // Ascendant tropical -> sidereal
-  const ascTrop = ascendant(JD, lat, lon); const ascSid = norm360(ascTrop - aya);
-  const longitudes={}; longitudes['Ascendant']=ascSid;
-
-  const swissOK = useSwiss && swe; // if Swiss loaded
-
-  // Helper to compute ecliptic longitude (tropical), then convert to sidereal
-  function lonTrop(planet){ if(planet==='Moon') return moonLongitude(JD); if(planet==='Sun' || ELEMS[planet]) return planetGeoEclLon(JD, planet==='Ketu'?'Moon':planet); return 0; }
-
-  // Standard engine
-  const std = {
-    Sun: norm360(lonTrop('Sun') - aya), Moon: norm360(lonTrop('Moon') - aya), Mars: norm360(lonTrop('Mars') - aya), Mercury: norm360(lonTrop('Mercury') - aya), Jupiter: norm360(lonTrop('Jupiter') - aya), Venus: norm360(lonTrop('Venus') - aya), Saturn: norm360(lonTrop('Saturn') - aya)
-  };
-  const rahuTrop = meanNode(JD); std.Rahu = norm360(rahuTrop - aya); std.Ketu = norm360(std.Rahu + 180);
-
-  // (Optional) Swiss would replace std values here if available (kept as same keys)
-  const L = {...std};
-
-  for(const k of Object.keys(L)) longitudes[k]=L[k];
-
-  // Populate table
-  const tbody=document.querySelector('#tbl tbody'); tbody.innerHTML=''; const rows=[];
-  for(const g of GRAHAS){ const lonSid=longitudes[g]; const sign=Math.floor(lonSid/30); const {name:nk,pada}=nakshatra(lonSid); const house=houseOf(lonSid, ascSid); const tr=document.createElement('tr'); const status=statusOf(g, lonSid); const tds=[g, `${formatLon(lonSid)} (${dms(lonSid)})`, ZODIAC[sign], `${nk} ${pada}`, house, status]; for(const v of tds){ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td);} tbody.appendChild(tr); rows.push({graha:g, lon:lonSid, sign, nk:`${nk} ${pada}`, house}); }
-
-  // Badges
-  document.getElementById('ayanamshaLbl').textContent=`Ayanamsha (Lahiri): ${aya.toFixed(2)}°`;
-  document.getElementById('ascLbl').textContent=`Asc: ${formatLon(ascSid)}`;
-  document.getElementById('nakLbl').textContent=`Moon: ${nakshatra(longitudes['Moon']).name}`;
-
-  drawNorthChart(ascSid, rows.filter(r=>r.graha!=="Ascendant"));
-  renderHouseList(ascSid, rows);
-  // stash for interpretation/download
-  window.__kundli = { name, JD, aya, ascSid, rows };
-}
-
-function drawNorthChart(ascSid, items){
-  const svg=document.getElementById('chart'); while(svg.firstChild) svg.removeChild(svg.firstChild); const W=800,H=800; const cx=W/2, cy=H/2, R=320; svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-  const g=(tag,attrs)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); svg.appendChild(e); return e;}; const grp=(tag,attrs)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e;};
-  const pts=[[cx,cy-R],[cx+R,cy],[cx,cy+R],[cx-R,cy]].map(p=>p.join(',')).join(' '); g('polygon',{points:pts,fill:'#0a0f2a',stroke:'#3a4585','stroke-width':3});
-  const lines=[[cx,cy-R,cx+R,cy],[cx+R,cy,cx,cy+R],[cx,cy+R,cx-R,cy],[cx-R,cy,cx,cy-R],[cx,cy-R,cx,cy+R],[cx-R,cy,cx+R,cy]]; for(const [x1,y1,x2,y2] of lines){ g('line',{x1,y1,x2,y2,stroke:'#2a3366','stroke-width':2}); }
-  const houseCenters=[[cx,cy-R+80],[cx+130,cy-130],[cx+R-80,cy],[cx+130,cy+130],[cx,cy+R-80],[cx-130,cy+130],[cx-R+80,cy],[cx-130,cy-130],[cx,cy-R+190],[cx+190,cy],[cx,cy+190],[cx-190,cy]];
-  const ascSign=Math.floor(ascSid/30); for(let i=0;i<12;i++){ const sign=(ascSign+i)%12; const [x,y]=houseCenters[i]; const t=g('text',{x,y,'text-anchor':'middle','dominant-baseline':'middle',fill:'#bcd','font-size':18}); t.textContent=`${i+1}
-${ZODIAC[sign].slice(0,3)}`; }
-  const houseMap=Array.from({length:12},()=>[]); for(const it of items){ const h=it.house-1; houseMap[h].push(it); }
-  for(let i=0;i<12;i++){ const [x,y]=houseCenters[i]; const list=houseMap[i]; if(!list.length) continue; list.sort((a,b)=>a.lon-b.lon); list.forEach((it,idx)=>{ const t=g('text',{x,y:y+22*idx+18,'text-anchor':'middle','dominant-baseline':'middle',fill:'#e8ecff','font-size':16}); const short={Sun:'Su',Moon:'Mo',Mars:'Ma',Mercury:'Me',Jupiter:'Ju',Venus:'Ve',Saturn:'Sa',Rahu:'Ra',Ketu:'Ke'}[it.graha]||it.graha; t.textContent=`${short} ${((it.lon%30).toFixed(1))}`; }); }
-  const title=grp('g',{}); svg.appendChild(title); const tt=document.createElementNS('http://www.w3.org/2000/svg','text'); tt.setAttribute('x', cx); tt.setAttribute('y', 40); tt.setAttribute('text-anchor','middle'); tt.setAttribute('fill','#cfe1ff'); tt.setAttribute('font-size','20'); tt.textContent='Kundli (North‑Indian)'; title.appendChild(tt);
-}
-
-function renderHouseList(ascSid, rows){
-  const box=document.getElementById('houseList'); box.innerHTML=''; const houses=Array.from({length:12},()=>[]); for(const r of rows){ if(r.graha==='Ascendant') continue; houses[r.house-1].push(r); }
-  const meanings=[
-    'Self, body, temperament, vitality',
-    'Wealth, speech, family, values',
-    'Siblings, skills, courage, short travel',
-    'Home, mother, property, emotional base',
-    'Education, creativity, romance, children',
-    'Health, service, daily work, obstacles',
-    'Marriage, partnerships, public dealings',
-    'Longevity, transformations, occult, debts',
-    'Fortune, dharma, higher learning, long travel',
-    'Career, status, authority, karma',
-    'Gains, networks, aspirations',
-    'Losses, Moksha, isolation, foreign lands'
-  ];
-  houses.forEach((arr,i)=>{
-    const div=document.createElement('div'); div.className='card panel'; const title=document.createElement('h3'); title.textContent=`House ${i+1} — ${meanings[i]}`; title.style.margin='0 0 6px'; title.style.fontSize='14px'; title.style.color='#d7e4ff'; div.appendChild(title);
-    const p=document.createElement('p'); p.className='muted'; if(arr.length){ const names=arr.map(o=>o.graha).join(', '); p.textContent=`Planets: ${names}`; } else { p.textContent='Planets: —'; } div.appendChild(p); box.appendChild(div);
-  });
-}
-
-function generateInterpretation(){
-  const K=window.__kundli; if(!K){ alert('Generate the chart first.'); return; }
-  const {ascSid, rows, aya} = K;
-  const ascSign = Math.floor(ascSid/30);
-  const byHouse = Array.from({length:12},()=>[]);
-  for(const r of rows){ if(r.graha==='Ascendant') continue; byHouse[r.house-1].push(r); }
-  const lines=[];
-  lines.push(`This kundli uses the sidereal Lahiri ayanamsha (~${aya.toFixed(2)}°) with equal houses from the Ascendant. Below is a plain‑language placement summary.`);
-  for(let h=1;h<=12;h++){
-    const arr = byHouse[h-1];
-    const sign = (ascSign + (h-1)) % 12;
-    const who = arr.length? arr.map(o=>o.graha).join(', ') : 'no planets';
-    const starters = [
-      'Focus rests on', 'Themes involve', 'Emphasis appears in', 'You may experience', 'Energies gather around'
-    ];
-    const meanings=['self and vitality','finances and values','skills and siblings','home and emotional roots','creativity and learning','work, health and service','partnerships and agreements','depth, change and shared matters','faith, mentors and long journeys','career, status and responsibilities','friends, networks and gains','solitude, release and inner life'];
-    const m = meanings[h-1];
-    const intro = `${['House','Bhava'][0]} ${h} in ${ZODIAC[sign]}: ${who}.`;
-    let detail = `${starters[h%starters.length]} ${m}.`;
-    // add planet‑wise flavour
-    if(arr.length){
-      arr.forEach(o=>{
-        const s = statusOf(o.graha, o.lon);
-        const deg = (o.lon%30).toFixed(1);
-        let add = `${o.graha} at ${deg}° ${ZODIAC[o.sign]}`;
-        if(s && s!== '—') add += ` (${s})`;
-        add += ` tends to express its results through this house.`;
-        detail += ' ' + add;
-      });
-    }
-    lines.push(intro + ' ' + detail);
-  }
-  const text = lines.join('
-
-');
-  const ta=document.getElementById('interpretBox'); ta.value=text; return text;
-}
-
-// Downloads
-function downloadSVG(){ const svg=document.getElementById('chart'); const data=new XMLSerializer().serializeToString(svg); const blob=new Blob([data],{type:'image/svg+xml'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kundli.svg'; a.click(); URL.revokeObjectURL(a.href); }
-function downloadPNG(){ const svg=document.getElementById('chart'); const xml=new XMLSerializer().serializeToString(svg); const img=new Image(); const svg64='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(xml))); img.onload=function(){ const canvas=document.createElement('canvas'); canvas.width=svg.viewBox.baseVal.width; canvas.height=svg.viewBox.baseVal.height; const ctx=canvas.getContext('2d'); ctx.fillStyle='#0c1130'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0); canvas.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='kundli.png'; a.click(); URL.revokeObjectURL(a.href); }); }; img.src=svg64; }
-function downloadTXT(){ const text = document.getElementById('interpretBox').value || generateInterpretation(); const blob=new Blob([text],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kundli_report.txt'; a.click(); URL.revokeObjectURL(a.href); }
-
-// Example autofill
-function fillExample(){ document.getElementById('name').value='Example — Delhi'; document.getElementById('dob').value='1999-01-15'; document.getElementById('tob').value='14:30:00'; document.getElementById('tz').value='5.5'; document.getElementById('dst').value='0'; document.getElementById('lat').value='28.6139'; document.getElementById('lon').value='77.2090'; }
-
-// Events
- document.getElementById('calc').addEventListener('click', async()=>{ const ok = await tryLoadSwiss(); compute(ok); });
- document.getElementById('dlSvg').addEventListener('click', downloadSVG);
- document.getElementById('dlPng').addEventListener('click', downloadPNG);
- document.getElementById('dlTxt').addEventListener('click', downloadTXT);
- document.getElementById('example').addEventListener('click', fillExample);
- document.getElementById('makeInterpret').addEventListener('click', generateInterpretation);
- document.getElementById('hiPrec').addEventListener('change', async()=>{ const ok=await tryLoadSwiss();});
-</script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kundli Generator – API‑free (High Accuracy + Explanation)</title>
-  <style>
-    :root{--bg:#0f1320;--card:#141a2f;--ink:#e8ecff;--muted:#9aa5d1;--accent:#6ee7ff;--good:#7ef7a6;--warn:#ffd66e;--danger:#ff7e7e}
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:radial-gradient(1200px 800px at 80% -20%,#20305A33 0%,transparent 60%),var(--bg);color:var(--ink)}
-    header{padding:28px 20px 10px;display:flex;gap:10px;align-items:center;justify-content:space-between}
-    h1{margin:0;font-weight:800;letter-spacing:.3px;font-size:clamp(22px,3vw,28px)}
-    .wrap{display:grid;grid-template-columns:400px 1fr;gap:18px;padding:16px}
-    @media (max-width:1100px){.wrap{grid-template-columns:1fr;}}
-    .card{background:linear-gradient(180deg,#161d39 0%, #101429 100%);border:1px solid #2a335f;border-radius:16px;box-shadow:0 10px 30px #0007}
-    .panel{padding:16px}
-    .panel h2{margin:0 0 10px;font-size:16px;font-weight:700;color:#cfe1ff}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    label{display:block;font-size:12px;color:var(--muted);margin:8px 0 6px}
-    input,select,button,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2a335f;background:#0e1330;color:var(--ink);outline:none}
-    input:focus,select:focus,textarea:focus{border-color:#5fa8ff;box-shadow:0 0 0 3px #5fa8ff30}
-    .row{display:flex;gap:10px}
-    .row > *{flex:1}
-    .btn{cursor:pointer;border:1px solid #3156a3;background:linear-gradient(180deg,#23408e,#1a2f6c);font-weight:700}
-    .btn:active{transform:translateY(1px)}
-    .btn.ghost{background:#0e1330}
-    .muted{color:var(--muted);font-size:12px}
-    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-    .chip{font-size:12px;border:1px dashed #3850a8;border-radius:999px;padding:6px 10px;color:#cfe1ff}
-    canvas,svg{max-width:100%;height:auto}
-    .stack{display:grid;gap:10px}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:6px 8px;border-bottom:1px dashed #334}
-    th{font-size:12px;color:#bcd}
-    td{font-size:13px;color:#eaf}
-    .foot{display:flex;gap:10px;flex-wrap:wrap}
-    .badge{font:12px/1.2 ui-monospace,monospace;background:#0c1130;border:1px solid #384074;border-radius:8px;padding:8px 10px;color:#bcd}
-    .ok{color:var(--good)} .warn{color:var(--warn)}
-    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid #3b4a95;background:#0c1233;border-radius:999px;padding:8px 12px;font-size:12px}
-    .section{display:grid;gap:8px}
-    textarea{min-height:160px;resize:vertical}
-  </style>
-</head>
-<body>
-  <header>
-    <h1>🔭 Kundli Generator — High‑Accuracy + Auto Explanation (No API)</h1>
-    <div class="chips">
-      <div class="chip">Sidereal (Lahiri)</div>
-      <div class="chip">Equal Houses</div>
-      <div class="chip">North‑Indian Chart</div>
-      <div class="chip" id="precTag">Precision: Standard</div>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <section class="card panel">
-      <h2>Birth Details</h2>
-      <div class="grid">
-        <div>
-          <label>Name</label>
-          <input id="name" placeholder="e.g., Priyanshu" />
-        </div>
-        <div>
-          <label>Gender (optional)</label>
-          <select id="gender">
-            <option value="">—</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div>
-          <label>Date of Birth</label>
-          <input id="dob" type="date" />
-        </div>
-        <div>
-          <label>Time of Birth</label>
-          <input id="tob" type="time" step="1" />
-        </div>
-        <div>
-          <label>Time Zone (UTC offset, hours)</label>
-          <input id="tz" type="number" step="0.25" value="5.5" />
-        </div>
-        <div>
-          <label>Daylight Saving?</label>
-          <select id="dst">
-            <option value="0">No</option>
-            <option value="1">Yes (+1h)</option>
-          </select>
-        </div>
-        <div>
-          <label>Latitude (° +N)</label>
-          <input id="lat" type="number" step="0.0001" placeholder="28.6139" />
-        </div>
-        <div>
-          <label>Longitude (° +E)</label>
-          <input id="lon" type="number" step="0.0001" placeholder="77.2090" />
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:12px">
-        <button class="btn" id="calc">Generate Kundli</button>
-        <button class="btn ghost" id="example">Fill Example (Delhi)</button>
-      </div>
-
-      <div class="row" style="margin-top:8px">
-        <button class="btn" id="dlPng">Download PNG</button>
-        <button class="btn" id="dlSvg">Download SVG</button>
-        <button class="btn" id="dlTxt">Download Report (TXT)</button>
-      </div>
-
-      <div class="section" style="margin-top:12px">
-        <div class="pill">
-          <input id="hiPrec" type="checkbox" />
-          <span><strong>High Precision Mode</strong> (optional Swiss Ephemeris WASM if present; otherwise standard engine)</span>
-        </div>
-        <p class="muted">Tip: No internet/API needed. All calculations run in your browser. For near‑professional accuracy, drop Swiss Ephemeris WASM files into <code>/swe/</code> (instructions at bottom) and enable High Precision Mode.</p>
+        <p class="muted">यह ऐप पूरी तरह ब्राउज़र में चलता है — किसी बाहरी API की जरूरत नहीं। प्रो‑ग्रेड शुद्धता के लिए वैकल्पिक Swiss Ephemeris WASM जोड़ सकते हैं।</p>
       </div>
     </section>
 
@@ -503,82 +125,75 @@ function fillExample(){ document.getElementById('name').value='Example — Delhi
         <div class="foot">
           <span class="badge" id="ayanamshaLbl">Ayanamsha: —</span>
           <span class="badge" id="ascLbl">Asc: —</span>
-          <span class="badge" id="nakLbl">Moon Nakshatra: —</span>
+          <span class="badge" id="nakLbl">चंद्र नक्षत्र: —</span>
         </div>
       </div>
 
       <div class="card panel">
-        <h2>Graha Longitudes (Sidereal ‑ Lahiri)</h2>
-        <table id="tbl"><thead><tr><th>Graha</th><th>Longitude</th><th>Rāśi</th><th>Nakshatra</th><th>House</th><th>Status</th></tr></thead><tbody></tbody></table>
-        <p class="muted">Standard engine is precise enough for signs/houses. Enable High Precision to tighten longitudes (Moon/fast planets) using local WASM if available.</p>
+        <h2>ग्रह देशांतर (साइडरीयल – लहीरी)</h2>
+        <table id="tbl"><thead><tr><th>ग्रह</th><th>देशांतर</th><th>राशि</th><th>नक्षत्र</th><th>भाव</th><th>स्थिति</th></tr></thead><tbody></tbody></table>
+        <p class="muted">Standard इंजन signs/houses के लिए काफी सटीक है। हाई‑प्रिसीजन मोड चंद्र/तेज़ ग्रहों के देशांतर और टाइट करता है (यदि WASM उपलब्ध हो)।</p>
       </div>
 
       <div class="card panel">
-        <h2>Housewise Placement</h2>
+        <h2>घर‑वार (Housewise) प्लेसमेंट</h2>
         <div id="houseList" class="section"></div>
       </div>
 
       <div class="card panel">
-        <h2>Interpretation</h2>
-        <button class="btn" id="makeInterpret">Generate Explanation</button>
-        <textarea id="interpretBox" placeholder="Click the button to generate a tailored paragraph explaining which planet sits in which house, with core meanings."></textarea>
+        <h2>व्याख्या (Hindi)</h2>
+        <button class="btn" id="makeInterpret">एक्सप्लेनेशन बनाएं</button>
+        <textarea id="interpretBox" placeholder="बटन दबाएँ — नीचे हिन्दी में विस्तृत पैराग्राफ ऑटो‑जनरेट होगा, जिसमें हर घर में कौन‑सा ग्रह है और उसका सार बताया जाएगा।"></textarea>
       </div>
 
       <div class="card panel">
-        <h2>Offline High‑Precision (Optional)</h2>
+        <h2>ऑफ़लाइन हाई‑प्रिसीजन (वैकल्पिक)</h2>
         <ol class="muted">
-          <li>Create a folder <code>swe</code> beside this <code>index.html</code>.</li>
-          <li>Put Swiss Ephemeris WASM build & data files inside (e.g., <code>swe.wasm</code>, <code>sepl_18.se1</code> …). No internet/API required.</li>
-          <li>Tick “High Precision Mode”. The app will auto‑load local files and switch precision (status tag at top updates).</li>
+          <li>इसी फाइल के बगल में <code>swe</code> नाम का फ़ोल्डर बनाइए।</li>
+          <li>उसमें Swiss Ephemeris WASM/डेटा फाइलें रखें (उदा. <code>swe.wasm</code>, <code>sepl_18.se1</code>…)।</li>
+          <li>ऊपर “हाई‑प्रिसीजन मोड” ऑन करें — स्टेटस टैग "Precision: Swiss WASM" दिखेगा।</li>
         </ol>
       </div>
     </section>
   </main>
 
 <script>
-/*************************************
+/*****************************************
  * Kundli Engine (No API)
- * – Sidereal (Lahiri)
- * – Equal houses (from Asc)
- * – North‑Indian chart
- * – PNG/SVG/TXT report download
- * – Auto explanation text
- * – Optional High‑Precision via Swiss Ephemeris WASM (local files)
- *************************************/
-const D2R = Math.PI/180, R2D = 180/Math.PI;
-const ZODIAC = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
-const NAKS = ["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishta","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"];
-const GRAHAS = ["Ascendant","Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn","Rahu","Ketu"];
+ * – Sidereal (Lahiri), Equal Houses
+ * – North‑Indian chart, SVG/PNG/TXT
+ * – Hindi Interpretation
+ * – Optional Swiss Ephemeris WASM
+ *****************************************/
+const D2R=Math.PI/180, R2D=180/Math.PI;
+const ZODIAC=["Mesha","Vrishabha","Mithuna","Karka","Simha","Kanya","Tula","Vrischika","Dhanu","Makara","Kumbha","Meena"];
+const NAKS=["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishta","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"];
+const GRAHAS=["Ascendant","Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn","Rahu","Ketu"];
 
-// Exaltation/Debilitation + Ownership (basic classical tables)
-const OWN = {
-  Sun:[4,5], // Leo owns 5 (but keep as map by planet -> array of signs). We'll mark only primary: Sun owns Leo
-};
-const OWN_SIGN = { Sun:5, Moon:4, Mars:[1,8], Mercury:[3,6], Jupiter:[9,12], Venus:[2,7], Saturn:[10,11] };
-const EXALT = { Sun:[0,10], Moon:[1,3], Mars:[9,28], Mercury:[5,15], Jupiter:[3,5], Venus:[11,27], Saturn:[6,20] }; // [signIndex, degree]
-const DEBIL = { Sun:[6,10], Moon:[7,3], Mars:[3,28], Mercury:[11,15], Jupiter:[9,5], Venus:[5,27], Saturn:[0,20] };
+// स्वामित्व/उच्च/नीच (सरल टेबल)
+const OWN_SIGN={ Sun:5, Moon:4, Mars:[1,8], Mercury:[3,6], Jupiter:[9,12], Venus:[2,7], Saturn:[10,11] };
+const EXALT={ Sun:[0,10], Moon:[1,3], Mars:[9,28], Mercury:[5,15], Jupiter:[3,5], Venus:[11,27], Saturn:[6,20] };
+const DEBIL={ Sun:[6,10], Moon:[7,3], Mars:[3,28], Mercury:[11,15], Jupiter:[9,5], Venus:[5,27], Saturn:[0,20] };
 
-// Julian Day from local date/time and tz offset
+// Julian Day (local -> UTC)
 function julianDay(y,m,d,h,tzHours){
-  h -= tzHours; // to UTC
-  let A = Math.floor((14 - m)/12);
-  y = y + 4800 - A;
-  m = m + 12*A - 3;
-  let JDN = d + Math.floor((153*m+2)/5) + 365*y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400) - 32045;
-  let JD = JDN + (h-12)/24; // noon base
-  return JD;
+  h-=tzHours; // to UTC
+  const A=Math.floor((14-m)/12);
+  y=y+4800-A; m=m+12*A-3;
+  const JDN=d+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;
+  return JDN+(h-12)/24; // JD at local civil time
 }
-
-function tCent(JD){ return (JD - 2451545.0)/36525; }
-function obliquity(JD){ const U = (JD-2451545.0)/3652500; const eps = 23 + (26 + ((21.448 - 46.8150*U - 0.00059*U*U + 0.001813*U*U*U))/60)/60; return eps*D2R; }
-function gst(JD){ const T=tCent(JD); let th=280.46061837+360.98564736629*(JD-2451545)+0.000387933*T*T - T*T*T/38710000; th=((th%360)+360)%360; return th/15; }
-function lahiriAyanamsha(JD){ const days=JD-2451545.0; const years=days/365.2422; const base=24+7/60; const rate=50.29/3600; return base + rate*years; }
+function tCent(JD){ return (JD-2451545.0)/36525; }
+function obliquity(JD){ const U=(JD-2451545.0)/3652500; const eps=23+(26+((21.448-46.8150*U-0.00059*U*U+0.001813*U*U*U))/60)/60; return eps*D2R; }
+function gst(JD){ const T=tCent(JD); let th=280.46061837+360.98564736629*(JD-2451545)+0.000387933*T*T-T*T*T/38710000; th=((th%360)+360)%360; return th/15; }
+function lahiriAyanamsha(JD){ const days=JD-2451545.0; const years=days/365.2422; const base=24+7/60; const rate=50.29/3600; return base+rate*years; }
 const norm360=x=>((x%360)+360)%360;
 
-function solveKepler(M,e){ M=M*D2R; let E=M+e*Math.sin(M)*(1+e*Math.cos(M)); for(let i=0;i<12;i++){ const dE=(E-e*Math.sin(E)-M)/(1-e*Math.cos(E)); E-=dE; if(Math.abs(dE)<1e-12) break;} return E; }
+// Kepler
+function solveKepler(M,e){ M*=D2R; let E=M+e*Math.sin(M)*(1+e*Math.cos(M)); for(let i=0;i<14;i++){ const dE=(E-e*Math.sin(E)-M)/(1-e*Math.cos(E)); E-=dE; if(Math.abs(dE)<1e-12) break; } return E; }
 
-// Planetary elements (low‑precision) for J2000 with secular terms
-const ELEMS = {
+// Planetary elements (low‑precision)
+const ELEMS={
   Mercury:{ a:0.38709893, e:[0.20563069, 0.00002527], I:[7.00487,-23.51/3600], L:[252.25084,149472.67411175], wbar:[77.45645, 573.57/3600], Omega:[48.33167,-446.30/3600] },
   Venus:  { a:0.72333199, e:[0.00677323,-0.00004938], I:[3.39471,-2.86/3600], L:[181.97973,58517.81538729], wbar:[131.53298, 622.65/3600], Omega:[76.68069,-996.89/3600] },
   Earth:  { a:1.00000011, e:[0.01671022,-0.00003804], I:[0.00005,-46.94/3600], L:[100.46645,35999.3728565], wbar:[102.93735,1161.0/3600], Omega:[-11.26064,-18228.25/3600] },
@@ -586,24 +201,163 @@ const ELEMS = {
   Jupiter:{ a:5.20336301, e:[0.04839266,-0.00012880], I:[1.30530,-4.15/3600], L:[34.40438,3034.74612775], wbar:[14.75385,  7.30/3600], Omega:[100.55615,1217.17/3600] },
   Saturn: { a:9.53707032, e:[0.05415060,-0.00036762], I:[2.48446,  6.11/3600], L:[49.94432,1222.49362201], wbar:[92.43194, -17.59/3600], Omega:[113.71504, -1591.05/3600] },
 };
+function planetHelioEcliptic(JD,name){ const T=tCent(JD); const el=ELEMS[name]; const a=el.a; const e=el.e[0]+el.e[1]*T; const I=(el.I[0]+el.I[1]*T)*D2R; const L=el.L[0]+el.L[1]*T; const wbar=el.wbar[0]+el.wbar[1]*T; const Omega=el.Omega[0]+el.Omega[1]*T; const M=norm360(L-wbar); const E=solveKepler(M,e); const v=2*Math.atan2(Math.sqrt(1+e)*Math.sin(E/2),Math.sqrt(1-e)*Math.cos(E/2)); const r=a*(1-e*Math.cos(E)); const w=(wbar-Omega)*D2R; const x=r*( Math.cos(Omega*D2R)*Math.cos(w+v) - Math.sin(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const y=r*( Math.sin(Omega*D2R)*Math.cos(w+v) + Math.cos(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const z=r*( Math.sin(w+v)*Math.sin(I) ); return {x,y,z}; }
+function eclipLonLat(x,y,z){ const lon=Math.atan2(y,x); const rxy=Math.hypot(x,y); const lat=Math.atan2(z,rxy); return {lon:norm360(lon*R2D), lat:lat*R2D}; }
+function planetGeoEclLon(JD,name){ if(name==="Sun"){ const E=planetHelioEcliptic(JD,"Earth"); const {lon}=eclipLonLat(E.x,E.y,E.z); return norm360(lon+180); } const E=planetHelioEcliptic(JD,"Earth"); const P=planetHelioEcliptic(JD,name); return eclipLonLat(P.x-E.x, P.y-E.y, P.z-E.z).lon; }
 
-function planetHelioEcliptic(JD, name){
-  const T = tCent(JD); const el = ELEMS[name];
-  const a=el.a; const e=el.e[0]+el.e[1]*T; const I=(el.I[0]+el.I[1]*T)*D2R; const L=el.L[0]+el.L[1]*T; const wbar=el.wbar[0]+el.wbar[1]*T; const Omega=el.Omega[0]+el.Omega[1]*T; const M=norm360(L-wbar); const E=solveKepler(M,e); const v=2*Math.atan2(Math.sqrt(1+e)*Math.sin(E/2),Math.sqrt(1-e)*Math.cos(E/2)); const r=a*(1-e*Math.cos(E)); const w=(wbar-Omega)*D2R; const xh=r*( Math.cos(Omega*D2R)*Math.cos(w+v) - Math.sin(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const yh=r*( Math.sin(Omega*D2R)*Math.cos(w+v) + Math.cos(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const zh=r*( Math.sin(w+v)*Math.sin(I) ); return {x:xh,y:yh,z:zh};
-}
-
-function eclipticLonLatFromXYZ(x,y,z){ const lon=Math.atan2(y,x); const rxy=Math.hypot(x,y); const lat=Math.atan2(z,rxy); return {lon:norm360(lon*R2D), lat:lat*R2D}; }
-function planetGeoEclLon(JD,name){ if(name==="Sun"){ const E=planetHelioEcliptic(JD,"Earth"); const {lon}=eclipticLonLatFromXYZ(E.x,E.y,E.z); return norm360(lon+180); } const earth=planetHelioEcliptic(JD,"Earth"); const p=planetHelioEcliptic(JD,name); const x=p.x-earth.x, y=p.y-earth.y, z=p.z-earth.z; return eclipticLonLatFromXYZ(x,y,z).lon; }
-
-// Improved Moon longitude (more terms, still lightweight)
+// Moon (compact major terms)
 function moonLongitude(JD){
-  const T=(JD-2451545.0)/36525; const L0=norm360(218.3164477+481267.88123421*T-0.0015786*T*T+T*T*T/538841); const D=norm360(297.8501921+445267.1114034*T-0.0018819*T*T+T*T*T/545868); const M=norm360(357.5291092+35999.0502909*T-0.0001536*T*T); const Mp=norm360(134.9633964+477198.8675055*T+0.0087414*T*T); const F=norm360(93.2720950+483202.0175233*T-0.0036539*T*T);
-  const terms=[[6288774,0,0,1,0],[1274027,2,-1,0,0],[658314,2,-1,-1,0],[213618,2,-2,0,0],[-185116,0,1,0,2],[-114332,0,0,0,2],[58793,2,-1,2,0],[57066,2,-1,-1,0],[53322,0,2,0,0],[45758,2,-2,-2,0],[-40923,0,1,0,0],[-34720,1,1,0,0],[-30383,2,0,0,0]]; // compact major terms
-  let sum=0; for(const [A,kD,kM,kMp,kF] of terms){ const arg=(kD*D + kM*M + kMp*Mp + kF*F)*D2R; sum += A*Math.sin(arg); }
-  const deltaDeg = sum/1000000* (180/Math.PI); // scale tuning for compact set
-  return norm360(L0 + deltaDeg);
+  const T=(JD-2451545.0)/36525;
+  const L0=norm360(218.3164477+481267.88123421*T-0.0015786*T*T+T*T*T/538841);
+  const D=norm360(297.8501921+445267.1114034*T-0.0018819*T*T+T*T*T/545868);
+  const M=norm360(357.5291092+35999.0502909*T-0.0001536*T*T);
+  const Mp=norm360(134.9633964+477198.8675055*T+0.0087414*T*T);
+  const F=norm360(93.2720950+483202.0175233*T-0.0036539*T*T);
+  const terms=[[6288774,0,0,1,0],[1274027,2,-1,0,0],[658314,2,-1,-1,0],[213618,2,-2,0,0],[-185116,0,1,0,2],[-114332,0,0,0,2],[58793,2,-1,2,0],[57066,2,-1,-1,0],[53322,0,2,0,0],[45758,2,-2,-2,0],[-40923,0,1,0,0],[-34720,1,1,0,0],[-30383,2,0,0,0]];
+  let sum=0; for(const [A,kD,kM,kMp,kF] of terms){ const arg=(kD*D+kM*M+kMp*Mp+kF*F)*D2R; sum+=A*Math.sin(arg); }
+  const deltaDeg=sum/1000000*(180/Math.PI);
+  return norm360(L0+deltaDeg);
 }
 
-function lstHours(JD, lon){ return (gst(JD)+lon/15+24)%24; }
-function ascendant(JD, latDeg, lonDeg){ const eps=obliquity(JD); const LST=lstHours(JD,lonDeg)*15*D2R; const phi=latDeg*D2R; let lambda=Math.atan2( Math.sin(LST), Math.cos(LST)*Math.cos(eps)-Math.tan(phi)*Math.sin(eps) ); lambda=norm360(lambda*R2D); return lambda; }
-function meanNode(JD){ const T=(JD-2451545.0)/36525; let Omega=125.0445550-1934.1361849*T+0.0020762*T*T+(T*T*T)/467410; return 
+// Ascendant & Nodes
+function lstHours(JD,lon){ return (gst(JD)+lon/15+24)%24; }
+function ascendant(JD,latDeg,lonDeg){ const eps=obliquity(JD); const LST=lstHours(JD,lonDeg)*15*D2R; const phi=latDeg*D2R; let lambda=Math.atan2(Math.sin(LST), Math.cos(LST)*Math.cos(eps)-Math.tan(phi)*Math.sin(eps)); return norm360(lambda*R2D); }
+function meanNode(JD){ const T=(JD-2451545.0)/36525; let Omega=125.0445550-1934.1361849*T+0.0020762*T*T+(T*T*T)/467410; return norm360(Omega+180); }
+
+// Helpers
+function nakshatra(lon){ const span=360/27; const idx=Math.floor(lon/span); const pada=Math.floor((lon%span)/(span/4))+1; return {name:NAKS[idx],pada}; }
+function houseOf(lonSid,ascSid){ const diff=norm360(lonSid-ascSid); return Math.floor(diff/30)+1; }
+function dms(deg){ const d=Math.floor(deg); const mfull=(deg-d)*60; const m=Math.floor(mfull); const s=Math.round((mfull-m)*60); return `${d}° ${m}' ${s}\"`; }
+function formatLon(lon){ const sign=Math.floor(lon/30); const d=lon-sign*30; return `${ZODIAC[sign]} ${d.toFixed(2)}°`; }
+function statusOf(planet,lon){ const sign=Math.floor(lon/30); const degIn=lon-sign*30; let out=[]; const own=OWN_SIGN[planet]; if(own){ const owns=Array.isArray(own)?own:[own]; if(owns.includes(sign+1)) out.push('स्व‑राशि'); }
+  const ex=EXALT[planet]; if(ex&&ex[0]===sign&&Math.abs(degIn-ex[1])<1.0) out.push('उच्च के निकट');
+  const de=DEBIL[planet]; if(de&&de[0]===sign&&Math.abs(degIn-de[1])<1.0) out.push('नीच के निकट');
+  return out.join(', ')||'—'; }
+
+// Optional Swiss WASM (यदि मौजूद)
+let swe=null; async function tryLoadSwiss(){ if(!document.getElementById('hiPrec').checked){ swe=null; document.getElementById('precTag').textContent='Precision: Standard'; return false; }
+  try{ if(!window.createModule){ await import('./swe/swe.js').catch(()=>{}); }
+    if(typeof createModule!=="function") throw new Error('no wasm');
+    swe=await createModule(); document.getElementById('precTag').textContent='Precision: Swiss WASM'; return true;
+  }catch(e){ swe=null; document.getElementById('precTag').textContent='Precision: Standard'; return false; }
+}
+
+async function compute(useSwiss){
+  const name=(document.getElementById('name').value||'—').trim();
+  const dob=document.getElementById('dob').value; if(!dob){ alert('जन्म तिथि चुनें'); return; }
+  const tob=document.getElementById('tob').value||'00:00:00';
+  const tz=parseFloat(document.getElementById('tz').value||'0') + (document.getElementById('dst').value==='1'?1:0);
+  const lat=parseFloat(document.getElementById('lat').value||'0');
+  const lon=parseFloat(document.getElementById('lon').value||'0');
+  const [Y,M,D]=dob.split('-').map(Number); const [hh,mm,ss]=tob.split(':').map(Number); const H=(hh||0)+(mm||0)/60+(ss||0)/3600;
+  const JD=julianDay(Y,M,D,H,tz); const aya=lahiriAyanamsha(JD);
+
+  // Ascendant (tropical -> sidereal)
+  const ascTrop=ascendant(JD,lat,lon); const ascSid=norm360(ascTrop-aya);
+  const L={}; L['Ascendant']=ascSid;
+
+  // Tropical longitudes -> sidereal
+  function lonTrop(p){ if(p==='Moon') return moonLongitude(JD); if(p==='Sun' || ELEMS[p]) return planetGeoEclLon(JD,p==='Ketu'?'Moon':p); return 0; }
+  L.Sun=norm360(lonTrop('Sun')-aya);
+  L.Moon=norm360(lonTrop('Moon')-aya);
+  L.Mars=norm360(lonTrop('Mars')-aya);
+  L.Mercury=norm360(lonTrop('Mercury')-aya);
+  L.Jupiter=norm360(lonTrop('Jupiter')-aya);
+  L.Venus=norm360(lonTrop('Venus')-aya);
+  L.Saturn=norm360(lonTrop('Saturn')-aya);
+  const rahuTrop=meanNode(JD); L.Rahu=norm360(rahuTrop-aya); L.Ketu=norm360(L.Rahu+180);
+  // (Swiss WASM मौजूद हो तो यहाँ override कर सकते हैं)
+
+  // Table render
+  const tbody=document.querySelector('#tbl tbody'); tbody.innerHTML=''; const rows=[];
+  for(const g of GRAHAS){ const lonSid=L[g]; const sign=Math.floor(lonSid/30); const nk=nakshatra(lonSid); const house=houseOf(lonSid,ascSid); const tr=document.createElement('tr'); const stat=statusOf(g,lonSid); const cells=[g, `${formatLon(lonSid)} (${dms(lonSid)})`, ZODIAC[sign], `${nk.name} ${nk.pada}`, house, stat];
+    for(const v of cells){ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); } tbody.appendChild(tr);
+    rows.push({graha:g,lon:lonSid,sign,house,nk:`${nk.name} ${nk.pada}`}); }
+
+  document.getElementById('ayanamshaLbl').textContent=`Ayanamsha (Lahiri): ${aya.toFixed(2)}°`;
+  document.getElementById('ascLbl').textContent=`Asc: ${formatLon(ascSid)}`;
+  document.getElementById('nakLbl').textContent=`चंद्र नक्षत्र: ${nakshatra(L['Moon']).name}`;
+
+  drawNorthChart(ascSid, rows.filter(r=>r.graha!=="Ascendant"));
+  renderHouseList(ascSid, rows);
+  window.__kundli={name,JD,aya,ascSid,rows};
+}
+
+function drawNorthChart(ascSid, items){
+  const svg=document.getElementById('chart'); while(svg.firstChild) svg.removeChild(svg.firstChild);
+  const W=800,H=800; const cx=W/2, cy=H/2, R=320; svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const g=(tag,attrs)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); svg.appendChild(e); return e;};
+  const grp=(tag,attrs)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e;};
+  const pts=[[cx,cy-R],[cx+R,cy],[cx,cy+R],[cx-R,cy]].map(p=>p.join(',')).join(' ');
+  g('polygon',{points:pts,fill:'#0a0f2a',stroke:'#3a4585','stroke-width':3});
+  const lines=[[cx,cy-R,cx+R,cy],[cx+R,cy,cx,cy+R],[cx,cy+R,cx-R,cy],[cx-R,cy,cx,cy-R],[cx,cy-R,cx,cy+R],[cx-R,cy,cx+R,cy]]; for(const [x1,y1,x2,y2] of lines){ g('line',{x1,y1,x2,y2,stroke:'#2a3366','stroke-width':2}); }
+  const houseCenters=[[cx,cy-R+80],[cx+130,cy-130],[cx+R-80,cy],[cx+130,cy+130],[cx,cy+R-80],[cx-130,cy+130],[cx-R+80,cy],[cx-130,cy-130],[cx,cy-R+190],[cx+190,cy],[cx,cy+190],[cx-190,cy]];
+  const ascSign=Math.floor(ascSid/30); for(let i=0;i<12;i++){ const sign=(ascSign+i)%12; const [x,y]=houseCenters[i]; const t=g('text',{x,y,'text-anchor':'middle','dominant-baseline':'middle',fill:'#bcd','font-size':18}); t.textContent=`${i+1}\n${ZODIAC[sign].slice(0,3)}`; }
+  const houseMap=Array.from({length:12},()=>[]); for(const it of items){ const h=it.house-1; houseMap[h].push(it); }
+  for(let i=0;i<12;i++){ const [x,y]=houseCenters[i]; const list=houseMap[i]; if(!list.length) continue; list.sort((a,b)=>a.lon-b.lon);
+    list.forEach((it,idx)=>{ const t=g('text',{x,y:y+22*idx+18,'text-anchor':'middle','dominant-baseline':'middle',fill:'#e8ecff','font-size':16}); const short={Sun:'Su',Moon:'Mo',Mars:'Ma',Mercury:'Me',Jupiter:'Ju',Venus:'Ve',Saturn:'Sa',Rahu:'Ra',Ketu:'Ke'}[it.graha]||it.graha; t.textContent=`${short} ${((it.lon%30).toFixed(1))}`; }); }
+  const title=grp('g',{}); svg.appendChild(title); const tt=document.createElementNS('http://www.w3.org/2000/svg','text'); tt.setAttribute('x',cx); tt.setAttribute('y',40); tt.setAttribute('text-anchor','middle'); tt.setAttribute('fill','#cfe1ff'); tt.setAttribute('font-size','20'); tt.textContent='Kundli (North‑Indian)'; title.appendChild(tt);
+}
+
+function renderHouseList(ascSid, rows){
+  const box=document.getElementById('houseList'); box.innerHTML=''; const houses=Array.from({length:12},()=>[]); for(const r of rows){ if(r.graha==='Ascendant') continue; houses[r.house-1].push(r); }
+  const meanings=[
+    'स्वयं, देह, स्वभाव, जीवन शक्ति',
+    'धन, वाणी, परिवार, मूल्य',
+    'भाई‑बहन, साहस, अल्प यात्रा, कौशल',
+    'घर, माता, संपत्ति, भावनात्मक आधार',
+    'शिक्षा, रचनात्मकता, प्रेम, संतान',
+    'स्वास्थ्य, सेवा, दैनिक कार्य, बाधाएँ',
+    'विवाह, साझेदारी, सार्वजनिक व्यवहार',
+    'आयुष्य, परिवर्तन, रहस्य, ऋण',
+    'भाग्य, धर्म, उच्च शिक्षा, दूर यात्रा',
+    'कर्म, करियर, प्रतिष्ठा, अधिकार',
+    'लाभ, मित्र, नेटवर्क, आकांक्षाएँ',
+    'हानि, मोक्ष, एकांत, विदेशी विषय'
+  ];
+  houses.forEach((arr,i)=>{ const div=document.createElement('div'); div.className='card panel'; const title=document.createElement('h3'); title.textContent=`भाव ${i+1} — ${meanings[i]}`; title.style.margin='0 0 6px'; title.style.fontSize='14px'; title.style.color='#d7e4ff'; div.appendChild(title); const p=document.createElement('p'); p.className='muted'; p.textContent=arr.length?(`ग्रह: ${arr.map(o=>o.graha).join(', ')}`):'ग्रह: —'; div.appendChild(p); box.appendChild(div); });
+}
+
+function generateInterpretation(){
+  const K=window.__kundli; if(!K){ alert('पहले कुंडली जेनरेट करें'); return; }
+  const {ascSid,rows,aya}=K; const ascSign=Math.floor(ascSid/30); const byHouse=Array.from({length:12},()=>[]); for(const r of rows){ if(r.graha==='Ascendant') continue; byHouse[r.house-1].push(r); }
+  const houseMean=['स्वयं और जीवन‑शक्ति','धन‑संचय और मूल्य','कौशल/भाई‑बहन','घर‑परिवार और भावनाएँ','रचनात्मकता/शिक्षा/संतान','सेवा‑कार्य/स्वास्थ्य','साझेदारी/विवाह','गूढ़/परिवर्तन/साझा संसाधन','भाग्य/धर्म/शिक्षा','कर्म/करियर/प्रतिष्ठा','लाभ/मित्र/नेटवर्क','त्याग/मुक्ति/अंतर्मुखता'];
+  const starts=['केंद्रितता रहती है','मुख्य विषय हैं','जोर दिखता है','अनुभव होने की सम्भावना','ऊर्जा संकेंद्रित होती है'];
+  const lines=[`यह कुंडली साइडरीयल (लहीरी) अयनांश ~${aya.toFixed(2)}° तथा Equal Houses पर आधारित है। नीचे घर‑वार स्थिति का सरल हिन्दी वर्णन दिया है:`];
+  for(let h=1; h<=12; h++){
+    const arr=byHouse[h-1]; const sign=(ascSign+(h-1))%12; const who=arr.length?arr.map(o=>o.graha).join(', '):'कोई ग्रह नहीं';
+    let detail=`${starts[h%starts.length]} ${houseMean[h-1]} पर।`;
+    if(arr.length){ arr.forEach(o=>{ const s=statusOf(o.graha,o.lon); const deg=(o.lon%30).toFixed(1); let add=`${o.graha} ${ZODIAC[o.sign]} के ${deg}° पर`; if(s&&s!=='—') add+=` (${s})`; add+=` — इस भाव के विषयों में अपने फल देता है।`; detail+=' '+add; }); }
+    lines.push(`भाव ${h} (${ZODIAC[sign]}): ${who}. ${detail}`);
+  }
+  const text=lines.join('\n\n'); document.getElementById('interpretBox').value=text; return text;
+}
+
+// Downloads
+function downloadSVG(){ const svg=document.getElementById('chart'); const data=new XMLSerializer().serializeToString(svg); const blob=new Blob([data],{type:'image/svg+xml'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kundli.svg'; a.click(); URL.revokeObjectURL(a.href); }
+function downloadPNG(){ const svg=document.getElementById('chart'); const xml=new XMLSerializer().serializeToString(svg); const img=new Image(); const svg64='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(xml))); img.onload=function(){ const canvas=document.createElement('canvas'); canvas.width=svg.viewBox.baseVal.width; canvas.height=svg.viewBox.baseVal.height; const ctx=canvas.getContext('2d'); ctx.fillStyle='#0c1130'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0); canvas.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='kundli.png'; a.click(); URL.revokeObjectURL(a.href); }); }; img.src=svg64; }
+function downloadTXT(){ const text=document.getElementById('interpretBox').value||generateInterpretation(); const blob=new Blob([text],{type:'text/plain;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kundli_report_hindi.txt'; a.click(); URL.revokeObjectURL(a.href); }
+
+// Example
+function fillExample(){ document.getElementById('name').value='उदाहरण — दिल्ली'; document.getElementById('dob').value='1999-01-15'; document.getElementById('tob').value='14:30:00'; document.getElementById('tz').value='5.5'; document.getElementById('dst').value='0'; document.getElementById('lat').value='28.6139'; document.getElementById('lon').value='77.2090'; }
+
+// Location helpers (no external API)
+function setLocStatus(text){ const el=document.getElementById('locStatus'); el.innerHTML=`<span>📍 <strong>लोकेशन:</strong> <em>${text}</em></span>`; }
+function tryAutoTimezone(){ const offsetHours=-new Date().getTimezoneOffset()/60; document.getElementById('tz').value=String(offsetHours); }
+function tryAutoGeo(){ if(!('geolocation' in navigator)){ setLocStatus('Geolocation उपलब्ध नहीं'); return; } navigator.geolocation.getCurrentPosition(pos=>{ const {latitude,longitude}=pos.coords; document.getElementById('lat').value=latitude.toFixed(4); document.getElementById('lon').value=longitude.toFixed(4); setLocStatus(`${latitude.toFixed(4)}, ${longitude.toFixed(4)} (auto)`); },err=>{ setLocStatus('अनुमति न मिलने पर ऑटो‑डिटेक्ट बंद'); }, {enableHighAccuracy:true,timeout:8000,maximumAge:60000}); }
+function detectLocation(){ tryAutoTimezone(); tryAutoGeo(); }
+
+// Events
+ document.getElementById('calc').addEventListener('click', async()=>{ const ok=await tryLoadSwiss(); compute(ok); });
+ document.getElementById('dlSvg').addEventListener('click', downloadSVG);
+ document.getElementById('dlPng').addEventListener('click', downloadPNG);
+ document.getElementById('dlTxt').addEventListener('click', downloadTXT);
+ document.getElementById('example').addEventListener('click', fillExample);
+ document.getElementById('makeInterpret').addEventListener('click', generateInterpretation);
+ document.getElementById('hiPrec').addEventListener('change', async()=>{ await tryLoadSwiss(); });
+ document.getElementById('detectLoc').addEventListener('click', detectLocation);
+ document.getElementById('clearLoc').addEventListener('click', ()=>{ setLocStatus('Auto detect बंद'); document.getElementById('lat').value=''; document.getElementById('lon').value=''; });
+ window.addEventListener('DOMContentLoaded', ()=>{ tryAutoTimezone(); /* best‑effort */ tryAutoGeo(); });
+</script>
+</body>
+</html>
