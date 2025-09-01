@@ -3,14 +3,12 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Divine Path - Full Astrology & Numerology Suite</title>
+<title>Divine Path - Complete Astrology & Numerology Suite</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
-
   * {
     box-sizing: border-box;
   }
-
   body {
     margin: 0;
     background: #10101c;
@@ -24,7 +22,6 @@
     align-items: center;
     scroll-behavior: smooth;
   }
-
   header h1 {
     font-size: 2.8rem;
     font-weight: 700;
@@ -34,7 +31,6 @@
     text-align:center;
     user-select:none;
   }
-
   header p.subtitle {
     font-size: 1.125rem;
     font-weight: 400;
@@ -42,8 +38,6 @@
     margin-bottom: 30px;
     text-align: center;
   }
-
-  /* Tabs styling */
   #tabs {
     display: flex;
     justify-content: center;
@@ -72,7 +66,6 @@
     color: #301a00;
     border-color: #ffa832d0;
   }
-
   section.calculator-section {
     background: #1b2036cc;
     border-radius: 20px;
@@ -87,22 +80,19 @@
   section.calculator-section.active {
     display: flex;
   }
-
   form {
     width: 100%;
     max-width: 520px;
     margin: auto;
     margin-bottom: 24px;
   }
-
   label {
     display: block;
     font-weight: 600;
     color: #ffac49;
     font-size: 1rem;
-    user-select: none;
+    user-select:none;
   }
-
   input, select, button {
     margin: 8px 0 20px 0;
     width: 100%;
@@ -117,14 +107,12 @@
     transition: box-shadow 0.4s ease;
     user-select:none;
   }
-
   input:focus, select:focus {
     outline: none;
     background-color: #150f00;
     box-shadow: 0 0 30px #ffaa0055;
     color: #fff4de;
   }
-
   button {
     background: linear-gradient(45deg, #ffb930, #ff8321);
     font-weight: 800;
@@ -135,13 +123,11 @@
     transition: all 0.3s ease;
     user-select:none;
   }
-
   button:hover {
     background: linear-gradient(45deg, #ffc64b, #ff9723);
     color: #553312;
     box-shadow: 0 0 38px #ffd870ff;
   }
-
   #chart-container, #trad-chart-container {
     background: #121921dd;
     border-radius: 24px;
@@ -155,7 +141,6 @@
     max-width: 100%;
     user-select:none;
   }
-
   .house-label {
     fill: #ffd37dcc;
     font-weight: 800;
@@ -191,8 +176,7 @@
     50% { filter: drop-shadow(0 0 28px #ffa151dd); }
     100% { filter: drop-shadow(0 0 10px #ff8634aa); }
   }
-
-  #analysis, #analysis-detailed, #num-analysis, #dasha-result {
+  #analysis, #analysis-detailed, #num-analysis, #dasha-result, #dasha-analysis, #trad-analysis-detailed {
     background: #121821dd;
     border-radius: 20px;
     padding: 36px 40px;
@@ -207,7 +191,6 @@
     overflow-y: auto;
     font-family: 'Poppins', sans-serif;
   }
-
   #btnAnalysis {
     background: #ffb442cc;
     border: none;
@@ -228,13 +211,10 @@
     display: block;
     text-align:center;
   }
-
   #btnAnalysis:hover {
     background: #ffc660ee;
     box-shadow: 0 0 60px #ffb347dd;
   }
-
-  /* Responsive */
   @media (max-width: 720px) {
     form {
       max-width: 100%;
@@ -253,24 +233,23 @@
 <body>
 <header>
   <h1>Divine Path</h1>
-  <p class="subtitle">Full Astrology, Numerology, and Dasha Suite</p>
+  <p class="subtitle">Complete Astrology and Numerology Web App</p>
 </header>
-
 <div id="tabs">
-  <button class="tab-btn active" data-target="astrology">Astrology (Animated Chart)</button>
+  <button class="tab-btn active" data-target="astrology">Animated Kundli</button>
   <button class="tab-btn" data-target="traditional-kundli">Traditional Kundli</button>
   <button class="tab-btn" data-target="numerology">Numerology</button>
-  <button class="tab-btn" data-target="dasha">Dasha Calculators</button>
-  <button class="tab-btn" data-target="explanations">Detailed Explanations</button>
+  <button class="tab-btn" data-target="dasha">Dasha</button>
+  <button class="tab-btn" data-target="explanations">Explanations</button>
 </div>
-
 <main>
-
-  <!-- Astrology Animated Chart Section -->
-  <section id="astrology" class="calculator-section active" aria-label="Animated Astrology Chart">
+  <!-- Animated Kundli Section -->
+  <section id="astrology" class="calculator-section active" aria-label="Animated Kundli Chart">
     <form id="kundliForm" autocomplete="off">
-      <label>Date of Birth</label><input type="date" id="dob" required />
-      <label>Time of Birth (24h format)</label><input type="time" id="tob" required step="60" value="12:00" />
+      <label>Date of Birth</label>
+      <input type="date" id="dob" required />
+      <label>Time of Birth (24h format)</label>
+      <input type="time" id="tob" required step="60" value="12:00" />
       <label>City (Auto-fill Latitude & Longitude)</label>
       <select id="city">
         <option value="">-- Select City --</option>
@@ -281,21 +260,24 @@
         <option value="19.0760,72.8777">Mumbai</option>
         <option value="12.9716,77.5946">Bengaluru</option>
       </select>
-      <label>Latitude</label><input type="number" id="lat" step="0.0001" required placeholder="Latitude" />
-      <label>Longitude</label><input type="number" id="lng" step="0.0001" required placeholder="Longitude" />
-      <button type="submit" id="btnGenerate">Generate Kundli & Chart</button>
+      <label>Latitude</label>
+      <input type="number" id="lat" step="0.0001" required placeholder="Latitude" />
+      <label>Longitude</label>
+      <input type="number" id="lng" step="0.0001" required placeholder="Longitude" />
+      <button type="submit" id="btnGenerate">Generate Animated Kundli</button>
     </form>
-    <section id="chart-container" aria-label="Animated Kundli Chart"></section>
-    <button id="btnAnalysis">Show Detailed Astrology Analysis</button>
-    <section id="analysis" aria-live="polite" aria-label="Basic Astrology Summary"></section>
-    <section id="analysis-detailed" style="display:none;" aria-live="polite" aria-label="Detailed Astrology Analysis"></section>
+    <section id="chart-container" aria-label="Animated Kundli Chart" style="max-width: 700px; margin: auto;"></section>
+    <button id="btnAnalysis">Show Detailed Analysis</button>
+    <section id="analysis" aria-live="polite" aria-label="Basic Astrology Summary" style="max-width:700px; margin: 20px auto; white-space: pre-line;"></section>
+    <section id="analysis-detailed" style="max-width:700px; margin: 20px auto; white-space: pre-line; display:none;"></section>
   </section>
-
-  <!-- Traditional Kundli -->
-  <section id="traditional-kundli" class="calculator-section" aria-label="Traditional Kundli Section">
+  <!-- Traditional Kundli Section -->
+  <section id="traditional-kundli" class="calculator-section" aria-label="Traditional Kundli Section" style="display:none;">
     <form id="tradForm" autocomplete="off">
-      <label>Date of Birth</label><input type="date" id="tradDob" required />
-      <label>Time of Birth (24h format)</label><input type="time" id="tradTob" required step="60" value="12:00" />
+      <label>Date of Birth</label>
+      <input type="date" id="tradDob" required />
+      <label>Time of Birth (24h format)</label>
+      <input type="time" id="tradTob" required step="60" value="12:00" />
       <label>City (Auto-fill Latitude & Longitude)</label>
       <select id="tradCity">
         <option value="">-- Select City --</option>
@@ -306,30 +288,29 @@
         <option value="19.0760,72.8777">Mumbai</option>
         <option value="12.9716,77.5946">Bengaluru</option>
       </select>
-      <label>Latitude</label><input type="number" id="tradLat" step="0.0001" required placeholder="Latitude" />
-      <label>Longitude</label><input type="number" id="tradLng" step="0.0001" required placeholder="Longitude" />
+      <label>Latitude</label>
+      <input type="number" id="tradLat" step="0.0001" required placeholder="Latitude" />
+      <label>Longitude</label>
+      <input type="number" id="tradLng" step="0.0001" required placeholder="Longitude" />
       <button type="submit" id="btnGenerateTrad">Generate Traditional Kundli</button>
     </form>
     <section id="trad-chart-container" style="margin: auto; max-width: 600px;"></section>
-    <section id="trad-analysis-detailed" style="background:#121921cc;padding:30px;border-radius:20px;box-shadow:0 0 28px #ff7b22cc; margin-top: 20px; color: #ffc973; font-family: 'Poppins', sans-serif; font-size:1rem; line-height:1.5; white-space: pre-line;"></section>
+    <section id="trad-analysis-detailed" style="background:#121921cc; padding:30px; border-radius:20px; box-shadow:0 0 28px #ff7b22cc; margin-top: 20px; color: #ffc973; font-family: 'Poppins', sans-serif; font-size:1rem; line-height:1.5; white-space: pre-line; display:none;"></section>
   </section>
-
-  <!-- Numerology -->
-  <section id="numerology" class="calculator-section" aria-label="Numerology Section">
+  <!-- Numerology Section -->
+  <section id="numerology" class="calculator-section" aria-label="Numerology Section" style="display:none;">
     <form id="numForm" autocomplete="off">
       <label>Full Name (English letters)</label>
       <input type="text" id="numName" placeholder="Full Name" autocomplete="off" required />
-      
       <label>Date of Birth</label>
       <input type="date" id="numDob" required />
-
       <button type="submit" id="btnNumCalculate">Calculate Numerology</button>
     </form>
-    <section id="num-analysis" style="max-width:700px;margin:auto; white-space:pre-line; font-family:'Poppins',sans-serif; font-size:1rem; line-height:1.5; color:#ffc973; background: #121921cc; padding:30px; border-radius:20px; box-shadow:0 0 28px #ff7b22cc;"></section>
+    <section id="num-analysis" style="max-width:700px; margin:auto; white-space: pre-line;"></section>
+    <section id="num-analysis-detailed" style="max-width:700px; margin:auto; white-space: pre-line; display:none;"></section>
   </section>
-
-  <!-- Dasha -->
-  <section id="dasha" class="calculator-section" aria-label="Dasha Section">
+  <!-- Dasha Section -->
+  <section id="dasha" class="calculator-section" aria-label="Dasha Section" style="display:none;">
     <form id="dashaForm" autocomplete="off">
       <label>Date of Birth</label>
       <input type="date" id="dashaDob" required />
@@ -337,12 +318,11 @@
       <input type="time" id="dashaTob" required step="60" value="12:00" />
       <button type="submit" id="btnDashaCalculate">Calculate Dasha</button>
     </form>
-    <section id="dasha-result" style="max-width:700px;margin:auto; white-space:pre-line; font-family:'Poppins',sans-serif; font-size:1rem; line-height:1.5; color:#ffc973; background: #121921cc; padding:30px; border-radius:20px; box-shadow:0 0 28px #ff7b22cc;"></section>
-    <section id="dasha-analysis" style="max-width:700px;margin:auto; white-space:pre-line; font-family:'Poppins',sans-serif; font-size:1rem; line-height:1.5; color:#ffc973; background: #121921cc; padding:30px; border-radius:20px; box-shadow:0 0 28px #ff7b22cc; display:none;"></section>
+    <section id="dasha-result" style="max-width:700px; margin:auto; white-space: pre-line;"></section>
+    <section id="dasha-analysis" style="max-width:700px; margin:auto; white-space: pre-line; display:none;"></section>
   </section>
-
-  <!-- Explanations -->
-  <section id="explanations" class="calculator-section" aria-label="Explanations Section" style="color:#ffb24c; max-width:900px;margin:auto; font-size:1.1rem; line-height:1.6; white-space: pre-line; user-select:none;">
+  <!-- Explanations Section -->
+  <section id="explanations" class="calculator-section" aria-label="Explanations Section" style="color:#ffb24c; max-width:900px;margin:auto; font-size:1.1rem; line-height:1.6; white-space: pre-line; user-select:none; display:none;">
     <h2 style="text-align:center; margin-bottom:15px;">Comprehensive Astrology & Numerology Explanation</h2>
     <p>This section provides a detailed, plain-language explanation about kundli astrology charts, numerology numbers, dashas and how they impact your life, personality and destiny.</p>
     <ul>
@@ -354,11 +334,8 @@
     </ul>
     <p>For a deeper personalized reading, consult a professional astrologer.</p>
   </section>
-
 </main>
-
 <script>
-  // TAB SWITCHING
   const tabs = document.querySelectorAll('.tab-btn');
   const sections = document.querySelectorAll('.calculator-section');
   tabs.forEach(tab => {
@@ -371,49 +348,238 @@
     });
   });
 
-  // CITY AUTO-FILL for astrology forms
-  function setupCityAutoFill(selectId, latId, lngId) {
-    const selectEl = document.getElementById(selectId);
-    const latEl = document.getElementById(latId);
-    const lngEl = document.getElementById(lngId);
-    selectEl.addEventListener('change', e => {
-      if(e.target.value){
-        const [lat,lng] = e.target.value.split(',');
-        latEl.value = lat;
-        lngEl.value = lng;
-      }
-    });
-  }
-  setupCityAutoFill('city', 'lat', 'lng');
-  setupCityAutoFill('tradCity', 'tradLat', 'tradLng');
-
-  // Astronomy Utility class (same as before, omitted for brevity)
+  // Shared utilities
   class Astronomy {
     static toJulianDay(y,m,d,h,min){
-      if(m<=2){y-=1;m+=12;}
-      const A=Math.floor(y/100), B=2-A+Math.floor(A/4);
+      if(m<=2){ y-=1; m+=12;}
+      const A=Math.floor(y/100);
+      const B=2-A+Math.floor(A/4);
       const dayFrac=(h+min/60)/24;
-      return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+dayFrac+B-1524.5;
+      return Math.floor(365.25*(y+4716)) + Math.floor(30.6001*(m+1)) + d + dayFrac + B -1524.5;
     }
     static degToRad(d){return d*Math.PI/180;}
     static radToDeg(r){return r*180/Math.PI;}
-    static sunLongitude(JD){const n=JD-2451545.0;const L=(280.460+0.9856474*n)%360;const g=(357.528+0.9856003*n)%360;const gRad=this.degToRad(g);let lambda=L+1.915*Math.sin(gRad)+0.020*Math.sin(2*gRad);return (lambda+360)%360;}
-    static moonLongitude(JD){const n=JD-2451550.1;const L=(218.316+13.176396*n)%360;const M=(134.963+13.064993*n)%360;const F=(93.272+13.229350*n)%360;const LRad=this.degToRad(L);const MRad=this.degToRad(M);const FRad=this.degToRad(F);let lambda=L+6.289*Math.sin(MRad)-3.0*Math.sin(LRad-this.degToRad(297.850))+1.274*Math.sin(2*this.degToRad(L)-MRad)+0.658*Math.sin(2*LRad)+0.214*Math.sin(2*MRad)-0.186*Math.sin(this.degToRad(297.850))+0.114*Math.sin(2*FRad);return (lambda+360)%360;}
-    static mercuryLongitude(JD){const n=JD-2451545.0;let L=(252.25084+4.0923344368*n)%360;return (L+360)%360;}
-    static venusLongitude(JD){const n=JD-2451545.0;let L=(181.9798+1.6021302244*n)%360;return (L+360)%360;}
-    static marsLongitude(JD){const n=JD-2451545.0;let L=(355.433+0.5240207766*n)%360;return (L+360)%360;}
-    static jupiterLongitude(JD){const n=JD-2451545.0;let L=(34.3515+0.083091*n)%360;return (L+360)%360;}
-    static saturnLongitude(JD){const n=JD-2451545.0;let L=(50.07745+0.0300657*n)%360;return (L+360)%360;}
-    static greenwichSiderealTime(JD){const JD0=Math.floor(JD+0.5)-0.5;const S=JD0-2451545.0;const T=S/36525.0;const T0=6.697374558+2400.051336*T+0.000025862*T*T;const UT=(JD-JD0)*24;let GST=T0+UT*1.002737909;GST=(GST%24)*15;if(GST<0)GST+=360;return GST;}
+    static sunLongitude(JD){ const n=JD-2451545.0; const L=(280.460+0.9856474*n)%360; const g=(357.528+0.9856003*n)%360; const gRad=this.degToRad(g); let lam=L + 1.915*Math.sin(gRad)+0.02*Math.sin(2*gRad); return (lam+360)%360; }
+    static moonLongitude(JD){
+      const n=JD-2451550.1;
+      const L=(218.316+13.176396*n)%360;
+      const M=(134.963+13.064993*n)%360;
+      const F=(93.272+13.229350*n)%360;
+      const LRad=this.degToRad(L);
+      const MRad=this.degToRad(M);
+      const FRad=this.degToRad(F);
+      let lam = L+6.289*Math.sin(MRad)-3.0*Math.sin(LRad-this.degToRad(297.850))+1.274*Math.sin(2*this.degToRad(L)-MRad)+0.658*Math.sin(2*LRad)+0.214*Math.sin(2*MRad)-0.186*Math.sin(this.degToRad(297.850))+0.114*Math.sin(2*FRad);
+      return (lam+360)%360;
+    }
+    static mercuryLongitude(JD){const n=JD-2451545.0; return (252.25084+4.0923344368*n)%360;}
+    static venusLongitude(JD){const n=JD-2451545.0; return (181.9798+1.6021302244*n)%360;}
+    static marsLongitude(JD){const n=JD-2451545.0; return (355.433+0.5240207766*n)%360;}
+    static jupiterLongitude(JD){const n=JD-2451545.0; return (34.3515+0.083091*n)%360;}
+    static saturnLongitude(JD){const n=JD-2451545.0; return (50.07745+0.0300657*n)%360;}
+    static greenwichSiderealTime(JD){
+      const JD0 = Math.floor(JD+0.5) - 0.5;
+      const S = JD0 - 2451545.0;
+      const T = S / 36525.0;
+      const T0 = 6.697374558 + 2400.051336*T + 0.000025862*T*T;
+      const UT = (JD - JD0)*24;
+      let GST = T0 + UT*1.002737909;
+      GST = (GST % 24)*15;
+      if(GST<0) GST += 360;
+      return GST;
+    }
   }
 
-  // Other helper functions: formatLong, calculatePlanets, drawChart, etc are the same as previous code block.
+  function formatLongitude(lon){
+    let normLon = lon % 360;
+    if(normLon<0) normLon+=360;
+    const signs = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+    const signIx = Math.floor(normLon/30);
+    const degInSign = (normLon % 30).toFixed(2);
+    return `${degInSign}° ${signs[signIx]}`;
+  }
 
-  // Detailed implementations for Numerology with multiple numbers & explanations & Dasha calculator with detailed explanation omitted here due to space.
+  // Astrology Animated Kundli Logic
+  const kundliForm = document.getElementById("kundliForm");
+  const citySelect = document.getElementById("city");
+  const latInput = document.getElementById("lat");
+  const lngInput = document.getElementById("lng");
+  const chartContainer = document.getElementById("chart-container");
+  const btnAnalysis = document.getElementById("btnAnalysis");
+  const analysisBasic = document.getElementById("analysis");
+  const analysisDetailed = document.getElementById("analysis-detailed");
 
-  // Full code implementation will have numerology with Life Path, Soul Urge, Karmic Debts, Pinnacles; Dasha including Vimshottari and basic interpretation; Traditional Kundli with accurate placement; animated modern kundli chart; tabbed UI; detailed explanatory sections.
+  citySelect.addEventListener("change", e=>{
+    if(e.target.value){
+      const [lat,lng] = e.target.value.split(",");
+      latInput.value = lat;
+      lngInput.value = lng;
+    }
+  });
 
-  // ... rest of the JavaScript code is structured modularly similar to prior details with event listeners, chart drawing, calculations, and detailed multi-section analysis ...
+  function calculatePlanets(jd){
+    return [
+      {name:"Sun",longitude:Astronomy.sunLongitude(jd)},
+      {name:"Moon",longitude:Astronomy.moonLongitude(jd)},
+      {name:"Mercury",longitude:Astronomy.mercuryLongitude(jd)},
+      {name:"Venus",longitude:Astronomy.venusLongitude(jd)},
+      {name:"Mars",longitude:Astronomy.marsLongitude(jd)},
+      {name:"Jupiter",longitude:Astronomy.jupiterLongitude(jd)},
+      {name:"Saturn",longitude:Astronomy.saturnLongitude(jd)}
+    ];
+  }
+
+  kundliForm.addEventListener("submit", e=>{
+    e.preventDefault();
+    const dob=kundliForm.dob.value;
+    const tob=kundliForm.tob.value;
+    const lat=parseFloat(latInput.value);
+    const lng=parseFloat(lngInput.value);
+    if(!dob || !tob || isNaN(lat) || isNaN(lng)){
+      alert("Please fill all valid fields");
+      return;
+    }
+    const [year, month, day]=dob.split("-").map(Number);
+    const [hour, min]=tob.split(":").map(Number);
+    const jd=Astronomy.toJulianDay(year,month,day,hour,min);
+    const planets=calculatePlanets(jd);
+
+    const ascendant = (()=>{
+      const eps=23.4397;
+      let GST=Astronomy.greenwichSiderealTime(jd);
+      let LST=(GST+lng)%360;
+      if(LST<0) LST+=360;
+      const rLat=Astronomy.degToRad(lat);
+      const rEps=Astronomy.degToRad(eps);
+      const rLST=Astronomy.degToRad(LST);
+      let asc = Math.atan2(-Math.cos(rLST), Math.sin(rLST)*Math.cos(rEps)-Math.tan(rLat)*Math.sin(rEps));
+      if(asc<0) asc+=2*Math.PI;
+      return Astronomy.radToDeg(asc);
+    })();
+
+    drawAnimatedChart(planets,ascendant,chartContainer);
+
+    let basicText = `Birth Details:\nDate: ${dob} Time: ${tob}\nLocation: ${lat.toFixed(4)}, ${lng.toFixed(4)}\nAscendant: ${formatLongitude(ascendant)}\n\nPlanets:\n`;
+    basicText += planets.map(p=>`- ${p.name}: ${formatLongitude(p.longitude)}`).join("\n");
+    analysisBasic.textContent = basicText;
+
+    btnAnalysis.style.display = "block";
+    analysisDetailed.style.display = "none";
+    analysisDetailed.textContent = "";
+  });
+
+  btnAnalysis.addEventListener("click", ()=>{
+    let lines = [];
+    lines.push("Detailed Astrology Analysis\n");
+    lines.push(analysisBasic.textContent);
+    lines.push("\nPlanet Effects Summary:");
+
+    const effects = {
+      Sun: "Vitality, authority and leadership.",
+      Moon: "Emotions, instincts, and mind.",
+      Mercury: "Communication, intelligence and adaptability.",
+      Venus: "Love, values and creativity.",
+      Mars: "Energy, courage and aggression.",
+      Jupiter: "Growth, wisdom and spirituality.",
+      Saturn: "Discipline, hardships and karma."
+    };
+
+    analysisBasic.textContent.split("\n").filter(l => l.startsWith("- ")).forEach(line=>{
+      const name = line.split(":")[0].replace("- ","").trim();
+      lines.push(`* ${name}: ${effects[name] || "No effect description."}`);
+    });
+
+    analysisDetailed.textContent = lines.join("\n");
+    analysisDetailed.style.display = "block";
+    btnAnalysis.style.display = "none";
+    analysisDetailed.scrollIntoView({behavior:"smooth"});
+  });
+
+  function drawAnimatedChart(planets, asc, container){
+    container.innerHTML = "";
+    const svgNS = "http://www.w3.org/2000/svg";
+    const size = Math.min(600, window.innerWidth - 40);
+
+    const svg = document.createElementNS(svgNS,"svg");
+    svg.setAttribute("width",size);
+    svg.setAttribute("height",size);
+    svg.setAttribute("viewBox","0 0 600 600");
+    svg.style.maxWidth = "100%";
+    container.appendChild(svg);
+
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("cx", 300);
+    circle.setAttribute("cy", 300);
+    circle.setAttribute("r", 280);
+    circle.setAttribute("stroke", "#00fff7");
+    circle.setAttribute("stroke-width", 4);
+    circle.setAttribute("fill", "none");
+    circle.setAttribute("filter","drop-shadow(0 0 12px #00fff7aa)");
+    svg.appendChild(circle);
+
+    for(let i=0; i<12; i++){
+      const angle = ((i*30)-asc-90)*Math.PI/180;
+      const x1 = 300 + 0 * Math.cos(angle);
+      const y1 = 300 + 0 * Math.sin(angle);
+      const x2 = 300 + 280 * Math.cos(angle);
+      const y2 = 300 + 280 * Math.sin(angle);
+      const line = document.createElementNS(svgNS,"line");
+      line.setAttribute("x1", x1);
+      line.setAttribute("y1", y1);
+      line.setAttribute("x2", x2);
+      line.setAttribute("y2", y2);
+      line.setAttribute("stroke","#00fff7");
+      line.setAttribute("stroke-width",1);
+      line.setAttribute("opacity",0.5);
+      svg.appendChild(line);
+    }
+
+    for(let i=0; i<12; i++){
+      const angleDeg = ((i*30) - asc - 75);
+      const angle = angleDeg*Math.PI/180;
+      const x = 300 + 250*Math.cos(angle);
+      const y = 300 + 250*Math.sin(angle);
+
+      const text = document.createElementNS(svgNS,"text");
+      text.setAttribute("x", x);
+      text.setAttribute("y", y);
+      text.setAttribute("fill","#00fff7");
+      text.setAttribute("font-size","18");
+      text.setAttribute("font-weight","700");
+      text.setAttribute("text-anchor","middle");
+      text.setAttribute("alignment-baseline","middle");
+      text.style.userSelect = "none";
+      let houseNum = ((i+1)%12);
+      if(houseNum === 0) houseNum=12;
+      text.textContent = houseNum;
+      svg.appendChild(text);
+    }
+
+    planets.forEach(p => {
+      const relAngleDeg = (p.longitude - asc - 90);
+      const relAngle = relAngleDeg*Math.PI/180;
+      const px = 300 + 230*Math.cos(relAngle);
+      const py = 300 + 230*Math.sin(relAngle);
+
+      const circle = document.createElementNS(svgNS,"circle");
+      circle.setAttribute("cx", px);
+      circle.setAttribute("cy", py);
+      circle.setAttribute("r", 20);
+      circle.classList.add("planet-circle");
+      circle.setAttribute("title", `${p.name}: ${formatLongitude(p.longitude)}`);
+      svg.appendChild(circle);
+
+      const label = document.createElementNS(svgNS,"text");
+      label.setAttribute("x", px);
+      label.setAttribute("y", py + 40);
+      label.setAttribute("fill", "#ff467e");
+      label.setAttribute("font-weight", "700");
+      label.setAttribute("font-size", "14");
+      label.setAttribute("text-anchor", "middle");
+      label.style.userSelect = "none";
+      label.textContent = p.name;
+      svg.appendChild(label);
+    });
+  }
 </script>
 </body>
 </html>
