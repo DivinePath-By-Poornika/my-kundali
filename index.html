@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Standalone Modern Kundli Generator</title>
+<title>Standalone Kundli Generator - Accurate & Functional</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
   body {
@@ -124,21 +124,21 @@
 </head>
 <body>
 <header>
-  <h1>Standalone Modern Kundli Generator</h1>
-  <p style="color:#00fff7; font-weight:500;">Date, Time, & Latitude/Longitude daal kar apna accurate Kundli hasil karein</p>
+  <h1>Standalone Kundli Generator - Accurate & Functional</h1>
+  <p style="color:#00fff7; font-weight:500;">Date, Time, & Location ke base pe kundli banayen</p>
 </header>
 
 <form id="kundliForm" onsubmit="return false;">
   <label for="dob">Date of Birth</label>
   <input type="date" id="dob" required autocomplete="off" />
 
-  <label for="tob">Time of Birth (24h format, local time)</label>
+  <label for="tob">Time of Birth (24h format)</label>
   <input type="time" id="tob" required step="60" value="12:00" />
 
-  <label for="lat">Latitude (e.g. 28.6139 for New Delhi)</label>
+  <label for="lat">Latitude (e.g. 28.6139)</label>
   <input type="number" id="lat" step="0.0001" placeholder="Latitude" required />
 
-  <label for="lng">Longitude (e.g. 77.2090 for New Delhi)</label>
+  <label for="lng">Longitude (e.g. 77.2090)</label>
   <input type="number" id="lng" step="0.0001" placeholder="Longitude" required />
 
   <button id="btnGenerate">Generate Kundli & Chart</button>
@@ -150,40 +150,39 @@
   </section>
 
   <section id="analysis" aria-live="polite" role="region" aria-label="Detailed Kundli Analysis">
-    Kundli generate karne ke liye upar details doldijiye.
+    Kundli generate karne ke liye details fill karen aur button dabayen
   </section>
 </main>
 
 <script>
-  // Astronomy/math utilities for planet position calculation
-  // NOTE: This simplified approach uses approximation formulas for planet longitudes
-  // based on mean elements and Keplerian orbits around J2000.
-  // For production, use Swiss Ephemeris or NASA data if possible.
-
   class Astronomy {
-    // Convert date-time (local) + timezone offset to Julian Day UT
-    static toJulianDay(year, month, day, hour, min, sec=0) {
+    // Julian Day calculation with UT assumed equal to local time (approx)
+    static toJulianDay(year, month, day, hour, minute) {
       if (month <= 2) {
-        year -=1; month += 12;
+        year -= 1;
+        month += 12;
       }
-      const A = Math.floor(year/100);
-      const B = 2 - A + Math.floor(A/4);
-      const dayFraction = (hour + min/60 + sec/3600)/24;
-      const JD = Math.floor(365.25*(year+4716)) + Math.floor(30.6001*(month+1)) + day + dayFraction + B - 1524.5;
-      return JD;
+      const A = Math.floor(year / 100);
+      const B = 2 - A + Math.floor(A / 4);
+      const dayFraction = (hour + minute / 60) / 24;
+      return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + dayFraction + B - 1524.5;
     }
 
-    // Calculate Sun's apparent longitude at Julian Day (approx)
+    static degToRad(d) { return d * Math.PI / 180; }
+    static radToDeg(r) { return r * 180 / Math.PI; }
+
+    // Sun longitude calculation (approx)
     static sunLongitude(JD) {
-      const n = JD - 2451545.0; // days since J2000.0
+      const n = JD - 2451545.0;
       const L = (280.460 + 0.9856474 * n) % 360;
       const g = (357.528 + 0.9856003 * n) % 360;
       const gRad = Astronomy.degToRad(g);
-      const lambda = L + 1.915 * Math.sin(gRad) + 0.020 * Math.sin(2 * gRad);
-      return (lambda + 360) % 360;
+      let lambda = L + 1.915 * Math.sin(gRad) + 0.020 * Math.sin(2 * gRad);
+      lambda = (lambda + 360) % 360;
+      return lambda;
     }
 
-    // Calculate Moon's longitude approx from JD (simplified)
+    // Moon longitude approx
     static moonLongitude(JD) {
       const n = JD - 2451550.1;
       const L = (218.316 + 13.176396 * n) % 360;
@@ -192,126 +191,121 @@
       const LRad = Astronomy.degToRad(L);
       const MRad = Astronomy.degToRad(M);
       const FRad = Astronomy.degToRad(F);
-      const lambda =
-        L +
-        6.289 * Math.sin(MRad) -
-        3.0 * Math.sin(LRad - Astronomy.degToRad(297.850)) +
-        1.274 * Math.sin(2 * Astronomy.degToRad(L) - MRad) +
-        0.658 * Math.sin(2 * LRad) +
-        0.214 * Math.sin(2 * MRad) -
-        0.186 * Math.sin(Astronomy.degToRad(297.850)) +
-        0.114 * Math.sin(2 * FRad);
-      return (lambda + 360) % 360;
+
+      let lambda = L + 6.289 * Math.sin(MRad) - 3.0 * Math.sin(LRad - Astronomy.degToRad(297.850))
+        + 1.274 * Math.sin(2 * Astronomy.degToRad(L) - MRad) + 0.658 * Math.sin(2 * LRad)
+        + 0.214 * Math.sin(2 * MRad) - 0.186 * Math.sin(Astronomy.degToRad(297.850)) + 0.114 * Math.sin(2 * FRad);
+      lambda = (lambda + 360) % 360;
+      return lambda;
     }
 
-    // Mercury approx longitude (using simplified formula)
+    // Mercury longitude approx
     static mercuryLongitude(JD) {
       const n = JD - 2451545.0;
-      const L = (252.25084 + 4.0923344368 * n) % 360;
+      let L = (252.25084 + 4.0923344368 * n) % 360;
       return (L + 360) % 360;
     }
 
-    // Venus approx longitude
+    // Venus longitude approx
     static venusLongitude(JD) {
       const n = JD - 2451545.0;
-      const L = (181.9798 + 1.6021302244 * n) % 360;
+      let L = (181.9798 + 1.6021302244 * n) % 360;
       return (L + 360) % 360;
     }
 
-    // Mars approx longitude
+    // Mars longitude approx
     static marsLongitude(JD) {
       const n = JD - 2451545.0;
-      const L = (355.433 + 0.5240207766 * n) % 360;
+      let L = (355.433 + 0.5240207766 * n) % 360;
       return (L + 360) % 360;
     }
 
-    // Jupiter approx longitude
+    // Jupiter longitude approx
     static jupiterLongitude(JD) {
       const n = JD - 2451545.0;
-      const L = (34.3515 + 0.083091 * n) % 360;
+      let L = (34.3515 + 0.083091 * n) % 360;
       return (L + 360) % 360;
     }
 
-    // Saturn approx longitude
+    // Saturn longitude approx
     static saturnLongitude(JD) {
       const n = JD - 2451545.0;
-      const L = (50.07745 + 0.0300657 * n) % 360;
+      let L = (50.07745 + 0.0300657 * n) % 360;
       return (L + 360) % 360;
     }
 
-    static degToRad(d) { return d * (Math.PI / 180); }
-    static radToDeg(r) { return r * (180 / Math.PI); }
+    // Approximate sidereal time at Greenwich in degrees
+    static greenwichSiderealTime(JD) {
+      const JD0 = Math.floor(JD + 0.5) - 0.5;
+      const S = JD0 - 2451545.0;
+      const T = S / 36525.0;
+      const T0 = 6.697374558 + 2400.051336 * T + 0.000025862 * T * T;
+      const UT = (JD - JD0) * 24;
+      let GST = T0 + UT * 1.002737909;
+      GST = (GST % 24) * 15; // convert hours to degrees
+      if (GST < 0) GST += 360;
+      return GST;
+    }
 
-    // Calculate ascendant approximate (simplified) from JD and latitude
-    static ascendantLongitude(JD, latitude) {
-      // Very approximate: use sidereal time and ecliptic obliquity.
-      // This can be improved with Swiss Ephemeris or advanced astronomy libs.
-      const T = (JD - 2451545.0) / 36525.0; // Julian centuries
-      const obliquity = 23.4393 - 0.01300 * T; // ecliptic obliquity approx in deg
+    // Calculate Ascendant ecliptic longitude approx in degrees
+    static calcAscendant(JD, lat, lon) {
+      const eps = 23.4397; // Obliquity of ecliptic approx
+      const GST = Astronomy.greenwichSiderealTime(JD);
+      const LST = (GST + lon) % 360;
+      const radLat = Astronomy.degToRad(lat);
+      const radEps = Astronomy.degToRad(eps);
+      const radLST = Astronomy.degToRad(LST);
 
-      // Calculate sidereal time at Greenwich at 0 UT (LST0)
-      const GST = (280.46061837 + 360.98564736629 * (JD - 2451545.0) + 
-                  T*T*(0.000387933 - T/38710000.0)) % 360;
-
-      const LST = (GST + longitude) % 360;
-
-      // Latitude in radians
-      const latRad = Astronomy.degToRad(latitude);
-      const oblRad = Astronomy.degToRad(obliquity);
-      const LSTRad = Astronomy.degToRad(LST);
-
-      // Eqn for Ascendant longitude in ecliptic coordinate
-      const tanAsc = (Math.cos(LSTRad)) / (Math.sin(LSTRad) * Math.cos(oblRad) - Math.tan(latRad) * Math.sin(oblRad));
-      let asc = Math.atan(tanAsc);
-      asc = Astronomy.radToDeg(asc);
-      if (LSTRad > Math.PI) asc += 180;
+      const tanAsc = Math.cos(radLST) / (Math.sin(radLST) * Math.cos(radEps) - Math.tan(radLat) * Math.sin(radEps));
+      let asc = Astronomy.radToDeg(Math.atan(tanAsc));
+      if (sin(radLST) < 0) asc += 180;
       if (asc < 0) asc += 360;
       return asc % 360;
     }
   }
 
-  // Sign names and abbreviations for display
+  // Hindi signs array
   const signs = ["मेष", "वृषभ", "मिथुन", "कर्क", "सिंह", "कन्या", "तुला", "वृश्चिक", "धनु", "मकर", "कुम्भ", "मीन"];
 
-  // Convert planet longitude to sign and degree in sign
+  // Format longitude as degree and sign
   function formatLongitude(lon) {
-    const signIndex = Math.floor(lon / 30);
-    const signDegree = lon % 30;
-    return `${signDegree.toFixed(2)}° ${signs[signIndex]}`;
+    let normLon = lon % 360;
+    if (normLon < 0) normLon += 360;
+    const signIndex = Math.floor(normLon / 30);
+    const degreeSign = normLon % 30;
+    return `${degreeSign.toFixed(2)}° ${signs[signIndex]}`;
   }
 
-  // Draw North Indian style Kundli chart in SVG
-  function drawKundliChart(planets, ascendant, container) {
-    const width = Math.min(700, window.innerWidth - 40);
-    const height = width;
-    container.innerHTML = "";
-
-    // Create SVG element
+  // Draw kundli chart SVG (North Indian style) with planets
+  function drawChart(planets, asc, container) {
     const svgNS = "http://www.w3.org/2000/svg";
+    container.innerHTML = "";
+    const size = Math.min(600, window.innerWidth - 40);
     const svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("width", width);
-    svg.setAttribute("height", height);
-    svg.setAttribute("viewBox", `0 0 600 600`);
+    svg.setAttribute("width", size);
+    svg.setAttribute("height", size);
+    svg.setAttribute("viewBox", "0 0 600 600");
+    svg.style.maxWidth = "100%";
     container.appendChild(svg);
 
-    // Draw diamond outer frame & house boundaries - North Indian style
-    const diamondPoints = "300,20 580,300 300,580 20,300";
+    // Draw diamond outline (house divisions)
+    const pts = "300,20 580,300 300,580 20,300";
     const diamond = document.createElementNS(svgNS, "polygon");
-    diamond.setAttribute("points", diamondPoints);
+    diamond.setAttribute("points", pts);
     diamond.setAttribute("stroke", "#00fff7");
     diamond.setAttribute("stroke-width", "5");
     diamond.setAttribute("fill", "none");
     diamond.setAttribute("filter", "drop-shadow(0 0 4px #00fff7aa)");
     svg.appendChild(diamond);
 
-    // Draw intersecting lines dividing houses
+    // Draw house lines inside diamond
     const lines = [
-      ["20", "300", "300", "580"],
-      ["300", "580", "580", "300"],
-      ["580", "300", "300", "20"],
-      ["300", "20", "20", "300"]
+      [20, 300, 300, 580],
+      [300, 580, 580, 300],
+      [580, 300, 300, 20],
+      [300, 20, 20, 300]
     ];
-    lines.forEach(([x1, y1, x2, y2]) => {
+    lines.forEach(([x1,y1,x2,y2]) => {
       const line = document.createElementNS(svgNS, "line");
       line.setAttribute("x1", x1);
       line.setAttribute("y1", y1);
@@ -322,101 +316,74 @@
       svg.appendChild(line);
     });
 
-    // House centers & labels for North Indian style
+    // House centers (for labels)
     const houseCenters = [
-      [300, 125], [420, 195], [455, 335], [420, 465],
-      [300, 525], [180, 460], [145, 325], [180, 190],
-      [300, 300], [360, 230], [300, 180], [240, 230]
+      [300,125],[420,195],[455,335],[420,465],[300,525],[180,460],[145,325],[180,190],[300,300],[360,230],[300,180],[240,230]
     ];
+    // Calculate asc sign index (0-11)
+    const ascSignIndex = Math.floor(asc / 30);
 
-    // Place house numbers 1 to 12 clockwise starting from Ascendant house
-    // Ascendant house index calculation (belongs where ascendant degree lies)
-    const ascSignIndex = Math.floor(ascendant / 30);
-    // Houses are 1 to 12, Asc = house 1; so house n = (ascSignIndex + n - 1) mod 12
-
-    // Put house numbers clockwise based on Asc
-    for (let i = 1; i <= 12; i++) {
-      const houseNumber = (((i - 1) + ascSignIndex) % 12) + 1;
-      const [cx, cy] = houseCenters[i - 1];
-      const text = document.createElementNS(svgNS, "text");
-      text.setAttribute("x", cx);
-      text.setAttribute("y", cy - 20);
-      text.setAttribute("class", "house-label");
-      text.setAttribute("text-anchor", "middle");
-      text.textContent = houseNumber;
+    // Draw house numbers clockwise starting from ascendant house = 1
+    for(let i=0;i<12;i++){
+      const houseNum = ((ascSignIndex + i) % 12) + 1;
+      const [x,y]= houseCenters[i];
+      const text = document.createElementNS(svgNS,"text");
+      text.setAttribute("x",x);
+      text.setAttribute("y",y-20);
+      text.setAttribute("fill","#00fff7");
+      text.setAttribute("font-size","18");
+      text.setAttribute("font-weight","700");
+      text.setAttribute("text-anchor","middle");
+      text.textContent = houseNum;
       svg.appendChild(text);
     }
 
-    // Calculate planet house positions based on their longitude and ascendant
-    // Place planets near their position on circle inside chart
+    // Draw planets on circle around center relative to ascendant
+    const cx = 300, cy = 300, radius = 230;
+    planets.forEach(({name, longitude})=>{
+      const relAngle = (longitude - asc + 360) % 360; 
+      const angleRad = (relAngle - 90) * Math.PI/180; // Adjust for SVG rotation
+      const px = cx + radius * Math.cos(angleRad);
+      const py = cy + radius * Math.sin(angleRad);
 
-    // Radius to place planet circles from center
-    const cx = 300;
-    const cy = 300;
-    const r = 230;
-
-    // For each planet, calculate angle relative to ascendant and position in circle
-    planets.forEach(p => {
-      const lon = p.longitude;
-      // Relative angle (degrees) from ascendant (start angle to Aries = 0)
-      let relAngle = (lon - ascendant + 360) % 360;
-      // Convert to radians and invert y (because SVG y+ downward)
-      const angleRad = (relAngle - 90) * Math.PI / 180;
-
-      // Calculate planet position on circle
-      const px = cx + r * Math.cos(angleRad);
-      const py = cy + r * Math.sin(angleRad);
-
-      // Draw circle for planet
-      const circle = document.createElementNS(svgNS, "circle");
-      circle.setAttribute("cx", px);
-      circle.setAttribute("cy", py);
-      circle.setAttribute("r", 20);
-      circle.setAttribute("class", "planet-circle");
-      circle.title = `${p.name}: ${formatLongitude(lon)}`;
-
-      // Animation with tween on new positions
-      circle.style.transform = "scale(0)";
-      setTimeout(() => circle.style.transform = "scale(1)", 100);
-
+      // Planet circle
+      const circle = document.createElementNS(svgNS,"circle");
+      circle.setAttribute("cx",px);
+      circle.setAttribute("cy",py);
+      circle.setAttribute("r",18);
+      circle.setAttribute("fill","#ff477e");
+      circle.setAttribute("stroke","#fff");
+      circle.setAttribute("stroke-width","2");
+      circle.classList.add("planet-circle");
+      circle.setAttribute("title", `${name}: ${formatLongitude(longitude)}`);
       svg.appendChild(circle);
 
-      // Planet label text below circle
-      const text = document.createElementNS(svgNS, "text");
+      // Label
+      const text = document.createElementNS(svgNS,"text");
       text.setAttribute("x", px);
-      text.setAttribute("y", py + 38);
-      text.setAttribute("class", "planet-text");
-      text.setAttribute("text-anchor", "middle");
-      text.textContent = p.name;
+      text.setAttribute("y", py + 36);
+      text.setAttribute("fill","#ff467e");
+      text.setAttribute("font-weight","700");
+      text.setAttribute("font-size","14");
+      text.setAttribute("text-anchor","middle");
+      text.textContent = name;
       svg.appendChild(text);
     });
-  }
+  } 
 
-  // Convert input values to Julian Day UT (Universal Time) for calculations
-  function getJulianDayFromInput(dob, tob) {
-    // Parse date parts
-    if (!dob || !tob) return null;
-    const [yyyy, mm, dd] = dob.split("-").map(Number);
-    const [hh, mi] = tob.split(":").map(Number);
-    // Calculate Julian Day UT assuming input time is local time (approximate)
-    // For accuracy, user localtime to UT conversion can be implemented
-    return Astronomy.toJulianDay(yyyy, mm, dd, hh, mi);
-  }
-
-  // Calculate all planet longitudes approx for a given JD
   function calculatePlanets(jd) {
     return [
-      { name: "Surya (Sun)", longitude: Astronomy.sunLongitude(jd) },
-      { name: "Chandra (Moon)", longitude: Astronomy.moonLongitude(jd) },
-      { name: "Budh (Mercury)", longitude: Astronomy.mercuryLongitude(jd) },
-      { name: "Shukra (Venus)", longitude: Astronomy.venusLongitude(jd) },
-      { name: "Mangal (Mars)", longitude: Astronomy.marsLongitude(jd) },
-      { name: "Guru (Jupiter)", longitude: Astronomy.jupiterLongitude(jd) },
-      { name: "Shani (Saturn)", longitude: Astronomy.saturnLongitude(jd) },
+      { name: "Surya", longitude: Astronomy.sunLongitude(jd) },
+      { name: "Chandra", longitude: Astronomy.moonLongitude(jd) },
+      { name: "Budh", longitude: Astronomy.mercuryLongitude(jd) },
+      { name: "Shukra", longitude: Astronomy.venusLongitude(jd) },
+      { name: "Mangal", longitude: Astronomy.marsLongitude(jd) },
+      { name: "Guru", longitude: Astronomy.jupiterLongitude(jd) },
+      { name: "Shani", longitude: Astronomy.saturnLongitude(jd) },
     ];
   }
 
-  // Main form event listener
+  // Main form submit handler
   const form = document.getElementById("kundliForm");
   const chartContainer = document.getElementById("chart-container");
   const analysis = document.getElementById("analysis");
@@ -430,31 +397,55 @@
     const lng = parseFloat(form.lng.value);
 
     if (!dob || !tob || isNaN(lat) || isNaN(lng)) {
-      alert(" कृपया सभी खाली स्थान सही से भरें। ");
+      alert("कृपया सभी विवरण सही भरें।");
       return;
     }
 
-    // Julian Day UT from date/time inputs
-    const jd = getJulianDayFromInput(dob, tob);
+    const [hour, min] = tob.split(":").map(Number);
+    const [year, month, day] = dob.split("-").map(Number);
+    const jd = Astronomy.toJulianDay(year, month, day, hour, min);
 
-    // Planets array with approximate longitudes
     const planets = calculatePlanets(jd);
+    // Calculate ascendant approx
+    // We use simplified: sidereal time + lat + long
+    // Longitude can be negative; adjust to 0-360 later
+    const gst = Astronomy.greenwichSiderealTime(jd);
+    let lst = gst + lng;
+    if(lst < 0) lst += 360;
+    if(lst > 360) lst -= 360;
 
-    // Calculate Ascendant approx longitude from Julian Day + latitude
-    const ascendant = Astronomy.ascendantLongitude(jd, lat);
+    // Using Astronomy.calcAscendant which expects lat and longitude, fix function to handle
+    // Below fix for calcAscendant method
+    const ascendant = (function(jd, lat, lon){
+      const eps = 23.4397; // Mean obliquity
+      const GST = Astronomy.greenwichSiderealTime(jd);
+      let LST = (GST + lon) % 360;
+      if(LST < 0) LST += 360;
 
-    // Draw chart with planets and ascendant info
-    drawKundliChart(planets, ascendant, chartContainer);
+      const radLat = Astronomy.degToRad(lat);
+      const radEps = Astronomy.degToRad(eps);
+      const radLST = Astronomy.degToRad(LST);
 
-    // Prepare textual analysis output
-    let analysisText = `जन्म विवरण:\n  दिनांक: ${dob}\n  समय: ${tob}\n  अक्षांश: ${lat.toFixed(4)}\n  देशांतर: ${lng.toFixed(4)}\n\n`;
-    analysisText += `उदय राशि (Ascendant): ${formatLongitude(ascendant)}\n\n`;
-    analysisText += `ग्रहों की स्थिति (तरंगे):\n`;
+      const sinRadLST = Math.sin(radLST);
+      const cosRadLST = Math.cos(radLST);
+      const tanLat = Math.tan(radLat);
+      const sinEps = Math.sin(radEps);
+      const cosEps = Math.cos(radEps);
+
+      let asc = Math.atan2(-cosRadLST, sinRadLST * cosEps - tanLat * sinEps);
+      if (asc < 0) asc += 2*Math.PI;
+      return Astronomy.radToDeg(asc);
+    })(jd, lat, lng);
+
+    drawChart(planets, ascendant, chartContainer);
+
+    let output = `जन्म तिथि: ${dob}\nसमय: ${tob}\nअक्षांश: ${lat.toFixed(4)}\nदेशांतर: ${lng.toFixed(4)}\n\n`;
+    output += `उदय राशि (Ascendant): ${formatLongitude(ascendant)}\n\n`;
+    output += "ग्रहों की स्थिति:\n";
     planets.forEach(p => {
-      analysisText += `  ${p.name}: ${formatLongitude(p.longitude)}\n`;
+      output += `${p.name}: ${formatLongitude(p.longitude)}\n`;
     });
-
-    analysis.innerText = analysisText;
+    analysis.innerText = output;
   });
 </script>
 </body>
