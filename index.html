@@ -2,36 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Kundli Generator 🌌</title>
+  <title>Premium Kundli Generator 🌌</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4a148c, #880e4f);
       margin: 0;
       padding: 0;
+      color: #333;
     }
     header {
-      background: #4a148c;
-      color: #fff;
-      padding: 20px;
+      background: rgba(255,255,255,0.1);
+      color: white;
       text-align: center;
+      padding: 30px;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      backdrop-filter: blur(6px);
     }
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 30px auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      padding: 25px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      padding: 25px 40px;
+      animation: fadeIn 0.7s ease-in-out;
     }
     h2 {
       text-align: center;
       margin-bottom: 20px;
-      color: #333;
+      color: #4a148c;
     }
     label {
       font-weight: bold;
-      margin-top: 10px;
+      margin-top: 12px;
       display: block;
       color: #444;
     }
@@ -42,39 +48,67 @@
       border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 14px;
+      transition: 0.3s;
+    }
+    input:focus, select:focus {
+      border-color: #880e4f;
+      box-shadow: 0 0 8px rgba(136,14,79,0.3);
+      outline: none;
     }
     input[readonly] {
-      background: #eee;
+      background: #f0f0f0;
       cursor: not-allowed;
     }
     .btn {
-      background: #4a148c;
+      background: linear-gradient(45deg,#6a1b9a,#ad1457);
       color: white;
       border: none;
-      padding: 12px 18px;
+      padding: 14px;
       font-size: 16px;
-      border-radius: 8px;
+      border-radius: 10px;
       margin-top: 20px;
       cursor: pointer;
       width: 100%;
+      transition: 0.3s;
     }
     .btn:hover {
-      background: #6a1b9a;
+      background: linear-gradient(45deg,#4a148c,#880e4f);
+      transform: scale(1.03);
     }
     #output {
       margin-top: 25px;
-      padding: 15px;
-      background: #fafafa;
-      border-radius: 8px;
+      padding: 20px;
+      border-radius: 12px;
       border: 1px solid #ddd;
-      min-height: 80px;
+      background: #fafafa;
+      animation: fadeInUp 0.6s ease;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin: 15px 0;
+      animation: zoomIn 0.6s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Kundli Generator 🌌</h1>
-    <p>Premium Styled – Auto City Detection</p>
+    🌟 Premium Kundli Generator 🌟
+    <p style="font-size:16px; margin:5px 0;">Beautiful UI • Smooth Animations • Accurate Inputs</p>
   </header>
   
   <div class="container">
@@ -111,7 +145,7 @@
     <label for="tob">Time of Birth:</label>
     <input type="time" id="tob">
     
-    <button class="btn" onclick="generateKundli()">Generate Kundli</button>
+    <button class="btn" onclick="generateKundli()">🔮 Generate Kundli</button>
     
     <div id="output"></div>
   </div>
@@ -145,7 +179,7 @@
       }
     });
 
-    // Dummy calculation function
+    // Demo Kundli generator
     function generateKundli() {
       const city = document.getElementById("city").value;
       const dob = document.getElementById("dob").value;
@@ -154,14 +188,29 @@
       const lon = document.getElementById("lon").value;
       const tz = document.getElementById("tz").value;
 
+      const outputDiv = document.getElementById("output");
+      outputDiv.innerHTML = "";
+
       if (!city || !dob || !tob) {
-        document.getElementById("output").innerText = "⚠️ Please fill all fields!";
+        outputDiv.innerHTML = `<p style="color:red;">⚠️ Please fill all fields!</p>`;
         return;
       }
 
-      // For demo purposes only (replace with actual astrology logic later)
-      document.getElementById("output").innerText =
-        `✅ Kundli Generated!\n\nCity: ${city.toUpperCase()}\nDOB: ${dob}\nTOB: ${tob}\nLat: ${lat}, Lon: ${lon}, TZ: ${tz}\n\n⚡ Your chart is ready with premium style.`;
+      // Placeholder analysis
+      const cards = [
+        { title: "General Info", text: `City: ${city.toUpperCase()}<br>DOB: ${dob}<br>TOB: ${tob}<br>Lat: ${lat}, Lon: ${lon}, TZ: ${tz}` },
+        { title: "Personality Insights", text: "You are ambitious, creative and analytical. A balance between logic and intuition guides you." },
+        { title: "Career & Finance", text: "Opportunities for growth will come steadily. Patience and consistency bring success." },
+        { title: "Relationships", text: "Strong emotional bonds are highlighted. Communication is key for harmony." },
+        { title: "Health", text: "Focus on mindfulness and balance. Avoid overwork and maintain regular exercise." }
+      ];
+
+      cards.forEach(c => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `<h3>${c.title}</h3><p>${c.text}</p>`;
+        outputDiv.appendChild(card);
+      });
     }
   </script>
 </body>
