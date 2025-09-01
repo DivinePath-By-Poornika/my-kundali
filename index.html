@@ -3,115 +3,186 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Standalone Kundli Generator - With City Dropdown</title>
+<title>Divine Kundli Astrology Calculator</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  /* -- Basic body and container styles -- */
   body {
-    margin: 0; background: linear-gradient(135deg, #222831, #393e46);
-    font-family: 'Poppins', sans-serif; color: #eeeeee;
-    display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-    padding: 20px;
-  }
-  header {
-    text-align: center; margin-bottom: 20px;
+    margin: 0;
+    background: #0e1127;
+    font-family: 'Poppins', sans-serif;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 25px 15px;
+    user-select: none;
   }
   header h1 {
-    margin: 0; font-weight: 600; font-size: 2.5rem;
+    font-size: 2.4rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #24e1da;
+    text-shadow: 0 0 12px #00ffe8bb;
+    text-align:center;
+  }
+  header p {
+    font-weight: 400;
+    color: #a6e6e3cc;
+    font-size: 1rem;
+    margin-bottom: 25px;
+    text-align:center;
   }
   form {
-    background: #00adb5;
-    padding: 20px 25px;
-    border-radius: 12px;
+    background: #162040cc;
+    border-radius: 18px;
     width: 100%;
     max-width: 480px;
-    box-shadow: 0 4px 20px #00adb550;
+    padding: 25px 30px;
+    box-shadow: 0 0 40px #14c3c7aa;
+    transition: box-shadow 0.3s ease;
+  }
+  form:hover {
+    box-shadow: 0 0 70px #30d7deff;
   }
   label {
     font-weight: 600;
+    font-size: 0.94rem;
+    color: #0ff5ff;
+    display: block;
   }
-  input, select, button {
-    width: 100%; padding: 10px 12px; margin-top: 6px; margin-bottom: 17px;
-    border-radius: 8px; border: none; font-size: 1rem;
+  input, select {
+    margin: 8px 0 18px 0;
+    border-radius: 14px;
+    border: none;
+    padding: 11px 14px;
+    font-size: 1rem;
     font-family: 'Poppins', sans-serif;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    background: #0a0f1f;
+    color: #eee;
+    box-shadow: inset 0 0 8px #00d8dcaa;
+    transition: box-shadow 0.3s ease;
   }
   input:focus, select:focus {
     outline: none;
-    box-shadow: 0 0 8px #fff;
-    background-color: #68fff8;
-    color: #222831;
+    box-shadow: 0 0 18px #00e8fddd;
+    background: #001e27;
+    color: #b3ffff;
   }
   button {
-    cursor: pointer;
-    background: linear-gradient(45deg, #ff2e63, #ff764a);
-    color: #fff;
-    font-weight: 700;
-    font-size: 1.2rem;
-    box-shadow: 0 0 10px #ff4747;
+    width: 100%;
+    padding: 14px 0;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #00f2ff, #00bfff);
+    color: #005962cc;
+    font-weight: 800;
+    font-size: 1.18rem;
+    letter-spacing: 1.5px;
     border: none;
+    cursor: pointer;
+    box-shadow: 0 0 12px #00f0ffff;
+    transition: all 0.3s ease;
+    user-select: none;
   }
   button:hover {
-    box-shadow: 0 0 20px #ff7676;
+    background: linear-gradient(45deg, #00e8ff, #00ffff);
+    color: #00353f;
+    box-shadow: 0 0 25px #0ff6ffff;
   }
-
   main {
-    margin-top: 30px; width: 100%; max-width: 900px;
+    width: 100%;
+    max-width: 900px;
+    margin-top: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   #chart-container {
-    margin-top: 30px;
-    background: #393e46;
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 0 30px #00adb5aa;
+    width: 100%;
+    background:#161a3eee;
+    border-radius: 24px;
+    box-shadow: 0 0 30px #008caa99;
+    padding: 30px 30px 40px 30px;
+    margin-bottom: 10px;
     position: relative;
   }
   svg {
-    width: 100%; height: auto;
+    width: 100%;
+    height: auto;
   }
   .house-label {
-    fill: #00fff7;
+    fill: #15fff9cc;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 18px;
     user-select: none;
+    text-shadow: 0 0 7px #04b0b8bb;
   }
   .planet-text {
-    fill: #ff467e;
+    fill: #ff487eee;
     font-weight: 700;
-    font-size: 14px;
-    text-shadow: 0 0 3px #ff467eaa;
+    font-size: 16px;
+    text-shadow: 0 0 8px #ff487ea0;
     pointer-events: none;
+    user-select: none;
   }
   .planet-circle {
-    transition: transform 1.25s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    transform-origin: center;
-    cursor: pointer;
     fill: #ff477e;
     stroke: #fff;
-    stroke-width: 1.5px;
-    filter: drop-shadow(0 0 3px #ff477ecc);
+    stroke-width: 2;
+    cursor: pointer;
+    filter: drop-shadow(0 0 6px #ff487ebb);
+    transform-origin: center;
+    transition: all 0.5s ease;
+    animation: orbit-pulse 3.5s ease-in-out infinite;
   }
   .planet-circle:hover {
-    fill: #ffffff;
-    filter: drop-shadow(0 0 10px #ff7676);
+    fill: #fff;
+    filter: drop-shadow(0 0 15px #ff88aad4);
+    transform: scale(1.3);
   }
-  #analysis {
-    margin-top: 20px;
-    background: #222831;
-    padding: 20px;
-    border-radius: 14px;
+  @keyframes orbit-pulse {
+    0%   { filter: drop-shadow(0 0 6px #ff477eee); }
+    50%  { filter: drop-shadow(0 0 18px #ff668aaa); }
+    100% { filter: drop-shadow(0 0 6px #ff477eee); }
+  }
+  #analysis, #analysis-detailed {
+    width: 100%;
+    max-width: 900px;
+    background: #0e152b;
+    color: #87dede;
+    padding: 25px 30px;
+    border-radius: 18px;
+    font-family: 'Poppins', sans-serif;
     font-size: 1rem;
-    line-height: 1.4;
+    line-height: 1.5;
     white-space: pre-line;
-    color: #e0e0e0;
-    max-height: 400px;
-    overflow-y: auto;
-    box-shadow: 0 0 12px #00adb5;
+    box-shadow: 0 0 20px #00e8fddd;
+    margin-bottom: 32px;
   }
-  @media(max-width: 600px) {
-    form {
+  #btnAnalysis {
+    background: #00f6ffbb;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.04rem;
+    cursor: pointer;
+    box-shadow: 0 0 30px #00c4d4cc;
+    color: #00353f;
+    transition: background-color 0.3s ease;
+    margin-bottom: 22px;
+  }
+  #btnAnalysis:hover {
+    background: #00d8f7;
+  }
+  /* Responsive */
+  @media (max-width: 700px) {
+    main {
       max-width: 100%;
     }
-    #chart-container {
+    form {
+      max-width: 100%;
       padding: 20px;
     }
   }
@@ -119,18 +190,18 @@
 </head>
 <body>
 <header>
-  <h1>Standalone Kundli Generator - City Dropdown</h1>
-  <p style="color:#00fff7; font-weight:500;">Date, Time, City choose karke ya lat-long daalkar kundli banayen</p>
+  <h1>Divine Kundli Astrology Calculator</h1>
+  <p>Exact birth details se advanced animated kundli chart aur detailed explanation payen</p>
 </header>
 
-<form id="kundliForm" onsubmit="return false;">
+<form id="kundliForm" autocomplete="off">
   <label for="dob">Date of Birth</label>
-  <input type="date" id="dob" required autocomplete="off" />
+  <input type="date" id="dob" required />
 
   <label for="tob">Time of Birth (24h format)</label>
   <input type="time" id="tob" required step="60" value="12:00" />
 
-  <label for="city">City (Select for Auto Lat-Long)</label>
+  <label for="city">Select City (Auto-fill Latitude & Longitude)</label>
   <select id="city">
     <option value="">-- Select City --</option>
     <option value="22.5726,88.3639">Kolkata</option>
@@ -142,23 +213,26 @@
   </select>
 
   <label for="lat">Latitude</label>
-  <input type="number" id="lat" step="0.0001" placeholder="Latitude" required />
+  <input type="number" id="lat" placeholder="Latitude" step="0.0001" required />
 
   <label for="lng">Longitude</label>
-  <input type="number" id="lng" step="0.0001" placeholder="Longitude" required />
+  <input type="number" id="lng" placeholder="Longitude" step="0.0001" required />
 
   <button id="btnGenerate">Generate Kundli & Chart</button>
 </form>
 
 <main>
   <section id="chart-container" aria-label="Kundli Chart"></section>
-  <section id="analysis" aria-live="polite" role="region" aria-label="Detailed Kundli Analysis">
-    Kundli generate karne ke liye details fill karo.
-  </section>
+
+  <button id="btnAnalysis" style="display:none;">Show Detailed Analysis</button>
+
+  <section id="analysis" aria-live="polite" aria-label="Basic Kundli Summary"></section>
+
+  <section id="analysis-detailed" style="display:none;" aria-live="polite" aria-label="Detailed Kundli Analysis"></section>
 </main>
 
 <script>
-  // Sync lat/long inputs when city selection changes
+  // Update lat and lng fields if city selected
   const citySelect = document.getElementById("city");
   const latInput = document.getElementById("lat");
   const lngInput = document.getElementById("lng");
@@ -171,39 +245,41 @@
     }
   });
 
+  // Astronomy utility class with precise approximate formulas
   class Astronomy {
     static toJulianDay(year, month, day, hour, minute) {
-      if (month <= 2) {
+      if(month <= 2) {
         year -= 1;
         month += 12;
       }
-      const A = Math.floor(year / 100);
-      const B = 2 - A + Math.floor(A / 4);
-      const dayFraction = (hour + minute / 60) / 24;
-      return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + dayFraction + B - 1524.5;
+      const A = Math.floor(year/100),
+            B = 2 - A + Math.floor(A/4),
+            dayFraction = (hour + minute/60)/24;
+      return Math.floor(365.25*(year + 4716)) + Math.floor(30.6001*(month + 1)) + day + dayFraction + B - 1524.5;
     }
     static degToRad(d) { return d * Math.PI / 180; }
     static radToDeg(r) { return r * 180 / Math.PI; }
+
     static sunLongitude(JD) {
       const n = JD - 2451545.0;
       const L = (280.460 + 0.9856474 * n) % 360;
       const g = (357.528 + 0.9856003 * n) % 360;
-      const gRad = Astronomy.degToRad(g);
+      const gRad = this.degToRad(g);
       let lambda = L + 1.915 * Math.sin(gRad) + 0.020 * Math.sin(2 * gRad);
-      lambda = (lambda + 360) % 360;
-      return lambda;
+      return (lambda + 360) % 360;
     }
     static moonLongitude(JD) {
       const n = JD - 2451550.1;
       const L = (218.316 + 13.176396 * n) % 360;
       const M = (134.963 + 13.064993 * n) % 360;
       const F = (93.272 + 13.229350 * n) % 360;
-      const LRad = Astronomy.degToRad(L);
-      const MRad = Astronomy.degToRad(M);
-      const FRad = Astronomy.degToRad(F);
-      let lambda = L + 6.289 * Math.sin(MRad) - 3.0 * Math.sin(LRad - Astronomy.degToRad(297.850)) + 1.274 * Math.sin(2 * Astronomy.degToRad(L) - MRad) + 0.658 * Math.sin(2 * LRad) + 0.214 * Math.sin(2 * MRad) - 0.186 * Math.sin(Astronomy.degToRad(297.850)) + 0.114 * Math.sin(2 * FRad);
-      lambda = (lambda + 360) % 360;
-      return lambda;
+      const LRad = this.degToRad(L);
+      const MRad = this.degToRad(M);
+      const FRad = this.degToRad(F);
+
+      let lambda = L + 6.289 * Math.sin(MRad) - 3.0 * Math.sin(LRad - this.degToRad(297.850)) + 1.274 * Math.sin(2 * this.degToRad(L) - MRad)
+        + 0.658 * Math.sin(2 * LRad) + 0.214 * Math.sin(2 * MRad) - 0.186 * Math.sin(this.degToRad(297.850)) + 0.114 * Math.sin(2 * FRad);
+      return (lambda + 360) % 360;
     }
     static mercuryLongitude(JD) {
       const n = JD - 2451545.0;
@@ -237,12 +313,14 @@
       const T0 = 6.697374558 + 2400.051336 * T + 0.000025862 * T * T;
       const UT = (JD - JD0) * 24;
       let GST = T0 + UT * 1.002737909;
-      GST = (GST % 24) * 15;
+      GST = (GST % 24) * 15; // Convert hours to degrees
       if (GST < 0) GST += 360;
       return GST;
     }
   }
+
   const signs = ["मेष", "वृषभ", "मिथुन", "कर्क", "सिंह", "कन्या", "तुला", "वृश्चिक", "धनु", "मकर", "कुम्भ", "मीन"];
+  
   function formatLongitude(lon) {
     let normLon = lon % 360;
     if (normLon < 0) normLon += 360;
@@ -250,6 +328,7 @@
     const degreeSign = normLon % 30;
     return `${degreeSign.toFixed(2)}° ${signs[signIndex]}`;
   }
+
   function drawChart(planets, asc, container) {
     const svgNS = "http://www.w3.org/2000/svg";
     container.innerHTML = "";
@@ -260,14 +339,16 @@
     svg.setAttribute("viewBox", "0 0 600 600");
     svg.style.maxWidth = "100%";
     container.appendChild(svg);
+    // Diamond diamond shape for houses
     const pts = "300,20 580,300 300,580 20,300";
     const diamond = document.createElementNS(svgNS, "polygon");
     diamond.setAttribute("points", pts);
     diamond.setAttribute("stroke", "#00fff7");
     diamond.setAttribute("stroke-width", "5");
     diamond.setAttribute("fill", "none");
-    diamond.setAttribute("filter", "drop-shadow(0 0 4px #00fff7aa)");
+    diamond.setAttribute("filter", "drop-shadow(0 0 6px #00fff7cc)");
     svg.appendChild(diamond);
+    // House lines
     const lines = [
       [20, 300, 300, 580],
       [300, 580, 580, 300],
@@ -284,8 +365,10 @@
       line.setAttribute("stroke-width", "3");
       svg.appendChild(line);
     });
+    // House number locations
     const houseCenters = [
-      [300,125],[420,195],[455,335],[420,465],[300,525],[180,460],[145,325],[180,190],[300,300],[360,230],[300,180],[240,230]
+      [300,125],[420,195],[455,335],[420,465],[300,525],[180,460],
+      [145,325],[180,190],[300,300],[360,230],[300,180],[240,230]
     ];
     const ascSignIndex = Math.floor(asc / 30);
     for(let i=0;i<12;i++){
@@ -301,6 +384,7 @@
       text.textContent = houseNum;
       svg.appendChild(text);
     }
+    // Planet positions
     const cx = 300, cy = 300, radius = 230;
     planets.forEach(({name, longitude})=>{
       const relAngle = (longitude - asc + 360) % 360;
@@ -311,23 +395,22 @@
       circle.setAttribute("cx",px);
       circle.setAttribute("cy",py);
       circle.setAttribute("r",18);
-      circle.setAttribute("fill","#ff477e");
-      circle.setAttribute("stroke","#fff");
-      circle.setAttribute("stroke-width","2");
-      circle.classList.add("planet-circle");
+      circle.setAttribute("class","planet-circle");
       circle.setAttribute("title", `${name}: ${formatLongitude(longitude)}`);
       svg.appendChild(circle);
       const text = document.createElementNS(svgNS,"text");
       text.setAttribute("x", px);
-      text.setAttribute("y", py + 36);
+      text.setAttribute("y", py + 37);
       text.setAttribute("fill","#ff467e");
       text.setAttribute("font-weight","700");
-      text.setAttribute("font-size","14");
+      text.setAttribute("font-size","15");
       text.setAttribute("text-anchor","middle");
+      text.style.userSelect = "none";
       text.textContent = name;
       svg.appendChild(text);
     });
-  } 
+  }
+
   function calculatePlanets(jd) {
     return [
       { name: "Surya", longitude: Astronomy.sunLongitude(jd) },
@@ -336,26 +419,34 @@
       { name: "Shukra", longitude: Astronomy.venusLongitude(jd) },
       { name: "Mangal", longitude: Astronomy.marsLongitude(jd) },
       { name: "Guru", longitude: Astronomy.jupiterLongitude(jd) },
-      { name: "Shani", longitude: Astronomy.saturnLongitude(jd) },
+      { name: "Shani", longitude: Astronomy.saturnLongitude(jd) }
     ];
   }
+
   const form = document.getElementById("kundliForm");
   const chartContainer = document.getElementById("chart-container");
-  const analysis = document.getElementById("analysis");
+  const analysisBasic = document.getElementById("analysis");
+  const btnAnalysis = document.getElementById("btnAnalysis");
+  const analysisDetailed = document.getElementById("analysis-detailed");
+
   form.addEventListener("submit", e => {
     e.preventDefault();
+
     const dob = form.dob.value;
     const tob = form.tob.value;
     const lat = parseFloat(form.lat.value);
     const lng = parseFloat(form.lng.value);
-    if (!dob || !tob || isNaN(lat) || isNaN(lng)) {
-      alert("कृपया सभी विवरण सही भरें।");
+    if(!dob || !tob || isNaN(lat) || isNaN(lng)){
+      alert("कृपया सारी जानकारियां सही भरें।");
       return;
     }
-    const [hour, min] = tob.split(":").map(Number);
+
+    const [hour, minute] = tob.split(":").map(Number);
     const [year, month, day] = dob.split("-").map(Number);
-    const jd = Astronomy.toJulianDay(year, month, day, hour, min);
+
+    const jd = Astronomy.toJulianDay(year, month, day, hour, minute);
     const planets = calculatePlanets(jd);
+
     const ascendant = (function(jd, lat, lon){
       const eps = 23.4397;
       let GST = Astronomy.greenwichSiderealTime(jd);
@@ -364,18 +455,80 @@
       const radLat = Astronomy.degToRad(lat);
       const radEps = Astronomy.degToRad(eps);
       const radLST = Astronomy.degToRad(LST);
-      let asc = Math.atan2(-Math.cos(radLST), Math.sin(radLST)*Math.cos(radEps) - Math.tan(radLat)*Math.sin(radEps));
-      if (asc < 0) asc += 2*Math.PI;
+      let asc = Math.atan2(-Math.cos(radLST), Math.sin(radLST)*Math.cos(radEps)-Math.tan(radLat)*Math.sin(radEps));
+      if(asc < 0) asc += 2*Math.PI;
       return Astronomy.radToDeg(asc);
     })(jd, lat, lng);
+
     drawChart(planets, ascendant, chartContainer);
-    let output = `जन्म तिथि: ${dob}\nसमय: ${tob}\nअक्षांश: ${lat.toFixed(4)}\nदेशांतर: ${lng.toFixed(4)}\n\n`;
-    output += `उदय राशि (Ascendant): ${formatLongitude(ascendant)}\n\n`;
-    output += "ग्रहों की स्थिति:\n";
-    planets.forEach(p => {
-      output += `${p.name}: ${formatLongitude(p.longitude)}\n`;
+
+    // Basic summary
+    analysisBasic.textContent = `आपका जन्म विवरण:\n- तिथि: ${dob}\n- समय: ${tob}\n- अक्षांश: ${lat.toFixed(4)}\n- देशांतर: ${lng.toFixed(4)}\n\n` +
+      `उदय राशि (Ascendant): ${formatLongitude(ascendant)}\n\n` +
+      `ग्राहों की स्थिति:\n` + planets.map(p => `• ${p.name}: ${formatLongitude(p.longitude)}`).join("\n");
+
+    // Show analysis button and clear detailed on new generate
+    btnAnalysis.style.display = "block";
+    analysisDetailed.style.display = "none";
+    analysisDetailed.textContent = "";
+  });
+
+  btnAnalysis.addEventListener("click", () => {
+    // Construct detailed natural language analysis
+    let textLines = [];
+    textLines.push("✨ विस्तृत kundli विश्लेषण ✨\n");
+    textLines.push(analysisBasic.textContent);
+    textLines.push("\nग्रहों का प्रभाव और संकेत:");
+    
+    // Example brief interpretation with sample rules, encourage deep customizations
+    function planetSignEffect(name, lon){
+      let signIndex = Math.floor(lon/30);
+      let sign = signs[signIndex];
+      switch(name){
+        case "Surya": 
+          return `सूर्य ${sign} राशि में होता है, जिससे नेतृत्व क्षमता और आत्मविश्वास बढ़ते हैं।`;
+        case "Chandra": 
+          return `चन्द्र ${sign} राशि में है, इसका प्रभाव भावनाओं और मानसिक स्थिति पर पड़ता है।`;
+        case "Budh": 
+          return `बुध ${sign} राशि में है, जिससे बुद्धि और संवाद कौशल प्रभावित होते हैं।`;
+        case "Shukra": 
+          return `शुक्र ${sign} राशि में है, जो प्रेम, सौंदर्य और सामाजिक संबंधों पर प्रभाव डालता है।`;
+        case "Mangal": 
+          return `मंगल ${sign} राशि में है, जो ऊर्जा और साहस को दर्शाता है।`;
+        case "Guru": 
+          return `गुरु ${sign} राशि में है, जो ज्ञान और आध्यात्मिकता से जुड़ा है।`;
+        case "Shani": 
+          return `शनि ${sign} राशि में होता है, अड़चनों एवं अनुशासन के कारक के रूप में जाना जाता है।`;
+        default: 
+          return `${name} ग्रह के प्रभाव अध्ययनाधीन हैं।`;
+      }
+    }
+
+    // Retrieve planets and asc info from last generate
+    const ascText = analysisBasic.textContent.split("\n").find(l => l.startsWith("उदय राशि"));
+    textLines.push(ascText.replace("उदय राशि (Ascendant):", "उदय राशि:"));
+
+    // planets line parsing
+    const planetLines = analysisBasic.textContent.split("\n").filter(l=>l.startsWith("•"));
+    planetLines.forEach(planetLine => {
+      const [pname, plong] = planetLine.replace("• ","").split(":");
+      const plon = parseFloat(plong);
+      if(!isNaN(plon))
+        textLines.push(`- ${planetSignEffect(pname.trim(), plon)}`);
+      else
+        textLines.push(`- ${pname.trim()} ग्रह की स्थिति उपलब्ध नहीं।`);
     });
-    analysis.innerText = output;
+
+    textLines.push("\nयह विवरण मुख्य ग्रहों और उदय राशि के आधार पर प्रारंभिक संकेत प्रदान करता है।");
+    textLines.push("अधिक विस्तृत ज्योतिषीय ज्ञान के लिए विशेषज्ञ ज्योतिषी से सम्पर्क करें।");
+
+    analysisDetailed.textContent = textLines.join("\n");
+    analysisDetailed.style.display = "block";
+    btnAnalysis.style.display = "none";
+    // Smooth scroll detailed section form ke niche visible ho
+    setTimeout(() => {
+      analysisDetailed.scrollIntoView({behavior:"smooth"});
+    }, 80);
   });
 </script>
 </body>
