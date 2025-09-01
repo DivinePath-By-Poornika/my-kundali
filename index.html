@@ -1,310 +1,461 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="utf-8" />
-  <title>High-Accuracy Kundli (Vedic) - Browser Only</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Chart rendering deps -->
-  <!-- Snap.svg for AstroChartJS -->
-  <script src="https://cdn.jsdelivr.net/npm/snapsvg@0.5.1/dist/snap.svg-min.js"></script>
-  <!-- AstroChartJS (Hindu charts) -->
-  <script>
-  // Minimal embedded AstroChartJS draw (North Indian) based on public usage examples
-  // For full features, replace with official astrochart.js file.
-  // Ref usage and options: erajasekar/astrochartjs
-  // https://github.com/erajasekar/astrochartjs
-  // Demo: http://erajasekar.com/astrochartjs-demo/
-  // This simplified drawer expects a mapping {1:[...],2:[...],...,12:[...]} and draws a North Indian chart.
-  class AstroChart {
-    constructor(selector) {
-      this.sel = selector;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Standalone Modern Kundli Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+  body {
+    margin: 0; background: linear-gradient(135deg, #222831, #393e46);
+    font-family: 'Poppins', sans-serif; color: #eeeeee;
+    display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+    padding: 20px;
+  }
+  header {
+    text-align: center; margin-bottom: 20px;
+  }
+  header h1 {
+    margin: 0; font-weight: 600; font-size: 2.5rem;
+  }
+  form {
+    background: #00adb5;
+    padding: 20px 25px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 4px 20px #00adb550;
+  }
+  label {
+    font-weight: 600;
+  }
+  input, select, button {
+    width: 100%; padding: 10px 12px; margin-top: 6px; margin-bottom: 17px;
+    border-radius: 8px; border: none; font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  input:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 8px #fff;
+    background-color: #68fff8;
+    color: #222831;
+  }
+  button {
+    cursor: pointer;
+    background: linear-gradient(45deg, #ff2e63, #ff764a);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.2rem;
+    box-shadow: 0 0 10px #ff4747;
+    border: none;
+  }
+  button:hover {
+    box-shadow: 0 0 20px #ff7676;
+  }
+
+  main {
+    margin-top: 30px; width: 100%; max-width: 900px;
+  }
+  #chart-container {
+    margin-top: 30px;
+    background: #393e46;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 0 30px #00adb5aa;
+    position: relative;
+  }
+  svg {
+    width: 100%; height: auto;
+  }
+  .house-label {
+    fill: #00fff7;
+    font-weight: 700;
+    font-size: 16px;
+    user-select: none;
+  }
+  .planet-text {
+    fill: #ff467e;
+    font-weight: 700;
+    font-size: 14px;
+    text-shadow: 0 0 3px #ff467eaa;
+    pointer-events: none;
+  }
+
+  /* Animation for planets */
+  .planet-circle {
+    transition: transform 1.25s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    transform-origin: center;
+    cursor: pointer;
+    fill: #ff477e;
+    stroke: #fff;
+    stroke-width: 1.5px;
+    filter: drop-shadow(0 0 3px #ff477ecc);
+  }
+  .planet-circle:hover {
+    fill: #ffffff;
+    filter: drop-shadow(0 0 10px #ff7676);
+  }
+
+  #analysis {
+    margin-top: 20px;
+    background: #222831;
+    padding: 20px;
+    border-radius: 14px;
+    font-size: 1rem;
+    line-height: 1.4;
+    white-space: pre-line;
+    color: #e0e0e0;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 0 12px #00adb5;
+  }
+
+  /* Responsive */
+  @media(max-width: 600px) {
+    form {
+      max-width: 100%;
     }
-    draw(data, options) {
-      const width = options.width || 600;
-      const height = options.height || 600;
-      const s = Snap(this.sel);
-      s.clear();
-      s.attr({ width, height });
-      // Outer square
-      const pad = 10;
-      const size = Math.min(width, height) - 2
-      * pad;
-      const x0 = (width - size) / 2;
-      const y0 = (height - size) / 2;
-      const chart = s.rect(x0, y0, size, size).attr({ fill: "#faf7ef", stroke: "#333" });
-
-      // North Indian diamonds (approximate layout)
-      // House centers relative
-      const cx = x0 + size / 2, cy = y0 + size / 2, r = size / 2;
-      function pt(angle, rad) {
-        return [cx + rad * Math.cos(angle), cy + rad * Math.sin(angle)];
-      }
-      const diag = [
-        [x0, cy], [cx, y0], [x0 + size, cy], [cx, y0 + size]
-      ];
-      // Draw inner diamond
-      s.polyline(
-        diag.flat()
-      ).attr({ fill: "none", stroke: "#555" });
-
-      // Draw corner to midpoints to form houses
-      const mids = [
-        [x0 + size/2, y0], [x0 + size, y0 + size/2],
-        [x0 + size/2, y0 + size], [x0, y0 + size/2]
-      ];
-      // Connect corners to opposite midpoints
-      s.line(x0, y0, x0 + size, y0 + size).attr({ stroke: "#777" });
-      s.line(x0 + size, y0, x0, y0 + size).attr({ stroke: "#777" });
-
-      // Title
-      const title = options.title || ["Rāśi", "", ""];
-      s.text(width/2, y0 - 6, (title||"") + (title[12]?" • "+title[12]:"") + (title[13]?" • "+title[13]:""))
-        .attr({ "text-anchor": "middle", "font-size": 14, "font-family": "sans-serif", fill:"#333" });
-
-      // Simple placement for 12 houses labels
-      // Predefined positions (rough NorthIndian layout)
-      const housePos = [
-        [cx, y0 + size*0.17],
-        [x0 + size*0.78, y0 + size*0.22],
-        [x0 + size*0.85, cy],
-        [x0 + size*0.78, y0 + size*0.78],
-        [cx, y0 + size*0.83],
-        [x0 + size*0.22, y0 + size*0.78],
-        [x0 + size*0.15, cy],
-        [x0 + size*0.22, y0 + size*0.22],
-        [cx, cy], // 9
-        [cx + size*0.20, cy - size*0.20],
-        [cx, cy - size*0.28],
-        [cx - size*0.20, cy - size*0.20],
-      ];
-
-      const showNums = options.showHouseNumbers === true;
-      const startFrom = Math.max(1, Math.min(12, options.startHouseNumbersFrom || 1));
-      function houseNum(i) {
-        // display number cycling from startFrom
-        const n = ((i - 1 + (startFrom - 1)) % 12) + 1;
-        return n;
-      }
-
-      for (let i = 1; i <= 12; i++) {
-        const [tx, ty] = housePos[i-1];
-        const label = data[i] && data[i].length ? data[i].join(" ") : "";
-        let textLabel = label;
-        if (showNums) textLabel = houseNum(i) + " " + textLabel;
-        s.text(tx, ty, textLabel)
-          .attr({ "text-anchor": "middle", "font-size": 12, "font-family": "Consolas, monospace", fill:"#222" });
-      }
+    #chart-container {
+      padding: 20px;
     }
   }
-  </script>
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 20px; }
-    .row { display: flex; gap: 16px; flex-wrap: wrap; }
-    label { display:block; margin-top:8px; font-weight:600; }
-    input, select, button { padding:8px; font-size:14px; }
-    #chartWrap { max-width: 640px; }
-    #analysis { max-width: 760px; white-space: pre-wrap; }
-    .note { color:#555; font-size:12px; }
-  </style>
+</style>
 </head>
 <body>
-  <h1>High-Accuracy Kundli (Vedic) – Browser Only</h1>
-  <div class="row">
-    <div>
-      <label>Birth Date</label>
-      <input id="dob" type="date" />
-      <label>Birth Time (24h)</label>
-      <input id="tob" type="time" step="60" />
-      <label>City (auto lat/long)</label>
-      <select id="city"></select>
-      <div class="note">Cities list embedded; lat/long auto-selected. For geocoding APIs, integrate later.</div>
-      <label>Time Zone Offset (hours vs UTC)</label>
-      <input id="tz" type="number" step="0.5" value="5.5" />
-      <label>House Start From (Ascendant sign index if known, else 1)</label>
-      <input id="startHouse" type="number" min="1" max="12" value="1" />
-      <div style="margin-top:10px;">
-        <button id="btn">Generate Kundli</button>
-      </div>
-    </div>
+<header>
+  <h1>Standalone Modern Kundli Generator</h1>
+  <p style="color:#00fff7; font-weight:500;">Date, Time, & Latitude/Longitude daal kar apna accurate Kundli hasil karein</p>
+</header>
 
-    <div id="chartWrap">
-      <svg id="chart" width="600" height="600"></svg>
-    </div>
-  </div>
+<form id="kundliForm" onsubmit="return false;">
+  <label for="dob">Date of Birth</label>
+  <input type="date" id="dob" required autocomplete="off" />
 
-  <h2>Detailed Analysis</h2>
-  <div id="analysis">Enter birth details and click Generate Kundli.</div>
-  <!-- Swiss Ephemeris WASM via jsDelivr CDN (browser) -->
-  <!-- This package exposes a browser-ready WASM build for high-precision planetary positions -->
-  <!-- Note: Loading from CDN requires a local HTTP server due to CORS if tested locally -->
-  <script type="module">
-    // High-accuracy ephemeris (Swiss Ephemeris WASM)
-    // Using jsDelivr package for browser: swisseph-wasm
-    // See: jsDelivr page mentions WASM module for pro-grade calculations
-    // We dynamically import to ensure module loading.
-    const seModuleUrl = 'https://cdn.jsdelivr.net/npm/swisseph-wasm/dist/index.js';
+  <label for="tob">Time of Birth (24h format, local time)</label>
+  <input type="time" id="tob" required step="60" value="12:00" />
 
-    // Minimal world cities subset (name,country,lat,lng). Replace with a larger dataset if needed.
-    // For production, use a full JSON like lutangar/cities.json and populate the dropdown.
-    // Here we include representative major cities for demo.
-    const cities = [
-      { name: "New Delhi", country: "India", lat: 28.6139, lng: 77.2090 },
-      { name: "Mumbai", country: "India", lat: 19.0760, lng: 72.8777 },
-      { name: "Kolkata", country: "India", lat: 22.5726, lng: 88.3639 },
-      { name: "Chennai", country: "India", lat: 13.0827, lng: 80.2707 },
-      { name: "Bengaluru", country: "India", lat: 12.9716, lng: 77.5946 },
-      { name: "Hyderabad", country: "India", lat: 17.3850, lng: 78.4867 },
-      { name: "Jaipur", country: "India", lat: 26.9124, lng: 75.7873 },
-      { name: "Varanasi", country: "India", lat: 25.3176, lng: 82.9739 },
-      { name: "London", country: "UK", lat: 51.5074, lng: -0.1278 },
-      { name: "New York", country: "USA", lat: 40.7128, lng: -74.0060 }
+  <label for="lat">Latitude (e.g. 28.6139 for New Delhi)</label>
+  <input type="number" id="lat" step="0.0001" placeholder="Latitude" required />
+
+  <label for="lng">Longitude (e.g. 77.2090 for New Delhi)</label>
+  <input type="number" id="lng" step="0.0001" placeholder="Longitude" required />
+
+  <button id="btnGenerate">Generate Kundli & Chart</button>
+</form>
+
+<main>
+  <section id="chart-container" aria-label="Kundli Chart">
+    <!-- SVG kundli chart will be drawn here dynamically -->
+  </section>
+
+  <section id="analysis" aria-live="polite" role="region" aria-label="Detailed Kundli Analysis">
+    Kundli generate karne ke liye upar details doldijiye.
+  </section>
+</main>
+
+<script>
+  // Astronomy/math utilities for planet position calculation
+  // NOTE: This simplified approach uses approximation formulas for planet longitudes
+  // based on mean elements and Keplerian orbits around J2000.
+  // For production, use Swiss Ephemeris or NASA data if possible.
+
+  class Astronomy {
+    // Convert date-time (local) + timezone offset to Julian Day UT
+    static toJulianDay(year, month, day, hour, min, sec=0) {
+      if (month <= 2) {
+        year -=1; month += 12;
+      }
+      const A = Math.floor(year/100);
+      const B = 2 - A + Math.floor(A/4);
+      const dayFraction = (hour + min/60 + sec/3600)/24;
+      const JD = Math.floor(365.25*(year+4716)) + Math.floor(30.6001*(month+1)) + day + dayFraction + B - 1524.5;
+      return JD;
+    }
+
+    // Calculate Sun's apparent longitude at Julian Day (approx)
+    static sunLongitude(JD) {
+      const n = JD - 2451545.0; // days since J2000.0
+      const L = (280.460 + 0.9856474 * n) % 360;
+      const g = (357.528 + 0.9856003 * n) % 360;
+      const gRad = Astronomy.degToRad(g);
+      const lambda = L + 1.915 * Math.sin(gRad) + 0.020 * Math.sin(2 * gRad);
+      return (lambda + 360) % 360;
+    }
+
+    // Calculate Moon's longitude approx from JD (simplified)
+    static moonLongitude(JD) {
+      const n = JD - 2451550.1;
+      const L = (218.316 + 13.176396 * n) % 360;
+      const M = (134.963 + 13.064993 * n) % 360;
+      const F = (93.272 + 13.229350 * n) % 360;
+      const LRad = Astronomy.degToRad(L);
+      const MRad = Astronomy.degToRad(M);
+      const FRad = Astronomy.degToRad(F);
+      const lambda =
+        L +
+        6.289 * Math.sin(MRad) -
+        3.0 * Math.sin(LRad - Astronomy.degToRad(297.850)) +
+        1.274 * Math.sin(2 * Astronomy.degToRad(L) - MRad) +
+        0.658 * Math.sin(2 * LRad) +
+        0.214 * Math.sin(2 * MRad) -
+        0.186 * Math.sin(Astronomy.degToRad(297.850)) +
+        0.114 * Math.sin(2 * FRad);
+      return (lambda + 360) % 360;
+    }
+
+    // Mercury approx longitude (using simplified formula)
+    static mercuryLongitude(JD) {
+      const n = JD - 2451545.0;
+      const L = (252.25084 + 4.0923344368 * n) % 360;
+      return (L + 360) % 360;
+    }
+
+    // Venus approx longitude
+    static venusLongitude(JD) {
+      const n = JD - 2451545.0;
+      const L = (181.9798 + 1.6021302244 * n) % 360;
+      return (L + 360) % 360;
+    }
+
+    // Mars approx longitude
+    static marsLongitude(JD) {
+      const n = JD - 2451545.0;
+      const L = (355.433 + 0.5240207766 * n) % 360;
+      return (L + 360) % 360;
+    }
+
+    // Jupiter approx longitude
+    static jupiterLongitude(JD) {
+      const n = JD - 2451545.0;
+      const L = (34.3515 + 0.083091 * n) % 360;
+      return (L + 360) % 360;
+    }
+
+    // Saturn approx longitude
+    static saturnLongitude(JD) {
+      const n = JD - 2451545.0;
+      const L = (50.07745 + 0.0300657 * n) % 360;
+      return (L + 360) % 360;
+    }
+
+    static degToRad(d) { return d * (Math.PI / 180); }
+    static radToDeg(r) { return r * (180 / Math.PI); }
+
+    // Calculate ascendant approximate (simplified) from JD and latitude
+    static ascendantLongitude(JD, latitude) {
+      // Very approximate: use sidereal time and ecliptic obliquity.
+      // This can be improved with Swiss Ephemeris or advanced astronomy libs.
+      const T = (JD - 2451545.0) / 36525.0; // Julian centuries
+      const obliquity = 23.4393 - 0.01300 * T; // ecliptic obliquity approx in deg
+
+      // Calculate sidereal time at Greenwich at 0 UT (LST0)
+      const GST = (280.46061837 + 360.98564736629 * (JD - 2451545.0) + 
+                  T*T*(0.000387933 - T/38710000.0)) % 360;
+
+      const LST = (GST + longitude) % 360;
+
+      // Latitude in radians
+      const latRad = Astronomy.degToRad(latitude);
+      const oblRad = Astronomy.degToRad(obliquity);
+      const LSTRad = Astronomy.degToRad(LST);
+
+      // Eqn for Ascendant longitude in ecliptic coordinate
+      const tanAsc = (Math.cos(LSTRad)) / (Math.sin(LSTRad) * Math.cos(oblRad) - Math.tan(latRad) * Math.sin(oblRad));
+      let asc = Math.atan(tanAsc);
+      asc = Astronomy.radToDeg(asc);
+      if (LSTRad > Math.PI) asc += 180;
+      if (asc < 0) asc += 360;
+      return asc % 360;
+    }
+  }
+
+  // Sign names and abbreviations for display
+  const signs = ["मेष", "वृषभ", "मिथुन", "कर्क", "सिंह", "कन्या", "तुला", "वृश्चिक", "धनु", "मकर", "कुम्भ", "मीन"];
+
+  // Convert planet longitude to sign and degree in sign
+  function formatLongitude(lon) {
+    const signIndex = Math.floor(lon / 30);
+    const signDegree = lon % 30;
+    return `${signDegree.toFixed(2)}° ${signs[signIndex]}`;
+  }
+
+  // Draw North Indian style Kundli chart in SVG
+  function drawKundliChart(planets, ascendant, container) {
+    const width = Math.min(700, window.innerWidth - 40);
+    const height = width;
+    container.innerHTML = "";
+
+    // Create SVG element
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
+    svg.setAttribute("viewBox", `0 0 600 600`);
+    container.appendChild(svg);
+
+    // Draw diamond outer frame & house boundaries - North Indian style
+    const diamondPoints = "300,20 580,300 300,580 20,300";
+    const diamond = document.createElementNS(svgNS, "polygon");
+    diamond.setAttribute("points", diamondPoints);
+    diamond.setAttribute("stroke", "#00fff7");
+    diamond.setAttribute("stroke-width", "5");
+    diamond.setAttribute("fill", "none");
+    diamond.setAttribute("filter", "drop-shadow(0 0 4px #00fff7aa)");
+    svg.appendChild(diamond);
+
+    // Draw intersecting lines dividing houses
+    const lines = [
+      ["20", "300", "300", "580"],
+      ["300", "580", "580", "300"],
+      ["580", "300", "300", "20"],
+      ["300", "20", "20", "300"]
+    ];
+    lines.forEach(([x1, y1, x2, y2]) => {
+      const line = document.createElementNS(svgNS, "line");
+      line.setAttribute("x1", x1);
+      line.setAttribute("y1", y1);
+      line.setAttribute("x2", x2);
+      line.setAttribute("y2", y2);
+      line.setAttribute("stroke", "#00fff7");
+      line.setAttribute("stroke-width", "3");
+      svg.appendChild(line);
+    });
+
+    // House centers & labels for North Indian style
+    const houseCenters = [
+      [300, 125], [420, 195], [455, 335], [420, 465],
+      [300, 525], [180, 460], [145, 325], [180, 190],
+      [300, 300], [360, 230], [300, 180], [240, 230]
     ];
 
-    // Populate city dropdown
-    const citySel = document.getElementById('city');
-    cities.forEach((c, idx) => {
-      const opt = document.createElement('option');
-      opt.value = idx;
-      opt.textContent = `${c.name}, ${c.country} (${c.lat.toFixed(4)}, ${c.lng.toFixed(4)})`;
-      citySel.appendChild(opt);
+    // Place house numbers 1 to 12 clockwise starting from Ascendant house
+    // Ascendant house index calculation (belongs where ascendant degree lies)
+    const ascSignIndex = Math.floor(ascendant / 30);
+    // Houses are 1 to 12, Asc = house 1; so house n = (ascSignIndex + n - 1) mod 12
+
+    // Put house numbers clockwise based on Asc
+    for (let i = 1; i <= 12; i++) {
+      const houseNumber = (((i - 1) + ascSignIndex) % 12) + 1;
+      const [cx, cy] = houseCenters[i - 1];
+      const text = document.createElementNS(svgNS, "text");
+      text.setAttribute("x", cx);
+      text.setAttribute("y", cy - 20);
+      text.setAttribute("class", "house-label");
+      text.setAttribute("text-anchor", "middle");
+      text.textContent = houseNumber;
+      svg.appendChild(text);
+    }
+
+    // Calculate planet house positions based on their longitude and ascendant
+    // Place planets near their position on circle inside chart
+
+    // Radius to place planet circles from center
+    const cx = 300;
+    const cy = 300;
+    const r = 230;
+
+    // For each planet, calculate angle relative to ascendant and position in circle
+    planets.forEach(p => {
+      const lon = p.longitude;
+      // Relative angle (degrees) from ascendant (start angle to Aries = 0)
+      let relAngle = (lon - ascendant + 360) % 360;
+      // Convert to radians and invert y (because SVG y+ downward)
+      const angleRad = (relAngle - 90) * Math.PI / 180;
+
+      // Calculate planet position on circle
+      const px = cx + r * Math.cos(angleRad);
+      const py = cy + r * Math.sin(angleRad);
+
+      // Draw circle for planet
+      const circle = document.createElementNS(svgNS, "circle");
+      circle.setAttribute("cx", px);
+      circle.setAttribute("cy", py);
+      circle.setAttribute("r", 20);
+      circle.setAttribute("class", "planet-circle");
+      circle.title = `${p.name}: ${formatLongitude(lon)}`;
+
+      // Animation with tween on new positions
+      circle.style.transform = "scale(0)";
+      setTimeout(() => circle.style.transform = "scale(1)", 100);
+
+      svg.appendChild(circle);
+
+      // Planet label text below circle
+      const text = document.createElementNS(svgNS, "text");
+      text.setAttribute("x", px);
+      text.setAttribute("y", py + 38);
+      text.setAttribute("class", "planet-text");
+      text.setAttribute("text-anchor", "middle");
+      text.textContent = p.name;
+      svg.appendChild(text);
     });
-    // Utility: convert local date-time + tz to UTC Julian Day
-    // Swiss Ephemeris prefers UT; we compute UT from local time + tz offset
-    function toJulianDayUTC(dateStr, timeStr, tzHours) {
-      // dateStr: "YYYY-MM-DD"; timeStr: "HH:MM"
-      const [y, m, d] = dateStr.split('-').map(Number);
-      const [H, M] = timeStr.split(':').map(Number);
-      // Local time -> UTC
-      const utcMillis = Date.UTC(y, m - 1, d, H - tzHours, M, 0);
-      // Julian Day from JS date (millis)
-      // JD (UTC) = (unixMillis / 86400000) + 2440587.5
-      return utcMillis / 86400000 + 2440587.5;
+  }
+
+  // Convert input values to Julian Day UT (Universal Time) for calculations
+  function getJulianDayFromInput(dob, tob) {
+    // Parse date parts
+    if (!dob || !tob) return null;
+    const [yyyy, mm, dd] = dob.split("-").map(Number);
+    const [hh, mi] = tob.split(":").map(Number);
+    // Calculate Julian Day UT assuming input time is local time (approximate)
+    // For accuracy, user localtime to UT conversion can be implemented
+    return Astronomy.toJulianDay(yyyy, mm, dd, hh, mi);
+  }
+
+  // Calculate all planet longitudes approx for a given JD
+  function calculatePlanets(jd) {
+    return [
+      { name: "Surya (Sun)", longitude: Astronomy.sunLongitude(jd) },
+      { name: "Chandra (Moon)", longitude: Astronomy.moonLongitude(jd) },
+      { name: "Budh (Mercury)", longitude: Astronomy.mercuryLongitude(jd) },
+      { name: "Shukra (Venus)", longitude: Astronomy.venusLongitude(jd) },
+      { name: "Mangal (Mars)", longitude: Astronomy.marsLongitude(jd) },
+      { name: "Guru (Jupiter)", longitude: Astronomy.jupiterLongitude(jd) },
+      { name: "Shani (Saturn)", longitude: Astronomy.saturnLongitude(jd) },
+    ];
+  }
+
+  // Main form event listener
+  const form = document.getElementById("kundliForm");
+  const chartContainer = document.getElementById("chart-container");
+  const analysis = document.getElementById("analysis");
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const dob = form.dob.value;
+    const tob = form.tob.value;
+    const lat = parseFloat(form.lat.value);
+    const lng = parseFloat(form.lng.value);
+
+    if (!dob || !tob || isNaN(lat) || isNaN(lng)) {
+      alert(" कृपया सभी खाली स्थान सही से भरें। ");
+      return;
     }
 
-    // Compute geocentric ecliptic longitudes (Sun..Saturn) using Swiss Ephemeris WASM
-    async function computePlanets(jdUT, lat, lng, se) {
-      // Planets indexes (Swiss Ephemeris standard)
-      const planets = [
-        { name: "Sun", idx: 0 },
-        { name: "Moon", idx: 1 },
-        { name: "Mars", idx: 4 },
-        { name: "Mercury", idx: 2 },
-        { name: "Jupiter", idx: 5 },
-        { name: "Venus", idx: 3 },
-        { name: "Saturn", idx: 6 },
-        // Rahu/Ketu (True Node/South Node)
-        { name: "Rahu", idx: 11 }, // True Node
-      ];
-      const flags = se.SEFLG_SWIEPH | se.SEFLG_SPEED | se.SEFLG_MOSEPH; // use Swiss eph, with speed
-      const results = {};
-      for (const p of planets) {
-        const out = se.swe_calc_ut(jdUT, p.idx, flags);
-        if (out.rc !== se.ERR) {
-          results[p.name] = { lon: out.x, lat: out.x[12], dist: out.x[13], speedLon: out.x[14] };
-        } else {
-          results[p.name] = null;
-        }
-      }
-      // Ketu = Rahu + 180 mod 360
-      if (results["Rahu"]) {
-        const k = (results["Rahu"].lon + 180) % 360;
-        results["Ketu"] = { lon: k, lat: results["Rahu"].lat, dist: results["Rahu"].dist, speedLon: results["Rahu"].speedLon };
-      }
-      return results;
-    }
-    // Determine Rāśi (sign) index from ecliptic longitude (0..360): Aries starts at 0
-    function signIndexFromLongitude(lon) {
-      return Math.floor(((lon % 360) + 360) % 360 / 30) + 1; // 1..12
-    }
+    // Julian Day UT from date/time inputs
+    const jd = getJulianDayFromInput(dob, tob);
 
-    // Very basic house allocation by sign-only scheme for demo
-    // Production should compute Ascendant from local sidereal time and ecliptic obliquity.
-    function houseMappingFromPlanets(planetLongitudes, ascSignIndex) {
-      // Create empty 12 houses
-      const houses = {};
-      for (let i = 1; i <= 12; i++) houses[i] = [];
-      // Put Asc label in house 1
-      houses[12].push("Asc");
-      // Map abbreviations
-      const mapAbbr = {
-        Sun: "Su", Moon: "Mo", Mars: "Ma", Mercury: "Me",
-        Jupiter: "Ju", Venus: "Ve", Saturn: "Sa", Rahu: "Ra", Ketu: "Ke"
-      };
-      for (const [name, obj] of Object.entries(planetLongitudes)) {
-        if (!obj) continue;
-        const sidx = signIndexFromLongitude(obj.lon); // 1..12
-        // relative house = ((planetSign - ascSign + 12) % 12) + 1
-        const house = ((sidx - ascSignIndex + 12) % 12) + 1;
-        houses[house].push(mapAbbr[name] || name);
-      }
-      return houses;
-    }
+    // Planets array with approximate longitudes
+    const planets = calculatePlanets(jd);
 
-    // Textual basic analysis demo
-    function buildAnalysisText(city, tz, ascIdx, planetLongitudes) {
-      const lines = [];
-      lines.push(`Location: ${city.name}, ${city.country} (${city.lat.toFixed(4)}, ${city.lng.toFixed(4)})`);
-      lines.push(`Time Zone offset: UTC${tz >= 0 ? "+" : ""}${tz}`);
-      lines.push(`Ascendant starting sign index (1=Aries .. 12=Pisces): ${ascIdx}`);
-      lines.push(`Planet Longitudes (°):`);
-      for (const [k, v] of Object.entries(planetLongitudes)) {
-        if (!v) continue;
-        lines.push(`  ${k}: ${v.lon.toFixed(4)}° (sign ${signIndexFromLongitude(v.lon)})`);
-      }
-      lines.push(`Note: For production-grade houses and Ascendant, compute true Asc from latitude/longitude and sidereal time; this demo uses sign-based mapping for clarity.`);
-      return lines.join("\n");
-    }
-    // Main
-    let se = null;
-    async function ensureSE() {
-      if (se) return se;
-      const mod = await import(seModuleUrl);
-      // Initialize module
-      se = await mod.default();
-      // Set path for ephemeris; WASM build embeds data or fetches .se1 if needed
-      // In many WASM builds, eph files are preloaded or not required at runtime for swe_calc_ut defaults.
-      return se;
-    }
+    // Calculate Ascendant approx longitude from Julian Day + latitude
+    const ascendant = Astronomy.ascendantLongitude(jd, lat);
 
-    const btn = document.getElementById('btn');
-    btn.addEventListener('click', async () => {
-      const dob = document.getElementById('dob').value;
-      const tob = document.getElementById('tob').value || "00:00";
-      const tz = parseFloat(document.getElementById('tz').value || "5.5");
-      const city = cities[parseInt(document.getElementById('city').value || "0", 10)];
-      const startHouse = Math.max(1, Math.min(12, parseInt(document.getElementById('startHouse').value || "1", 10)));
+    // Draw chart with planets and ascendant info
+    drawKundliChart(planets, ascendant, chartContainer);
 
-      if (!dob) { alert("Please enter Birth Date"); return; }
-
-      // Convert to Julian Day (UT)
-      const jdUT = toJulianDayUTC(dob, tob, tz);
-
-      // Load Swiss Ephemeris WASM and compute planets
-      const se = await ensureSE();
-      const planets = await computePlanets(jdUT, city.lat, city.lng, se);
-
-      // For demo, Asc sign index comes from UI; in production compute true Asc from geo/time
-      const ascIdx = startHouse;
-
-      // House mapping and chart draw
-      const houses = houseMappingFromPlanets(planets, ascIdx);
-      const astroChart = new AstroChart("#chart");
-      astroChart.draw(houses, {
-        title: ["Rāśi", `${dob} ${tob} (UTC${tz>=0?"+":""}${tz})`, `${city.name}, ${city.country}`],
-        width: 600,
-        height: 600,
-        showHouseNumbers: true,
-        startHouseNumbersFrom: ascIdx
-      });
-
-      // Analysis text
-      document.getElementById('analysis').textContent = buildAnalysisText(city, tz, ascIdx, planets);
+    // Prepare textual analysis output
+    let analysisText = `जन्म विवरण:\n  दिनांक: ${dob}\n  समय: ${tob}\n  अक्षांश: ${lat.toFixed(4)}\n  देशांतर: ${lng.toFixed(4)}\n\n`;
+    analysisText += `उदय राशि (Ascendant): ${formatLongitude(ascendant)}\n\n`;
+    analysisText += `ग्रहों की स्थिति (तरंगे):\n`;
+    planets.forEach(p => {
+      analysisText += `  ${p.name}: ${formatLongitude(p.longitude)}\n`;
     });
 
-  </script>
-
-  <p class="note">
-    Tip: Open this file with a local web server (e.g., npx serve . or Python http.server) because browsers block WASM/CDN fetches via file://. Accuracy powered by Swiss Ephemeris WASM; chart drawn in-browser with SVG. Replace the sample cities array with a full cities JSON for broader auto-detection coverage.
-  </p>
+    analysis.innerText = analysisText;
+  });
+</script>
 </body>
 </html>
