@@ -1,192 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cosmic Kundli ✨</title>
-  <style>
-    /* Reset */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kundli Generator — Cities Base · Cosmic Premium UI (Locked)</title>
+<style>
+:root{
+--bg:#070b1a;--bg2:#0b1240;--card:#0f174a;--ink:#eef2ff;--muted:#a7b6ea;--accent:#7dd3fc;--glow:#5aa2ff;--ok:#87fba8;--warn:#ffd36b;
+--glass:rgba(255,255,255,.08);--glass2:rgba(255,255,255,.06)
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:radial-gradient(1200px 800px at 80% -20%,#20377a40 0%,transparent 60%),var(--bg);color:var(--ink);overflow-x:hidden}
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top, #0a0f29, #000);
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      background: linear-gradient(90deg, #6a5acd, #00e5ff, #ff66cc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: glow 3s infinite alternate;
-    }
+/* Starfield & aurora */
+.sky{position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(1000px 600px at 10% -10%,#1a2e6a55 0%,transparent 60%),radial-gradient(900px 700px at 110% 0%,#1b3b6b55 0%,transparent 60%)}
+.stars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.6;animation:twinkle 4s infinite ease-in-out}
+@keyframes twinkle{0%,100%{opacity:.2;filter:drop-shadow(0 0 0 #fff)}50%{opacity:1;filter:drop-shadow(0 0 8px #9ad6ff)}}
 
-    @keyframes glow {
-      from { text-shadow: 0 0 10px #00e5ff; }
-      to { text-shadow: 0 0 25px #ff66cc; }
-    }
 
-    .container {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
-      padding: 30px;
-      width: 90%;
-      max-width: 900px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(15px);
-      position: relative;
-      overflow: hidden;
-      animation: fadeIn 1.2s ease-in-out;
-    }
+header{padding:24px 16px 10px;display:flex;gap:10px;align-items:center;justify-content:space-between}
+h1{margin:0;font-weight:800;letter-spacing:.2px;font-size:clamp(20px,3vw,26px);background:linear-gradient(90deg,#b8c7ff,#7ad3ff,#f7a8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 6px #3aa1ff33)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:12px;border:1px dashed #3b4ea8;border-radius:999px;padding:6px 10px;color:#cfe1ff;background:var(--glass)}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
 
-    label {
-      font-size: 1rem;
-      margin-right: 10px;
-      font-weight: 500;
-    }
+.wrap{display:grid;grid-template-columns:410px 1fr;gap:18px;padding:16px}
+@media (max-width:1080px){.wrap{grid-template-columns:1fr}}
 
-    select, input, button {
-      padding: 10px 15px;
-      border-radius: 12px;
-      border: none;
-      outline: none;
-      margin: 8px 0;
-      font-size: 1rem;
-    }
 
-    select, input {
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-    }
+.card{background:linear-gradient(180deg,#131a52 0%, #0e1542 100%);border:1px solid #28336d;border-radius:18px;box-shadow:0 18px 50px #0008, inset 0 1px 0 #ffffff12}
+.panel{padding:16px}
+.panel h2{margin:0 0 12px;font-size:16px;font-weight:800;color:#e6efff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:12px;color:var(--muted);margin:8px 0 6px}
+input,select,button,textarea{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #2a335f;background:#0b1138;color:var(--ink);outline:none;position:relative}
+input:focus,select:focus,textarea:focus{border-color:#5fa8ff;box-shadow:0 0 0 3px #5fa8ff33}
+.row{display:flex;gap:10px}
+.row>*{flex:1}
 
-    select option { color: #000; }
 
-    button {
-      background: linear-gradient(90deg, #6a5acd, #00e5ff, #ff66cc);
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s ease;
-    }
+.btn{cursor:pointer;border:1px solid #3156a3;background:linear-gradient(180deg,#23408e,#1a2f6c);font-weight:800;transition:transform .15s ease,box-shadow .2s ease, filter .2s ease}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 30px #3b82f633;filter:brightness(1.1)}
+.btn.ghost{background:#0b1138}
+.muted{color:var(--muted);font-size:12px}
+.chipsRow{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.badge{font:12px/1.2 ui-monospace,monospace;background:#0c1130;border:1px solid #384074;border-radius:10px;padding:8px 10px;color:#bcd}
+.alert{border-left:3px solid var(--warn);padding:8px 10px;background:#33240038;border-radius:8px}
 
-    button:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 20px #00e5ff;
-    }
 
-    .result-card {
-      margin-top: 20px;
-      padding: 20px;
-      border-radius: 15px;
-      background: rgba(255, 255, 255, 0.05);
-      box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
-      animation: slideUp 1s ease-in-out;
-    }
+/* Chart container with orbital glow */
+.chartWrap{background:linear-gradient(180deg,#0a0f2a,#070d29);border:1px solid #23305f;border-radius:14px;position:relative;overflow:hidden}
+.chartWrap::before{content:"";position:absolute;inset:-40%;background:conic-gradient(from 0deg, #5aa2ff22,transparent 40%, #9ad6ff20, transparent 70%, #ff9ae020);animation:spin 26s linear infinite}
+.chartWrap>*{position:relative}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
 
-    .stars {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0; left: 0;
-      z-index: -1;
-      overflow: hidden;
-    }
+/* Floating orbit dots around chart */
+.orbit{position:absolute;inset:0;pointer-events:none}
+.orbit i{position:absolute;width:6px;height:6px;border-radius:50%;background:#cfe6ff;opacity:.6;box-shadow:0 0 8px #8bd1ff}
 
-    .star {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle 4s infinite;
-    }
 
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 1; }
-    }
-  </style>
+table{width:100%;border-collapse:collapse}
+th,td{padding:6px 8px;border-bottom:1px dashed #334}
+th{font-size:12px;color:#bcd}
+td{font-size:13px;color:#eaf}
+
+
+textarea{min-height:180px;resize:vertical}
+
+
+/* Enter animations */
+.fadeUp{animation:fadeUp .7s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+</style>
 </head>
 <body>
-  <h1>✨ Cosmic Kundli Calculator ✨</h1>
-  <div class="container">
-    <label for="city">Select City:</label>
-    <select id="city">
-      <option value="23.99,85.36">Hazaribagh</option>
-      <option value="22.57,88.36">Kolkata</option>
-      <option value="28.61,77.23">Delhi</option>
-      <option value="23.34,85.31">Ranchi</option>
-    </select>
-    <br>
-    <label for="dob">Date of Birth:</label>
-    <input type="date" id="dob">
-    <br>
-    <label for="tob">Time of Birth:</label>
-    <input type="time" id="tob">
-    <br>
-    <button onclick="calculateKundli()">🔮 Calculate Kundli</button>
+<div class="sky"></div>
+<div class="stars" id="stars"></div>
 
-    <div class="result-card" id="kundliResult">
-      Your Kundli results will appear here ✨
-    </div>
-  </div>
 
-  <!-- Starfield BG -->
-  <div class="stars" id="stars"></div>
-
-  <script>
-    // Generate stars
-    const starsContainer = document.getElementById("stars");
-    for (let i = 0; i < 100; i++) {
-      const star = document.createElement("div");
-      star.className = "star";
-      star.style.top = Math.random() * 100 + "%";
-      star.style.left = Math.random() * 100 + "%";
-      star.style.animationDuration = (2 + Math.random() * 3) + "s";
-      starsContainer.appendChild(star);
-    }
-
-    function calculateKundli() {
-      const city = document.getElementById("city").value.split(",");
-      const lat = parseFloat(city[0]);
-      const lon = parseFloat(city[1]);
-      const dob = document.getElementById("dob").value;
-      const tob = document.getElementById("tob").value;
-
-      if (!dob || !tob) {
-        alert("Please enter your date and time of birth!");
-        return;
-      }
-
-      // Simple fake astro-calculation for demo
-      const randomFactor = (lat + lon + new Date(dob + "T" + tob).getTime() / 10000000000) % 12;
-
-      document.getElementById("kundliResult").innerHTML = `
-        <h2>🌌 Kundli Report</h2>
-        <p><b>Location:</b> Lat ${lat}, Lon ${lon}</p>
-        <p><b>Date:</b> ${dob}, <b>Time:</b> ${tob}</p>
-        <p><b>Ascendant (Lagna):</b> House ${Math.floor(randomFactor) + 1}</p>
-        <p><b>Prediction:</b> You are aligned with cosmic energies ✨ Expect growth and clarity.</p>
-      `;
-    }
-  </script>
-</body>
+<header>
+<h1>🔭 Kundli Generator — Cities Base (Locked)</h1>
+<div class="chips">
+<div class="chip">Sidereal (Lahiri)</div>
+<div class="chip">Equal Houses</div>
 </html>
