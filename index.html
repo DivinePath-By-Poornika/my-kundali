@@ -71,26 +71,30 @@
           <select id="city"></select>
         </div>
         <div>
-          <label>Latitude (° +N)</label>
-          <input id="lat" type="number" step="0.0001" />
+          <label>Latitude (auto)</label>
+          <input id="lat" type="number" step="0.0001" disabled />
         </div>
         <div>
-          <label>Longitude (° +E)</label>
-          <input id="lon" type="number" step="0.0001" />
+          <label>Longitude (auto)</label>
+          <input id="lon" type="number" step="0.0001" disabled />
         </div>
         <div>
-          <label>Time Zone (UTC offset, hours)</label>
-          <input id="tz" type="number" step="0.25" />
+          <label>Time Zone (auto, UTC offset hours)</label>
+          <input id="tz" type="number" step="0.25" disabled />
         </div>
         <div>
           <label>Daylight Saving?</label>
-          <select id="dst">
+          <select id="dst" disabled>
             <option value="0">No</option>
             <option value="1">Yes (+1h)</option>
           </select>
         </div>
       </div>
-      <p class="muted">Tip: Choose a city first; fields will auto-fill. You can still edit lat/long/timezone if needed.</p>
+      <div class="row" style="margin:6px 0 0;align-items:center">
+        <input id="manual" type="checkbox" style="width:auto;accent-color:#5fa8ff" />
+        <label for="manual" style="margin:0 0 0 6px">Manual override (edit latitude/longitude/time zone)</label>
+      </div>
+      <p class="muted">Choose a city and we auto-fill latitude, longitude & time zone. Use manual override only if you need custom values.</p>
       <div id="err" class="muted alert" style="display:none"></div>
       <div class="row" style="margin-top:12px">
         <button class="btn" id="calc">Generate Kundli</button>
@@ -151,18 +155,26 @@ const GRAHAS = ["Ascendant","Sun","Moon","Mars","Mercury","Jupiter","Venus","Sat
 
 // Preset cities (lat, lon in degrees; +E, +N). tz in hours from UTC
 const CITIES = [
-  {name:"Delhi, India", lat:28.6139, lon:77.2090, tz:5.5},
-  {name:"Kolkata, India", lat:22.5726, lon:88.3639, tz:5.5},
-  {name:"Hazaribagh, India", lat:23.9966, lon:85.3616, tz:5.5},
-  {name:"Ranchi, India", lat:23.3441, lon:85.3096, tz:5.5},
-  {name:"Mumbai, India", lat:19.0760, lon:72.8777, tz:5.5},
-  {name:"Bengaluru, India", lat:12.9716, lon:77.5946, tz:5.5},
-  {name:"Hyderabad, India", lat:17.3850, lon:78.4867, tz:5.5},
-  {name:"Chennai, India", lat:13.0827, lon:80.2707, tz:5.5},
-  {name:"Pune, India", lat:18.5204, lon:73.8567, tz:5.5},
-  {name:"Jaipur, India", lat:26.9124, lon:75.7873, tz:5.5},
-  {name:"Lucknow, India", lat:26.8467, lon:80.9462, tz:5.5},
-  {name:"Patna, India", lat:25.5941, lon:85.1376, tz:5.5}
+  {name:"Delhi, India", lat:28.6139, lon:77.2090, tz:5.5, dst:0},
+  {name:"Kolkata, India", lat:22.5726, lon:88.3639, tz:5.5, dst:0},
+  {name:"Hazaribagh, India", lat:23.9966, lon:85.3616, tz:5.5, dst:0},
+  {name:"Ranchi, India", lat:23.3441, lon:85.3096, tz:5.5, dst:0},
+  {name:"Mumbai, India", lat:19.0760, lon:72.8777, tz:5.5, dst:0},
+  {name:"Bengaluru, India", lat:12.9716, lon:77.5946, tz:5.5, dst:0},
+  {name:"Hyderabad, India", lat:17.3850, lon:78.4867, tz:5.5, dst:0},
+  {name:"Chennai, India", lat:13.0827, lon:80.2707, tz:5.5, dst:0},
+  {name:"Pune, India", lat:18.5204, lon:73.8567, tz:5.5, dst:0},
+  {name:"Jaipur, India", lat:26.9124, lon:75.7873, tz:5.5, dst:0},
+  {name:"Lucknow, India", lat:26.8467, lon:80.9462, tz:5.5, dst:0},
+  {name:"Patna, India", lat:25.5941, lon:85.1376, tz:5.5, dst:0},
+  {name:"Ahmedabad, India", lat:23.0225, lon:72.5714, tz:5.5, dst:0},
+  {name:"Surat, India", lat:21.1702, lon:72.8311, tz:5.5, dst:0},
+  {name:"Varanasi, India", lat:25.3176, lon:82.9739, tz:5.5, dst:0},
+  {name:"Indore, India", lat:22.7196, lon:75.8577, tz:5.5, dst:0},
+  {name:"Bhopal, India", lat:23.2599, lon:77.4126, tz:5.5, dst:0},
+  {name:"Guwahati, India", lat:26.1445, lon:91.7362, tz:5.5, dst:0},
+  {name:"Chandigarh, India", lat:30.7333, lon:76.7794, tz:5.5, dst:0},
+  {name:"Kochi, India", lat:9.9312, lon:76.2673, tz:5.5, dst:0}
 ];
 
 // Dignities (basic)
@@ -305,12 +317,39 @@ function downloadPNG(){ const svg=document.getElementById('chart'); const xml=ne
 function downloadTXT(){ const text=document.getElementById('interpretBox').value||generateInterpretation(); const blob=new Blob([text],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kundli_report.txt'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500); }
 
 // UI init
-function fillCities(){ const sel=document.getElementById('city'); sel.innerHTML=''; CITIES.forEach((c,i)=>{ const o=document.createElement('option'); o.value=String(i); o.textContent=c.name; sel.appendChild(o); }); sel.addEventListener('change', ()=>{ const c=CITIES[Number(sel.value)]; document.getElementById('lat').value=c.lat; document.getElementById('lon').value=c.lon; document.getElementById('tz').value=c.tz; }); sel.value='0'; sel.dispatchEvent(new Event('change')); }
+function fillCities(){
+  const sel=document.getElementById('city'); sel.innerHTML='';
+  CITIES.forEach((c,i)=>{ const o=document.createElement('option'); o.value=String(i); o.textContent=c.name; sel.appendChild(o); });
+  const applyCity=()=>{ const c=CITIES[Number(sel.value)];
+    document.getElementById('lat').value=c.lat;
+    document.getElementById('lon').value=c.lon;
+    document.getElementById('tz').value=c.tz;
+    document.getElementById('dst').value=String(c.dst||0);
+  };
+  sel.addEventListener('change', applyCity);
+  applyCity();
+}
+// Manual override toggling for lat/lon/tz/dst
+function setupManualToggle(){
+  const manual=document.getElementById('manual');
+  const ids=['lat','lon','tz','dst'];
+  const setState=()=>{ ids.forEach(id=>{ const el=document.getElementById(id); el.disabled=!manual.checked; }); };
+  manual.addEventListener('change', setState);
+  setState();
+}); sel.addEventListener('change', ()=>{ const c=CITIES[Number(sel.value)]; document.getElementById('lat').value=c.lat; document.getElementById('lon').value=c.lon; document.getElementById('tz').value=c.tz; }); sel.value='0'; sel.dispatchEvent(new Event('change')); }
 function fillExample(){ document.getElementById('name').value='Example — Delhi'; document.getElementById('dob').value='1999-01-15'; document.getElementById('tob').value='14:30:00'; document.getElementById('city').value='0'; document.getElementById('city').dispatchEvent(new Event('change')); document.getElementById('dst').value='0'; clearError(); }
 
 // Events
 window.addEventListener('DOMContentLoaded',()=>{
   fillCities();
+  setupManualToggle();
+  document.getElementById('calc').addEventListener('click', compute);
+  document.getElementById('dlSvg').addEventListener('click', downloadSVG);
+  document.getElementById('dlPng').addEventListener('click', downloadPNG);
+  document.getElementById('dlTxt').addEventListener('click', downloadTXT);
+  document.getElementById('example').addEventListener('click', ()=>{ fillExample(); fillCities(); });
+  document.getElementById('makeInterpret').addEventListener('click', generateInterpretation);
+});
   // Safe defaults so first-time users can compute immediately
   if(!document.getElementById('dob').value){ document.getElementById('dob').value='1999-01-15'; }
   if(!document.getElementById('tob').value){ document.getElementById('tob').value='14:30:00'; }
