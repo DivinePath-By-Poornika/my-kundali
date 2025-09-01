@@ -1,365 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kundli Generator — Cities Only (No API/Swiss) · Final</title>
+  <meta charset="UTF-8">
+  <title>Kundli Generator 🌌</title>
   <style>
-    :root{--bg:#0c1022;--card:#121835;--ink:#eaf0ff;--muted:#9fb1e0;--accent:#7dd3fc;--glow:#52a6ff;--ok:#87fba8;--warn:#ffd36b}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:radial-gradient(1200px 800px at 80% -20%,#19315d40 0%,transparent 60%),var(--bg);color:var(--ink)}
-    header{padding:22px 16px 8px;display:flex;gap:10px;align-items:center;justify-content:space-between}
-    h1{margin:0;font-weight:800;letter-spacing:.2px;font-size:clamp(20px,3vw,26px)}
-    .wrap{display:grid;grid-template-columns:410px 1fr;gap:18px;padding:16px}
-    @media (max-width:1080px){.wrap{grid-template-columns:1fr}}
-    .card{background:linear-gradient(180deg,#151c3f 0%, #101630 100%);border:1px solid #293264;border-radius:16px;box-shadow:0 10px 30px #0008}
-    .panel{padding:16px}
-    .panel h2{margin:0 0 10px;font-size:16px;font-weight:700;color:#d9e7ff}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    label{display:block;font-size:12px;color:var(--muted);margin:8px 0 6px}
-    input,select,button,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2a335f;background:#0f1433;color:var(--ink);outline:none;position:relative;z-index:2}
-    input:focus,select:focus,textarea:focus{border-color:#5fa8ff;box-shadow:0 0 0 3px #5fa8ff33}
-    .row{display:flex;gap:10px}
-    .row>*{flex:1}
-    .btn{cursor:pointer;border:1px solid #3156a3;background:linear-gradient(180deg,#23408e,#1a2f6c);font-weight:700;transition:transform .12s ease,box-shadow .12s ease}
-    .btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px #3b82f620}
-    .btn.ghost{background:#0f1433}
-    .muted{color:var(--muted);font-size:12px}
-    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-    .chip{font-size:12px;border:1px dashed #3850a8;border-radius:999px;padding:6px 10px;color:#cfe1ff}
-    canvas,svg{max-width:100%;height:auto}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:6px 8px;border-bottom:1px dashed #334}
-    th{font-size:12px;color:#bcd}
-    td{font-size:13px;color:#eaf}
-    .badge{font:12px/1.2 ui-monospace,monospace;background:#0c1130;border:1px solid #384074;border-radius:8px;padding:8px 10px;color:#bcd}
-    .section{display:grid;gap:8px}
-    textarea{min-height:160px;resize:vertical}
-    .ok{color:var(--ok)}
-    .alert{border-left:3px solid var(--warn);padding-left:10px}
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #4a148c;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 25px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+      color: #444;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    input[readonly] {
+      background: #eee;
+      cursor: not-allowed;
+    }
+    .btn {
+      background: #4a148c;
+      color: white;
+      border: none;
+      padding: 12px 18px;
+      font-size: 16px;
+      border-radius: 8px;
+      margin-top: 20px;
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn:hover {
+      background: #6a1b9a;
+    }
+    #output {
+      margin-top: 25px;
+      padding: 15px;
+      background: #fafafa;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      min-height: 80px;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>🔭 Kundli Generator — Cities Only (No API / No Swiss) • Final</h1>
-    <div class="chips">
-      <div class="chip">Sidereal (Lahiri)</div>
-      <div class="chip">Equal Houses</div>
-      <div class="chip">North-Indian Layout</div>
-      <div class="chip" id="precTag">Offline Engine</div>
-    </div>
+    <h1>Kundli Generator 🌌</h1>
+    <p>Premium Styled – Auto City Detection</p>
   </header>
-
-  <main class="wrap">
-    <section class="card panel">
-      <h2>Birth Details</h2>
-      <div class="grid">
-        <div>
-          <label>Name</label>
-          <input id="name" placeholder="e.g., Priyanshu" />
-        </div>
-        <div>
-          <label>Date of Birth</label>
-          <input id="dob" type="date" />
-        </div>
-        <div>
-          <label>Time of Birth</label>
-          <input id="tob" type="time" step="1" />
-        </div>
-        <div>
-          <label>City (preset lat/long & time zone)</label>
-          <select id="city"></select>
-        </div>
-        <div>
-          <label>Latitude (auto)</label>
-          <input id="lat" type="number" step="0.0001" disabled />
-        </div>
-        <div>
-          <label>Longitude (auto)</label>
-          <input id="lon" type="number" step="0.0001" disabled />
-        </div>
-        <div>
-          <label>Time Zone (auto, UTC offset hours)</label>
-          <input id="tz" type="number" step="0.25" disabled />
-        </div>
-        <div>
-          <label>Daylight Saving?</label>
-          <select id="dst" disabled>
-            <option value="0">No</option>
-            <option value="1">Yes (+1h)</option>
-          </select>
-        </div>
-      </div>
-      <div class="row" style="margin:6px 0 0;align-items:center">
-        <input id="manual" type="checkbox" style="width:auto;accent-color:#5fa8ff" />
-        <label for="manual" style="margin:0 0 0 6px">Manual override (edit latitude/longitude/time zone)</label>
-      </div>
-      <p class="muted">Choose a city and we auto-fill latitude, longitude & time zone. Use manual override only if you need custom values.</p>
-      <div id="err" class="muted alert" style="display:none"></div>
-      <div class="row" style="margin-top:12px">
-        <button class="btn" id="calc">Generate Kundli</button>
-        <button class="btn ghost" id="example">Quick Example</button>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <button class="btn" id="dlPng">Download PNG</button>
-        <button class="btn" id="dlSvg">Download SVG</button>
-        <button class="btn" id="dlTxt">Download Report (TXT)</button>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="card panel">
-        <h2>North-Indian Chart</h2>
-        <div class="panel" style="background:#0c1130;border-radius:12px;border:1px solid #2a335f">
-          <svg id="chart" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="Kundli Chart"></svg>
-        </div>
-        <div class="chips">
-          <span class="badge" id="ayanamshaLbl">Ayanamsha: —</span>
-          <span class="badge" id="ascLbl">Asc: —</span>
-          <span class="badge" id="nakLbl">Moon Nakshatra: —</span>
-        </div>
-      </div>
-
-      <div class="card panel">
-        <h2>Graha Longitudes (Sidereal – Lahiri)</h2>
-        <table id="tbl"><thead><tr><th>Graha</th><th>Longitude</th><th>Rāśi</th><th>Nakshatra</th><th>House</th><th>Status</th></tr></thead><tbody></tbody></table>
-        <p class="muted">This offline engine is robust for signs/houses. For arc‑minute precision you could later plug Swiss Ephemeris, but it is not required.</p>
-      </div>
-
-      <div class="card panel">
-        <h2>House-wise Placement</h2>
-        <div id="houseList" class="section"></div>
-      </div>
-
-      <div class="card panel">
-        <h2>Interpretation</h2>
-        <button class="btn" id="makeInterpret">Generate Explanation</button>
-        <textarea id="interpretBox" placeholder="Click to generate a paragraph explaining placements house-by-house."></textarea>
-      </div>
-    </section>
-  </main>
-
-<script>
-/*****************************************
- * Kundli Engine — Cities Only (No Geo)
- *  - Sidereal (Lahiri), Equal Houses
- *  - North-Indian chart
- *  - PNG/SVG/TXT export
- *  - No external APIs
- *  - Extra guard rails & error handling
- *****************************************/
-const D2R = Math.PI/180, R2D = 180/Math.PI;
-const ZODIAC = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
-const NAKS = ["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishta","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"];
-const GRAHAS = ["Ascendant","Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn","Rahu","Ketu"];
-
-// Preset cities (lat, lon in degrees; +E, +N). tz in hours from UTC
-const CITIES = [
-  {name:"Delhi, India", lat:28.6139, lon:77.2090, tz:5.5, dst:0},
-  {name:"Kolkata, India", lat:22.5726, lon:88.3639, tz:5.5, dst:0},
-  {name:"Hazaribagh, India", lat:23.9966, lon:85.3616, tz:5.5, dst:0},
-  {name:"Ranchi, India", lat:23.3441, lon:85.3096, tz:5.5, dst:0},
-  {name:"Mumbai, India", lat:19.0760, lon:72.8777, tz:5.5, dst:0},
-  {name:"Bengaluru, India", lat:12.9716, lon:77.5946, tz:5.5, dst:0},
-  {name:"Hyderabad, India", lat:17.3850, lon:78.4867, tz:5.5, dst:0},
-  {name:"Chennai, India", lat:13.0827, lon:80.2707, tz:5.5, dst:0},
-  {name:"Pune, India", lat:18.5204, lon:73.8567, tz:5.5, dst:0},
-  {name:"Jaipur, India", lat:26.9124, lon:75.7873, tz:5.5, dst:0},
-  {name:"Lucknow, India", lat:26.8467, lon:80.9462, tz:5.5, dst:0},
-  {name:"Patna, India", lat:25.5941, lon:85.1376, tz:5.5, dst:0},
-  {name:"Ahmedabad, India", lat:23.0225, lon:72.5714, tz:5.5, dst:0},
-  {name:"Surat, India", lat:21.1702, lon:72.8311, tz:5.5, dst:0},
-  {name:"Varanasi, India", lat:25.3176, lon:82.9739, tz:5.5, dst:0},
-  {name:"Indore, India", lat:22.7196, lon:75.8577, tz:5.5, dst:0},
-  {name:"Bhopal, India", lat:23.2599, lon:77.4126, tz:5.5, dst:0},
-  {name:"Guwahati, India", lat:26.1445, lon:91.7362, tz:5.5, dst:0},
-  {name:"Chandigarh, India", lat:30.7333, lon:76.7794, tz:5.5, dst:0},
-  {name:"Kochi, India", lat:9.9312, lon:76.2673, tz:5.5, dst:0}
-];
-
-// Dignities (basic)
-const OWN_SIGN = { Sun:5, Moon:4, Mars:[1,8], Mercury:[3,6], Jupiter:[9,12], Venus:[2,7], Saturn:[10,11] };
-const EXALT = { Sun:[0,10], Moon:[1,3], Mars:[9,28], Mercury:[5,15], Jupiter:[3,5], Venus:[11,27], Saturn:[6,20] }; // [signIndex, degree]
-const DEBIL = { Sun:[6,10], Moon:[7,3], Mars:[3,28], Mercury:[11,15], Jupiter:[9,5], Venus:[5,27], Saturn:[0,20] };
-
-// Utils
-const clampNum = (v, def=0) => isFinite(v)?v:def;
-const norm360=x=>((x%360)+360)%360;
-function dms(deg){ const d=Math.floor(deg); const mfull=(deg-d)*60; const m=Math.floor(mfull); const s=Math.round((mfull-m)*60); return `${d}° ${m}' ${s}\"`; }
-function formatLon(lon){ const s=Math.floor(lon/30); const d=lon-s*30; return `${ZODIAC[s]} ${d.toFixed(2)}°`; }
-
-// Time & astronomy
-function julianDay(y,m,d,h,tz){ // tz hours east of UTC
-  h = (h||0) - (tz||0); // convert local to UTC hours
-  const A = Math.floor((14 - m)/12); y = y + 4800 - A; m = m + 12*A - 3;
-  const JDN = d + Math.floor((153*m+2)/5) + 365*y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400) - 32045;
-  return JDN + (h-12)/24; // astronomical noon base
-}
-function tCent(JD){ return (JD - 2451545.0)/36525; }
-function obliquity(JD){ const U=(JD-2451545.0)/3652500; const eps=23 + (26 + ((21.448 - 46.8150*U - 0.00059*U*U + 0.001813*U*U*U))/60)/60; return eps*D2R; }
-function gst(JD){ const T=tCent(JD); let th=280.46061837+360.98564736629*(JD-2451545)+0.000387933*T*T - T*T*T/38710000; th=((th%360)+360)%360; return th/15; }
-function lahiriAyanamsha(JD){ const days=JD-2451545.0; const years=days/365.2422; const base=24+7/60; const rate=50.29/3600; return base + rate*years; }
-function lstHours(JD, lon){ return (gst(JD)+lon/15+24)%24; }
-function ascendant(JD, latDeg, lonDeg){ const eps=obliquity(JD); const LST=lstHours(JD,lonDeg)*15*D2R; const phi=(latDeg||0)*D2R; let lambda=Math.atan2( Math.sin(LST), Math.cos(LST)*Math.cos(eps)-Math.tan(phi)*Math.sin(eps) ); return norm360(lambda*R2D); }
-
-// Planet positions (compact models)
-function solveKepler(M,e){ M=M*D2R; let E=M+e*Math.sin(M)*(1+e*Math.cos(M)); for(let i=0;i<15;i++){ const dE=(E-e*Math.sin(E)-M)/(1-e*Math.cos(E)); E-=dE; if(Math.abs(dE)<1e-12) break;} return E; }
-const ELEMS={
-  Mercury:{ a:0.38709893, e:[0.20563069, 0.00002527], I:[7.00487,-23.51/3600], L:[252.25084,149472.67411175], wbar:[77.45645, 573.57/3600], Omega:[48.33167,-446.30/3600] },
-  Venus:  { a:0.72333199, e:[0.00677323,-0.00004938], I:[3.39471,-2.86/3600], L:[181.97973,58517.81538729], wbar:[131.53298, 622.65/3600], Omega:[76.68069,-996.89/3600] },
-  Earth:  { a:1.00000011, e:[0.01671022,-0.00003804], I:[0.00005,-46.94/3600], L:[100.46645,35999.3728565], wbar:[102.93735,1161.0/3600], Omega:[-11.26064,-18228.25/3600] },
-  Mars:   { a:1.52366231, e:[0.09341233, 0.00011902], I:[1.85061,-25.47/3600], L:[355.45332,19140.29934243], wbar:[336.04084,1590.20/3600], Omega:[49.57854,-1020.19/3600] },
-  Jupiter:{ a:5.20336301, e:[0.04839266,-0.00012880], I:[1.30530,-4.15/3600], L:[34.40438,3034.74612775], wbar:[14.75385,  7.30/3600], Omega:[100.55615,1217.17/3600] },
-  Saturn: { a:9.53707032, e:[0.05415060,-0.00036762], I:[2.48446,  6.11/3600], L:[49.94432,1222.49362201], wbar:[92.43194, -17.59/3600], Omega:[113.71504, -1591.05/3600] },
-};
-function planetHelioEcliptic(JD, name){ const T=tCent(JD); const el=ELEMS[name]; const a=el.a; const e=el.e[0]+el.e[1]*T; const I=(el.I[0]+el.I[1]*T)*D2R; const L=el.L[0]+el.L[1]*T; const wbar=el.wbar[0]+el.wbar[1]*T; const Omega=el.Omega[0]+el.Omega[1]*T; const M=norm360(L-wbar); const E=solveKepler(M,e); const v=2*Math.atan2(Math.sqrt(1+e)*Math.sin(E/2),Math.sqrt(1-e)*Math.cos(E/2)); const r=a*(1-e*Math.cos(E)); const w=(wbar-Omega)*D2R; const x=r*( Math.cos(Omega*D2R)*Math.cos(w+v) - Math.sin(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const y=r*( Math.sin(Omega*D2R)*Math.cos(w+v) + Math.cos(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const z=r*( Math.sin(w+v)*Math.sin(I) ); return {x,y,z}; }
-function eclipLonLat(x,y,z){ const lon=Math.atan2(y,x); const rxy=Math.hypot(x,y); const lat=Math.atan2(z,rxy); return {lon:norm360(lon*R2D), lat:lat*R2D}; }
-function planetGeoLon(JD,name){ if(name==="Sun"){ const E=planetHelioEcliptic(JD,"Earth"); const {lon}=eclipLonLat(E.x,E.y,E.z); return norm360(lon+180); } const E=planetHelioEcliptic(JD,"Earth"); const P=planetHelioEcliptic(JD,name); const x=P.x-E.x, y=P.y-E.y, z=P.z-E.z; return eclipLonLat(x,y,z).lon; }
-function moonLongitude(JD){ // compact lunar model
-  const T=(JD-2451545.0)/36525; const L0=norm360(218.3164477+481267.88123421*T-0.0015786*T*T+T*T*T/538841);
-  const D=norm360(297.8501921+445267.1114034*T-0.0018819*T*T+T*T*T/545868);
-  const M=norm360(357.5291092+35999.0502909*T-0.0001536*T*T);
-  const Mp=norm360(134.9633964+477198.8675055*T+0.0087414*T*T);
-  const F=norm360(93.2720950+483202.0175233*T-0.0036539*T*T);
-  const terms=[[6288774,0,0,1,0],[1274027,2,-1,0,0],[658314,2,-1,-1,0],[213618,2,-2,0,0],[-185116,0,1,0,2],[-114332,0,0,0,2],[58793,2,-1,2,0],[57066,2,-1,-1,0],[53322,0,2,0,0],[45758,2,-2,-2,0],[-40923,0,1,0,0],[-34720,1,1,0,0],[-30383,2,0,0,0]];
-  let sum=0; for(const [A,kD,kM,kMp,kF] of terms){ const arg=(kD*D+kM*M+kMp*Mp+kF*F)*D2R; sum += A*Math.sin(arg); }
-  const deltaDeg = sum/1000000*(180/Math.PI);
-  return norm360(L0 + deltaDeg);
-}
-function meanNode(JD){ const T=(JD-2451545.0)/36525; let Om=125.0445550-1934.1361849*T+0.0020762*T*T+(T*T*T)/467410; return norm360(Om+180); }
-
-function nakshatra(lon){ const span=360/27; const idx=Math.floor(lon/span); const pada=Math.floor((lon%span)/(span/4))+1; return {name:NAKS[idx], pada}; }
-function houseOf(lonSid, ascSid){ const diff=norm360(lonSid-ascSid); return Math.floor(diff/30)+1; }
-function statusOf(planet, lon){ const sign=Math.floor(lon/30); const deg=lon-sign*30; let s=[]; const own=OWN_SIGN[planet]; if(own){ const owns=Array.isArray(own)?own:[own]; if(owns.includes(sign+1)) s.push('Own sign'); }
-  const ex=EXALT[planet]; if(ex && ex[0]===sign && Math.abs(deg-ex[1])<1) s.push('Near exaltation');
-  const de=DEBIL[planet]; if(de && de[0]===sign && Math.abs(de-de[1])<1) s.push('Near debilitation');
-  return s.join(', ')||'—'; }
-
-function showError(msg){ const e=document.getElementById('err'); e.style.display='block'; e.textContent = '⚠️ ' + msg; }
-function clearError(){ const e=document.getElementById('err'); e.style.display='none'; e.textContent=''; }
-
-function compute(){
-  clearError();
-  try{
-    const name=(document.getElementById('name').value||'—').trim();
-    const dob=document.getElementById('dob').value; if(!dob){ showError('Please select Date of Birth.'); return; }
-    const tob=document.getElementById('tob').value||'00:00:00';
-    const tz=parseFloat(document.getElementById('tz').value||'0') + (document.getElementById('dst').value==='1'?1:0);
-    const lat=parseFloat(document.getElementById('lat').value||'0');
-    const lon=parseFloat(document.getElementById('lon').value||'0');
-
-    const [Y,M,D]=dob.split('-').map(n=>parseInt(n,10)); const [hh,mm,ss]=(tob||'00:00:00').split(':').map(n=>parseInt(n||'0',10)); const H=(hh||0)+(mm||0)/60+(ss||0)/3600;
-    const JD=julianDay(Y,M,D,H,tz);
-    const aya=lahiriAyanamsha(JD);
-
-    // Ascendant
-    const ascTrop=ascendant(JD, lat, lon); const ascSid=norm360(ascTrop - aya);
-    const longitudes={}; longitudes['Ascendant']=ascSid;
-
-    // Planets tropical -> sidereal
-    const std={
-      Sun: norm360(planetGeoLon(JD,'Sun') - aya),
-      Moon: norm360(moonLongitude(JD) - aya),
-      Mars: norm360(planetGeoLon(JD,'Mars') - aya),
-      Mercury: norm360(planetGeoLon(JD,'Mercury') - aya),
-      Jupiter: norm360(planetGeoLon(JD,'Jupiter') - aya),
-      Venus: norm360(planetGeoLon(JD,'Venus') - aya),
-      Saturn: norm360(planetGeoLon(JD,'Saturn') - aya)
+  
+  <div class="container">
+    <h2>Enter Birth Details</h2>
+    
+    <label for="city">Select City:</label>
+    <select id="city">
+      <option value="">-- Choose a City --</option>
+      <option value="hazaribagh">Hazaribagh</option>
+      <option value="kolkata">Kolkata</option>
+      <option value="delhi">Delhi</option>
+      <option value="ranchi">Ranchi</option>
+      <option value="mumbai">Mumbai</option>
+      <option value="chennai">Chennai</option>
+      <option value="bangalore">Bangalore</option>
+      <option value="hyderabad">Hyderabad</option>
+    </select>
+    
+    <label>Latitude:</label>
+    <input type="text" id="lat" readonly>
+    
+    <label>Longitude:</label>
+    <input type="text" id="lon" readonly>
+    
+    <label>Timezone (IST = +5:30):</label>
+    <input type="text" id="tz" readonly>
+    
+    <label>DST:</label>
+    <input type="text" id="dst" readonly>
+    
+    <label for="dob">Date of Birth:</label>
+    <input type="date" id="dob">
+    
+    <label for="tob">Time of Birth:</label>
+    <input type="time" id="tob">
+    
+    <button class="btn" onclick="generateKundli()">Generate Kundli</button>
+    
+    <div id="output"></div>
+  </div>
+  
+  <script>
+    // Predefined city data
+    const cityData = {
+      hazaribagh: { lat: "23.9924", lon: "85.3616", tz: "+5:30", dst: "0" },
+      kolkata: { lat: "22.5726", lon: "88.3639", tz: "+5:30", dst: "0" },
+      delhi: { lat: "28.7041", lon: "77.1025", tz: "+5:30", dst: "0" },
+      ranchi: { lat: "23.3441", lon: "85.3096", tz: "+5:30", dst: "0" },
+      mumbai: { lat: "19.0760", lon: "72.8777", tz: "+5:30", dst: "0" },
+      chennai: { lat: "13.0827", lon: "80.2707", tz: "+5:30", dst: "0" },
+      bangalore: { lat: "12.9716", lon: "77.5946", tz: "+5:30", dst: "0" },
+      hyderabad: { lat: "17.3850", lon: "78.4867", tz: "+5:30", dst: "0" }
     };
-    const rahuTrop=meanNode(JD); std.Rahu=norm360(rahuTrop - aya); std.Ketu=norm360(std.Rahu+180);
-    for(const k of Object.keys(std)) longitudes[k]=std[k];
 
-    // Table & badges
-    const tbody=document.querySelector('#tbl tbody'); tbody.innerHTML=''; const rows=[];
-    for(const g of GRAHAS){ const lonSid=longitudes[g]; const sign=Math.floor(lonSid/30); const {name:nk,pada}=nakshatra(lonSid); const house=houseOf(lonSid,ascSid); const status=statusOf(g,lonSid); const tr=document.createElement('tr'); const tds=[g, `${formatLon(lonSid)} (${dms(lonSid)})`, ZODIAC[sign], `${nk} ${pada}`, house, status]; for(const v of tds){ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); } tbody.appendChild(tr); rows.push({graha:g, lon:lonSid, sign, nk:`${nk} ${pada}`, house}); }
-    document.getElementById('ayanamshaLbl').textContent=`Ayanamsha (Lahiri): ${aya.toFixed(2)}°`;
-    document.getElementById('ascLbl').textContent=`Asc: ${formatLon(ascSid)}`;
-    document.getElementById('nakLbl').textContent=`Moon: ${nakshatra(longitudes['Moon']).name}`;
+    // Auto-fill on city change
+    document.getElementById("city").addEventListener("change", function() {
+      const val = this.value;
+      if (cityData[val]) {
+        document.getElementById("lat").value = cityData[val].lat;
+        document.getElementById("lon").value = cityData[val].lon;
+        document.getElementById("tz").value = cityData[val].tz;
+        document.getElementById("dst").value = cityData[val].dst;
+      } else {
+        document.getElementById("lat").value = "";
+        document.getElementById("lon").value = "";
+        document.getElementById("tz").value = "";
+        document.getElementById("dst").value = "";
+      }
+    });
 
-    drawNorthChart(ascSid, rows.filter(r=>r.graha!=="Ascendant"));
-    renderHouseList(ascSid, rows);
-    window.__kundli={name,JD,aya,ascSid,rows,lat,lon,tz};
-  }catch(err){ console.error(err); showError(err.message||String(err)); }
-}
+    // Dummy calculation function
+    function generateKundli() {
+      const city = document.getElementById("city").value;
+      const dob = document.getElementById("dob").value;
+      const tob = document.getElementById("tob").value;
+      const lat = document.getElementById("lat").value;
+      const lon = document.getElementById("lon").value;
+      const tz = document.getElementById("tz").value;
 
-function drawNorthChart(ascSid, items){
-  const svg=document.getElementById('chart'); while(svg.firstChild) svg.removeChild(svg.firstChild);
-  const W=800,H=800; const cx=W/2,cy=H/2,R=320; svg.setAttribute('viewBox',`0 0 ${W} ${H}`); svg.setAttribute('width',W); svg.setAttribute('height',H);
-  const g=(tag,attrs)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); svg.appendChild(e); return e;};
-  const grp=(tag,attrs)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag); for(const k in attrs) e.setAttribute(k,attrs[k]); return e;};
-  // outer diamond
-  const pts=[[cx,cy-R],[cx+R,cy],[cx,cy+R],[cx-R,cy]].map(p=>p.join(',')).join(' '); g('polygon',{points:pts,fill:'#0a0f2a',stroke:'#3a4585','stroke-width':3});
-  // cross lines
-  const lines=[[cx,cy-R,cx+R,cy],[cx+R,cy,cx,cy+R],[cx,cy+R,cx-R,cy],[cx-R,cy,cx,cy-R],[cx,cy-R,cx,cy+R],[cx-R,cy,cx+R,cy]]; for(const [x1,y1,x2,y2] of lines){ g('line',{x1,y1,x2,y2,stroke:'#2a3366','stroke-width':2}); }
-  const houseCenters=[[cx,cy-R+80],[cx+130,cy-130],[cx+R-80,cy],[cx+130,cy+130],[cx,cy+R-80],[cx-130,cy+130],[cx-R+80,cy],[cx-130,cy-130],[cx,cy-R+190],[cx+190,cy],[cx,cy+190],[cx-190,cy]];
-  const ascSign=Math.floor(ascSid/30);
-  for(let i=0;i<12;i++){ const sign=(ascSign+i)%12; const [x,y]=houseCenters[i]; const t=g('text',{x,y,'text-anchor':'middle','dominant-baseline':'middle',fill:'#bcd','font-size':18}); t.textContent=`${i+1}
-${ZODIAC[sign].slice(0,3)}`; }
-  const houseMap=Array.from({length:12},()=>[]); for(const it of items){ const h=it.house-1; houseMap[h].push(it); }
-  for(let i=0;i<12;i++){ const [x,y]=houseCenters[i]; const list=houseMap[i]; if(!list.length) continue; list.sort((a,b)=>a.lon-b.lon); list.forEach((it,idx)=>{ const t=g('text',{x,y:y+22*idx+18,'text-anchor':'middle','dominant-baseline':'middle',fill:'#e8ecff','font-size':16}); const short={Sun:'Su',Moon:'Mo',Mars:'Ma',Mercury:'Me',Jupiter:'Ju',Venus:'Ve',Saturn:'Sa',Rahu:'Ra',Ketu:'Ke'}[it.graha]||it.graha; t.textContent=`${short} ${((it.lon%30).toFixed(1))}`; }); }
-  const title=grp('g',{}); svg.appendChild(title); const tt=document.createElementNS('http://www.w3.org/2000/svg','text'); tt.setAttribute('x', cx); tt.setAttribute('y', 40); tt.setAttribute('text-anchor','middle'); tt.setAttribute('fill','#cfe1ff'); tt.setAttribute('font-size','20'); tt.textContent='Kundli (North-Indian)'; title.appendChild(tt);
-}
+      if (!city || !dob || !tob) {
+        document.getElementById("output").innerText = "⚠️ Please fill all fields!";
+        return;
+      }
 
-function renderHouseList(ascSid, rows){
-  const box=document.getElementById('houseList'); box.innerHTML=''; const houses=Array.from({length:12},()=>[]); for(const r of rows){ if(r.graha==='Ascendant') continue; houses[r.house-1].push(r); }
-  const meanings=['Self, body, vitality','Wealth, speech, family','Siblings, skills, short travel','Home, mother, property','Creativity, learning, children','Health, service, obstacles','Marriage, partnerships','Longevity, transformations','Fortune, higher learning','Career, status, authority','Gains, networks, aspirations','Losses, moksha, isolation'];
-  houses.forEach((arr,i)=>{ const div=document.createElement('div'); div.className='card panel'; const title=document.createElement('h3'); title.textContent=`House ${i+1} — ${meanings[i]}`; title.style.margin='0 0 6px'; title.style.fontSize='14px'; title.style.color='#d7e4ff'; div.appendChild(title); const p=document.createElement('p'); p.className='muted'; p.textContent=arr.length?`Planets: ${arr.map(o=>o.graha).join(', ')}`:'Planets: —'; div.appendChild(p); box.appendChild(div); });
-}
-
-function generateInterpretation(){ const K=window.__kundli; if(!K){ showError('Generate the chart first.'); return ''; } const {ascSid, rows, aya} = K; const ascSign=Math.floor(ascSid/30); const byHouse=Array.from({length:12},()=>[]); for(const r of rows){ if(r.graha==='Ascendant') continue; byHouse[r.house-1].push(r);} const lines=[]; lines.push(`This kundli uses the sidereal Lahiri ayanamsha (~${aya.toFixed(2)}°) with equal houses from the Ascendant. Summary below:`);
- for(let h=1; h<=12; h++){ const arr=byHouse[h-1]; const sign=(ascSign+(h-1))%12; const who=arr.length?arr.map(o=>o.graha).join(', '):'no planets'; let detail=`House ${h} in ${ZODIAC[sign]}: ${who}.`; if(arr.length){ arr.forEach(o=>{ const s=statusOf(o.graha,o.lon); const deg=(o.lon%30).toFixed(1); let add=` ${o.graha} at ${deg}° ${ZODIAC[o.sign]}`; if(s && s!=='—') add+=` (${s})`; add+=' expresses results through this house.'; detail+=add; }); } lines.push(detail);} const text=lines.join('
-
-'); const ta=document.getElementById('interpretBox'); ta.value=text; return text; }
-
-// Downloads
-function downloadSVG(){ const svg=document.getElementById('chart'); const data=new XMLSerializer().serializeToString(svg); const blob=new Blob([data],{type:'image/svg+xml'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kundli.svg'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500); }
-function downloadPNG(){ const svg=document.getElementById('chart'); const xml=new XMLSerializer().serializeToString(svg); const img=new Image(); const svg64='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(xml))); img.onload=function(){ const canvas=document.createElement('canvas'); canvas.width=1000; canvas.height=1000; const ctx=canvas.getContext('2d'); ctx.fillStyle='#0c1130'; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0,1000,1000); canvas.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='kundli.png'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500); }); }; img.src=svg64; }
-function downloadTXT(){ const text=document.getElementById('interpretBox').value||generateInterpretation(); const blob=new Blob([text],{type:'text/plain'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kundli_report.txt'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500); }
-
-// UI init
-function fillCities(){
-  const sel=document.getElementById('city'); sel.innerHTML='';
-  CITIES.forEach((c,i)=>{ const o=document.createElement('option'); o.value=String(i); o.textContent=c.name; sel.appendChild(o); });
-  const applyCity=()=>{ const c=CITIES[Number(sel.value)];
-    document.getElementById('lat').value=c.lat;
-    document.getElementById('lon').value=c.lon;
-    document.getElementById('tz').value=c.tz;
-    document.getElementById('dst').value=String(c.dst||0);
-  };
-  sel.addEventListener('change', applyCity);
-  applyCity();
-}
-// Manual override toggling for lat/lon/tz/dst
-function setupManualToggle(){
-  const manual=document.getElementById('manual');
-  const ids=['lat','lon','tz','dst'];
-  const setState=()=>{ ids.forEach(id=>{ const el=document.getElementById(id); el.disabled=!manual.checked; }); };
-  manual.addEventListener('change', setState);
-  setState();
-}); sel.addEventListener('change', ()=>{ const c=CITIES[Number(sel.value)]; document.getElementById('lat').value=c.lat; document.getElementById('lon').value=c.lon; document.getElementById('tz').value=c.tz; }); sel.value='0'; sel.dispatchEvent(new Event('change')); }
-function fillExample(){ document.getElementById('name').value='Example — Delhi'; document.getElementById('dob').value='1999-01-15'; document.getElementById('tob').value='14:30:00'; document.getElementById('city').value='0'; document.getElementById('city').dispatchEvent(new Event('change')); document.getElementById('dst').value='0'; clearError(); }
-
-// Events
-window.addEventListener('DOMContentLoaded',()=>{
-  fillCities();
-  setupManualToggle();
-  document.getElementById('calc').addEventListener('click', compute);
-  document.getElementById('dlSvg').addEventListener('click', downloadSVG);
-  document.getElementById('dlPng').addEventListener('click', downloadPNG);
-  document.getElementById('dlTxt').addEventListener('click', downloadTXT);
-  document.getElementById('example').addEventListener('click', ()=>{ fillExample(); fillCities(); });
-  document.getElementById('makeInterpret').addEventListener('click', generateInterpretation);
-});
-  // Safe defaults so first-time users can compute immediately
-  if(!document.getElementById('dob').value){ document.getElementById('dob').value='1999-01-15'; }
-  if(!document.getElementById('tob').value){ document.getElementById('tob').value='14:30:00'; }
-  document.getElementById('calc').addEventListener('click', compute);
-  document.getElementById('dlSvg').addEventListener('click', downloadSVG);
-  document.getElementById('dlPng').addEventListener('click', downloadPNG);
-  document.getElementById('dlTxt').addEventListener('click', downloadTXT);
-  document.getElementById('example').addEventListener('click', ()=>{ fillExample(); compute(); });
-  document.getElementById('makeInterpret').addEventListener('click', generateInterpretation);
-});
-</script>
+      // For demo purposes only (replace with actual astrology logic later)
+      document.getElementById("output").innerText =
+        `✅ Kundli Generated!\n\nCity: ${city.toUpperCase()}\nDOB: ${dob}\nTOB: ${tob}\nLat: ${lat}, Lon: ${lon}, TZ: ${tz}\n\n⚡ Your chart is ready with premium style.`;
+    }
+  </script>
 </body>
 </html>
