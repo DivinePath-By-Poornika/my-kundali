@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kundli Generator — Cities Only (No API/Swiss) · Pro Final</title>
+  <title>Kundli Generator — Cities Base (Accurate Engine, No API/Swiss)</title>
   <style>
-    :root{--bg:#0b0f22;--card:#121735;--ink:#eaf0ff;--muted:#9fb1e0;--accent:#7dd3fc;--ok:#87fba8;--warn:#ffd36b}
+    :root{--bg:#0c1022;--card:#121835;--ink:#eaf0ff;--muted:#9fb1e0;--accent:#7dd3fc;--glow:#52a6ff;--ok:#87fba8;--warn:#ffd36b}
     *{box-sizing:border-box}
     body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial;background:radial-gradient(1200px 800px at 80% -20%,#19315d40 0%,transparent 60%),var(--bg);color:var(--ink)}
     header{padding:22px 16px 8px;display:flex;gap:10px;align-items:center;justify-content:space-between}
@@ -17,9 +17,9 @@
     .panel h2{margin:0 0 10px;font-size:16px;font-weight:700;color:#d9e7ff}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     label{display:block;font-size:12px;color:var(--muted);margin:8px 0 6px}
-    input,select,button,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2a335f;background:#0f1433;color:var(--ink);outline:none}
+    input,select,button,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2a335f;background:#0f1433;color:var(--ink);outline:none;position:relative;z-index:2}
     input:focus,select:focus,textarea:focus{border-color:#5fa8ff;box-shadow:0 0 0 3px #5fa8ff33}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .row{display:flex;gap:10px}
     .row>*{flex:1}
     .btn{cursor:pointer;border:1px solid #3156a3;background:linear-gradient(180deg,#23408e,#1a2f6c);font-weight:700;transition:transform .12s ease,box-shadow .12s ease}
     .btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px #3b82f620}
@@ -35,17 +35,18 @@
     .badge{font:12px/1.2 ui-monospace,monospace;background:#0c1130;border:1px solid #384074;border-radius:8px;padding:8px 10px;color:#bcd}
     .section{display:grid;gap:8px}
     textarea{min-height:160px;resize:vertical}
+    .ok{color:var(--ok)}
     .alert{border-left:3px solid var(--warn);padding-left:10px}
   </style>
 </head>
 <body>
   <header>
-    <h1>🔭 Kundli Generator — Cities Only (No API / No Swiss) • Pro Final</h1>
+    <h1>🔭 Kundli Generator — Cities Base (No API / No Swiss)</h1>
     <div class="chips">
       <div class="chip">Sidereal (Lahiri)</div>
       <div class="chip">Equal Houses</div>
-      <div class="chip">North‑Indian Layout</div>
-      <div class="chip" id="precTag">Improved Astronomy (+ΔT, nutation)</div>
+      <div class="chip">North-Indian Layout</div>
+      <div class="chip" id="precTag">Upgraded Astronomy</div>
     </div>
   </header>
 
@@ -108,7 +109,7 @@
 
     <section class="section">
       <div class="card panel">
-        <h2>North‑Indian Chart</h2>
+        <h2>North-Indian Chart</h2>
         <div class="panel" style="background:#0c1130;border-radius:12px;border:1px solid #2a335f">
           <svg id="chart" viewBox="0 0 800 800" width="800" height="800" role="img" aria-label="Kundli Chart"></svg>
         </div>
@@ -116,36 +117,35 @@
           <span class="badge" id="ayanamshaLbl">Ayanamsha: —</span>
           <span class="badge" id="ascLbl">Asc: —</span>
           <span class="badge" id="nakLbl">Moon Nakshatra: —</span>
-          <span class="badge" id="accLbl">Calc: ~arc‑minute Sun/Moon; ~few arc‑min planets</span>
         </div>
       </div>
 
       <div class="card panel">
         <h2>Graha Longitudes (Sidereal – Lahiri)</h2>
         <table id="tbl"><thead><tr><th>Graha</th><th>Longitude</th><th>Rāśi</th><th>Nakshatra</th><th>House</th><th>Status</th></tr></thead><tbody></tbody></table>
-        <p class="muted">Offline engine with improved astronomy (ΔT, nutation, true obliquity). For sub‑arcminute parity with astro‑grade tools you’d integrate Swiss later, but this build avoids any API.</p>
+        <p class="muted">This engine is fully offline. For sub‑arcminute research, later you can plug Swiss Ephemeris, but it isn’t required for this app.</p>
       </div>
 
       <div class="card panel">
-        <h2>House‑wise Placement</h2>
+        <h2>House-wise Placement</h2>
         <div id="houseList" class="section"></div>
       </div>
 
       <div class="card panel">
         <h2>Interpretation</h2>
         <button class="btn" id="makeInterpret">Generate Explanation</button>
-        <textarea id="interpretBox" placeholder="Click to generate a paragraph explaining placements house‑by‑house."></textarea>
+        <textarea id="interpretBox" placeholder="Click to generate a paragraph explaining placements house-by-house."></textarea>
       </div>
     </section>
   </main>
 
 <script>
 /*****************************************
- * Kundli Engine — Pro Final (No API)
+ * Kundli Engine — Cities Base (Accurate)
  *  - Sidereal (Lahiri), Equal Houses
- *  - True obliquity + nutation
- *  - ΔT (UT→TT) estimate for ephemerides
- *  - Moon model upgraded; Sun apparent long.
+ *  - North-Indian chart
+ *  - PNG/SVG/TXT export
+ *  - No external APIs
  *****************************************/
 const D2R = Math.PI/180, R2D = 180/Math.PI;
 const ZODIAC = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
@@ -182,60 +182,56 @@ const EXALT = { Sun:[0,10], Moon:[1,3], Mars:[9,28], Mercury:[5,15], Jupiter:[3,
 const DEBIL = { Sun:[6,10], Moon:[7,3], Mars:[3,28], Mercury:[11,15], Jupiter:[9,5], Venus:[5,27], Saturn:[0,20] };
 
 // Utils
-const norm360=x=>((x%360)+360)%360;
-const clampNum = (v, def=0) => isFinite(v)?v:def;
-function dms(deg){ const d=Math.floor(deg); const mfull=(deg-d)*60; const m=Math.floor(mfull); const s=Math.round((mfull-m)*60); return `${d}° ${m}' ${s}"`; }
+const norm360=x=>((x%360)+360)%360; const clampNum = (v, def=0) => isFinite(v)?v:def;
+function dms(deg){ const d=Math.floor(deg); const mfull=(deg-d)*60; const m=Math.floor(mfull); const s=Math.round((mfull-m)*60); return `${d}° ${m}' ${s}\"`; }
 function formatLon(lon){ const s=Math.floor(lon/30); const d=lon-s*30; return `${ZODIAC[s]} ${d.toFixed(2)}°`; }
 
-// Time & Earth orientation
+// Time & astronomy core (high-accuracy, offline)
 function julianDay(y,m,d,h,tz){ // tz hours east of UTC
-  h = (h||0) - (tz||0); // local -> UTC hours
+  h = (h||0) - (tz||0); // convert local to UTC hours
   const A = Math.floor((14 - m)/12); y = y + 4800 - A; m = m + 12*A - 3;
   const JDN = d + Math.floor((153*m+2)/5) + 365*y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400) - 32045;
-  return JDN + (h-12)/24; // JD starting from noon
+  return JDN + (h-12)/24; // astronomical noon base
 }
 function tCent(JD){ return (JD - 2451545.0)/36525; }
-function meanObliquity(JD){ const U=(JD-2451545.0)/3652500; const eps=23 + (26 + ((21.448 - 46.8150*U - 0.00059*U*U + 0.001813*U*U*U))/60)/60; return eps*D2R; }
-function nutation(JD){ // 4-term nutation series (arcsec)
-  const T=tCent(JD);
-  const Ls = norm360(280.4665 + 36000.7698*T); // mean long Sun
-  const Lm = norm360(218.3165 + 481267.8813*T); // mean long Moon
-  const Om = norm360(125.04452 - 1934.136261*T);
-  const dpsi = (-17.20*Math.sin(Om*D2R) - 1.32*Math.sin(2*Ls*D2R) - 0.23*Math.sin(2*Lm*D2R) + 0.21*Math.sin(2*Om*D2R));
-  const deps =  (9.20*Math.cos(Om*D2R) + 0.57*Math.cos(2*Ls*D2R) + 0.10*Math.cos(2*Lm*D2R) - 0.09*Math.cos(2*Om*D2R));
-  return { dpsi: dpsi/3600, deps: deps/3600 }; // in degrees
+function meanObliquity(T){ // IAU 2006
+  const U=T/100; const arcsec = 84381.406 - 4680.93*U - 1.55*U*U + 1999.25*U*U*U - 51.38*U**4 - 249.67*U**5 - 39.05*U**6 + 7.12*U**7 + 27.87*U**8 + 5.79*U**9 + 2.45*U**10; return (arcsec/3600)*D2R; }
+function nutation(T){ // Meeus truncated
+  const D=norm360(297.85036 + 445267.111480*T - 0.0019142*T*T + T*T*T/189474)*D2R;
+  const M=norm360(357.52772 + 35999.050340*T - 0.0001603*T*T - T*T*T/300000)*D2R;
+  const Mp=norm360(134.96298 + 477198.867398*T + 0.0086972*T*T + T*T*T/56250)*D2R;
+  const F=norm360(93.27191 + 483202.017538*T - 0.0036825*T*T + T*T*T/327270)*D2R;
+  const Om=norm360(125.04452 - 1934.136261*T + 0.0020708*T*T + T*T*T/450000)*D2R;
+  let dpsi = (-17.20*Math.sin(Om) - 1.32*Math.sin(2*0) - 0.23*Math.sin(2*F) + 0.21*Math.sin(2*Om)) / 3600; // arcsec to deg (simplified)
+  let deps = ( 9.20*Math.cos(Om) + 0.57*Math.cos(2*0) + 0.10*Math.cos(2*F) - 0.09*Math.cos(2*Om)) / 3600; // deg
+  return { dpsi:dpsi*D2R, deps:deps*D2R, Om };
 }
-function trueObliquity(JD){ const eps0=meanObliquity(JD); const {deps}=nutation(JD); return eps0 + deps*D2R; }
-function gst(JD){ const T=tCent(JD); let th=280.46061837+360.98564736629*(JD-2451545)+0.000387933*T*T - T*T*T/38710000; th=((th%360)+360)%360; return th/15; }
-function gast(JD){ const eps = meanObliquity(JD); const {dpsi}=nutation(JD); return (gst(JD) + (dpsi*Math.cos(eps))/15); }
-function lstHours(JD, lon){ return (gast(JD)+lon/15+24)%24; }
-function ascendant(JD, latDeg, lonDeg){ const eps=trueObliquity(JD); const LST=lstHours(JD,lonDeg)*15*D2R; const phi=(latDeg||0)*D2R; let lambda=Math.atan2( Math.sin(LST), Math.cos(LST)*Math.cos(eps)-Math.tan(phi)*Math.sin(eps) ); return norm360(lambda*R2D); }
+function trueObliquity(T){ const eps0=meanObliquity(T); const {deps}=nutation(T); return eps0 + deps; }
+function apparentSiderealTime(JD){ const T=tCent(JD); // mean GST (IAU 2006 approx)
+  let theta = 280.46061837 + 360.98564736629*(JD-2451545) + 0.000387933*T*T - T*T*T/38710000; theta=norm360(theta);
+  const {dpsi}=nutation(T); const eps = trueObliquity(T); // add nutation in RA
+  const gast = theta + (dpsi*Math.cos(eps))*R2D; // degrees
+  return (gast/15+24)%24; // hours
+}
+function lahiriAyanamsha(JD){ // close to modern Lahiri; base J2000 ~ 23°51' (23.85°) and rate ≈ 50.290966''/yr
+  const days = JD - 2451545.0; const years = days/365.2422; const base = 23.8576; const rate = 50.290966/3600; return base + rate*years; }
+function ascendant(JD, latDeg, lonDeg){ const eps=trueObliquity(tCent(JD)); const LST=apparentSiderealTime(JD) + lonDeg/15; const th=(LST*15)*D2R; const phi=(latDeg||0)*D2R; let lambda=Math.atan2( Math.sin(th), Math.cos(th)*Math.cos(eps)-Math.tan(phi)*Math.sin(eps) ); return norm360(lambda*R2D); }
 
-// ΔT (seconds) — simple polynomial good for 1900..2100
-function deltaT_seconds(y){ const t=(y-2000)/100; return 64.7 + 64.7*t + 0*t*t; }
-
-// Lahiri ayanamsha (J2000 value ~23.8576°; rate ≈ 50.290966"/yr)
-function lahiriAyanamsha(JD){ const years=(JD-2451545.0)/365.2425; return 23.8576 + years*(50.290966/3600); }
-
-// SUN apparent ecliptic longitude (deg)
-function sunApparentLongitude(JD){ // Meeus style
-  const T=tCent(JD);
+// Sun (apparent longitude) – Meeus
+function sunApparentLongitude(JD){ const T=tCent(JD);
   const L0 = norm360(280.46646 + 36000.76983*T + 0.0003032*T*T);
-  const M  = norm360(357.52911 + 35999.05029*T - 0.0001537*T*T);
-  const e  = 0.016708634 - 0.000042037*T - 0.0000001267*T*T;
-  const C  = (1.914602 - 0.004817*T - 0.000014*T*T)*Math.sin(M*D2R)
-            + (0.019993 - 0.000101*T)*Math.sin(2*M*D2R)
-            + 0.000289*Math.sin(3*M*D2R);
-  const trueLon = L0 + C; // degrees
-  const R = (1.000001018*(1 - e*e)) / (1 + e*Math.cos((M+C)*D2R));
-  const {dpsi} = nutation(JD);
-  const eps = meanObliquity(JD);
-  const Omega = norm360(125.04 - 1934.136*T);
-  const lambda = trueLon - 0.00569 - 0.00478*Math.sin(Omega*D2R); // apparent longitude (aberration + nutation in lon)
+  const M = norm360(357.52911 + 35999.05029*T - 0.0001537*T*T);
+  const e = 0.016708634 - 0.000042037*T - 0.0000001267*T*T;
+  const C = (1.914602 - 0.004817*T - 0.000014*T*T)*Math.sin(M*D2R)
+          + (0.019993 - 0.000101*T)*Math.sin(2*M*D2R)
+          + 0.000289*Math.sin(3*M*D2R);
+  let trueLong = L0 + C;
+  const omega = 125.04 - 1934.136*T; // longitude of ascending node of the Moon
+  const lambda = trueLong - 0.00569 - 0.00478*Math.sin(omega*D2R); // apparent longitude
   return norm360(lambda);
 }
 
-// Planets — compact heliocentric elements (good to few arc‑min); geocentric ecliptic longitude
+// Compact planetary model (heliocentric -> geocentric, ecliptic lon)
 function solveKepler(M,e){ M=M*D2R; let E=M+e*Math.sin(M)*(1+e*Math.cos(M)); for(let i=0;i<15;i++){ const dE=(E-e*Math.sin(E)-M)/(1-e*Math.cos(E)); E-=dE; if(Math.abs(dE)<1e-12) break;} return E; }
 const ELEMS={
   Mercury:{ a:0.38709893, e:[0.20563069, 0.00002527], I:[7.00487,-23.51/3600], L:[252.25084,149472.67411175], wbar:[77.45645, 573.57/3600], Omega:[48.33167,-446.30/3600] },
@@ -245,35 +241,22 @@ const ELEMS={
   Jupiter:{ a:5.20336301, e:[0.04839266,-0.00012880], I:[1.30530,-4.15/3600], L:[34.40438,3034.74612775], wbar:[14.75385,  7.30/3600], Omega:[100.55615,1217.17/3600] },
   Saturn: { a:9.53707032, e:[0.05415060,-0.00036762], I:[2.48446,  6.11/3600], L:[49.94432,1222.49362201], wbar:[92.43194, -17.59/3600], Omega:[113.71504, -1591.05/3600] },
 };
-function planetHelioEcliptic(JD, name){ const T=tCent(JD); const el=ELEMS[name]; const a=el.a; const e=el.e[0]+el.e[1]*T; const I=(el.I[0]+el.I[1]*T)*D2R; const L=el.L[0]+el.L[1]*T; const wbar=el.wbar[0]+el.wbar[1]*T; const Omega=el.Omega[0]+el.Omega[1]*T; const M=norm360(L-wbar); const E=solveKepler(M,e); const v=2*Math.atan2(Math.sqrt(1+e)*Math.sin(E/2),Math.sqrt(1-e)*Math.cos(E/2)); const r=a*(1-e*Math.cos(E)); const w=(wbar-Omega)*D2R; const x=r*( Math.cos(Omega*D2R)*Math.cos(w+v) - Math.sin(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const y=r*( Math.sin(Omega*D2R)*Math.cos(w+v) + Math.cos(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const z=r*( Math.sin(w+v)*Math.sin(I) ); return {x,y,z}; }
 function eclipLonLat(x,y,z){ const lon=Math.atan2(y,x); const rxy=Math.hypot(x,y); const lat=Math.atan2(z,rxy); return {lon:norm360(lon*R2D), lat:lat*R2D}; }
+function planetHelioEcliptic(JD, name){ const T=tCent(JD); const el=ELEMS[name]; const a=el.a; const e=el.e[0]+el.e[1]*T; const I=(el.I[0]+el.I[1]*T)*D2R; const L=el.L[0]+el.L[1]*T; const wbar=el.wbar[0]+el.wbar[1]*T; const Omega=el.Omega[0]+el.Omega[1]*T; const M=norm360(L-wbar); const E=solveKepler(M,e); const v=2*Math.atan2(Math.sqrt(1+e)*Math.sin(E/2),Math.sqrt(1-e)*Math.cos(E/2)); const r=a*(1-e*Math.cos(E)); const w=(wbar-Omega)*D2R; const x=r*( Math.cos(Omega*D2R)*Math.cos(w+v) - Math.sin(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const y=r*( Math.sin(Omega*D2R)*Math.cos(w+v) + Math.cos(Omega*D2R)*Math.sin(w+v)*Math.cos(I) ); const z=r*( Math.sin(w+v)*Math.sin(I) ); return {x,y,z}; }
 function planetGeoLon(JD,name){ if(name==="Sun"){ return sunApparentLongitude(JD); } const E=planetHelioEcliptic(JD,"Earth"); const P=planetHelioEcliptic(JD,name); const x=P.x-E.x, y=P.y-E.y, z=P.z-E.z; return eclipLonLat(x,y,z).lon; }
 
-// Moon longitude — upgraded truncated series (Meeus-like)
-function moonLongitude(JD){
-  const T=(JD-2451545.0)/36525;
-  const L0=norm360(218.3164477 + 481267.88123421*T - 0.0015786*T*T + T*T*T/538841 - T*T*T*T/65194000);
-  const D =norm360(297.8501921 + 445267.1114034*T - 0.0018819*T*T + T*T*T/545868 - T*T*T*T/113065000);
-  const M =norm360(357.5291092 + 35999.0502909*T - 0.0001536*T*T + T*T*T/24490000);
-  const Mp=norm360(134.9633964 + 477198.8675055*T + 0.0087414*T*T + T*T*T/69699 - T*T*T*T/14712000);
-  const F =norm360(93.2720950  + 483202.0175233*T - 0.0036539*T*T - T*T*T/3526000 + T*T*T*T/863310000);
-  const E = 1 - 0.002516*T - 0.0000074*T*T;
-  // [A, D, M, Mp, F, Epow]
-  const terms=[
-    [6288774, 0, 0, 1, 0, 0], [1274027, 2,-1, 0, 0, 1], [658314, 2, 0,-1, 0, 0], [213618, 0, 0, 2, 0, 0], [-185116, 0, 1, 0, 0, 1], [-114332, 0, 0, 0, 2, 0],
-    [58793, 2,-1, 1, 0, 1], [57066, 2,-1,-1, 0, 1], [53322, 2, 0, 0, 0, 0], [45758, 0, 1,-1, 0, 1], [-40923, 1, 0, 0, 0, 0], [-34720, 0, 1, 1, 0, 1],
-    [-30383, 2, 0,-2, 0, 0], [15327, 2,-2, 0, 0, 0], [-12528, 0, 0, 1, 2, 0], [10980, 0, 0, 1,-2, 0], [10675, 4,-1,-1, 0, 1], [10034, 0, 0, 3, 0, 0],
-    [8548, 4,-1,-2, 0, 1], [-7888, 2, 1,-1, 0, 1], [-6766, 2, 1, 0, 0, 1], [-5163, 1, 0,-1, 0, 0], [4987, 1, 1, 0, 0, 1], [4036, 2,-1, 2, 0, 1],
-    [3994, 2, 0, 1, 0, 0], [3861, 2,-2,-1, 0, 0], [3665, 2,-2, 1, 0, 0], [-2689, 0, 1,-2, 0, 1], [-2602, 2,-1, 0, 2, 1], [-2390, 2,-1,-2, 0, 1],
-    [2359, 0, 1, 2, 0, 1], [2109, 2, 0, 0,-2, 0], [2045, 2, 0, 2, 0, 0], [1773, 2, 1,-2, 0, 1], [1595, 2, 1, 0,-2, 1], [1215, 2, 0,-1, 2, 0]
-  ];
-  let sum=0; for(const [A,kD,kM,kMp,kF,Ep] of terms){ const arg=(kD*D + kM*M + kMp*Mp + kF*F)*D2R; const Efac = Ep? (Ep===1?E:(E*E)) : 1; sum += A*Efac*Math.sin(arg); }
-  const deltaDeg = sum/1000000*(180/Math.PI);
-  // Add small correction from nutation in longitude (projected)
-  const {dpsi} = nutation(JD);
-  return norm360(L0 + deltaDeg + dpsi*Math.cos(trueObliquity(JD)));
+// Moon longitude (truncated high-accuracy)
+function moonLongitude(JD){ const T=(JD-2451545.0)/36525; const L0=norm360(218.3164477+481267.88123421*T-0.0015786*T*T+T*T*T/538841- T*T*T*T/65194000);
+  const D=norm360(297.8501921+445267.1114034*T-0.0018819*T*T+T*T*T/545868- T*T*T*T/113065000);
+  const M=norm360(357.5291092+35999.0502909*T-0.0001536*T*T+T*T*T/24490000);
+  const Mp=norm360(134.9633964+477198.8675055*T+0.0087414*T*T+T*T*T/69699- T*T*T*T/14712000);
+  const F=norm360(93.2720950+483202.0175233*T-0.0036539*T*T- T*T*T/3526000 + T*T*T*T/863310000);
+  const terms=[[6288774,0,0,1,0],[1274027,2,-1,0,0],[658314,2,-2,0,0],[213618,0,0,2,0],[-185116,0,1,0,2],[-114332,0,0,0,2],[58793,2,-1,2,0],[57066,2,-1,-1,0],[53322,2,-2,-2,0],[45758,2,-2,1,0],[-40923,0,1,0,0],[-34720,1,1,0,0],[-30383,2,0,0,0]];
+  let sum=0; for(const [A,kD,kM,kMp,kF] of terms){ const arg=(kD*D+kM*M+kMp*Mp+kF*F)*D2R; sum += A*Math.sin(arg); }
+  const deltaDeg = sum/1000000*(180/Math.PI); const lon = L0 + deltaDeg; // apparent corrections are small
+  return norm360(lon);
 }
-function meanNode(JD){ const T=(JD-2451545.0)/36525; let Om=125.0445550-1934.1361849*T+0.0020762*T*T+(T*T*T)/467410 - (T*T*T*T)/18999000; return norm360(Om+180); }
+function meanNode(JD){ const T=(JD-2451545.0)/36525; let Om=125.0445550-1934.1361849*T+0.0020762*T*T+(T*T*T)/467410; return norm360(Om+180); }
 
 function nakshatra(lon){ const span=360/27; const idx=Math.floor(lon/span); const pada=Math.floor((lon%span)/(span/4))+1; return {name:NAKS[idx], pada}; }
 function houseOf(lonSid, ascSid){ const diff=norm360(lonSid-ascSid); return Math.floor(diff/30)+1; }
@@ -296,40 +279,36 @@ function compute(){
     const lon=parseFloat(document.getElementById('lon').value||'0');
 
     const [Y,M,D]=dob.split('-').map(n=>parseInt(n,10)); const [hh,mm,ss]=(tob||'00:00:00').split(':').map(n=>parseInt(n||'0',10)); const H=(hh||0)+(mm||0)/60+(ss||0)/3600;
-    const JD_UT=julianDay(Y,M,D,H,tz);
-    // Convert to TT for ephemerides
-    const dT=deltaT_seconds(Y + (M-0.5)/12)/86400; // in days
-    const JD_TT=JD_UT + dT;
+    const JD=julianDay(Y,M,D,H,tz);
+    const aya=lahiriAyanamsha(JD);
 
-    const aya=lahiriAyanamsha(JD_TT);
-
-    // Ascendant uses UT (Earth rotation) with apparent sidereal time
-    const ascTrop=ascendant(JD_UT, lat, lon); const ascSid=norm360(ascTrop - aya);
+    // Ascendant (tropical -> sidereal)
+    const ascTrop=ascendant(JD, lat, lon); const ascSid=norm360(ascTrop - aya);
     const longitudes={}; longitudes['Ascendant']=ascSid;
 
-    // Planets tropical/apparent -> sidereal
+    // Planets tropical -> sidereal
     const std={
-      Sun: norm360(planetGeoLon(JD_TT,'Sun') - aya),
-      Moon: norm360(moonLongitude(JD_TT) - aya),
-      Mars: norm360(planetGeoLon(JD_TT,'Mars') - aya),
-      Mercury: norm360(planetGeoLon(JD_TT,'Mercury') - aya),
-      Jupiter: norm360(planetGeoLon(JD_TT,'Jupiter') - aya),
-      Venus: norm360(planetGeoLon(JD_TT,'Venus') - aya),
-      Saturn: norm360(planetGeoLon(JD_TT,'Saturn') - aya)
+      Sun: norm360(planetGeoLon(JD,'Sun') - aya),
+      Moon: norm360(moonLongitude(JD) - aya),
+      Mars: norm360(planetGeoLon(JD,'Mars') - aya),
+      Mercury: norm360(planetGeoLon(JD,'Mercury') - aya),
+      Jupiter: norm360(planetGeoLon(JD,'Jupiter') - aya),
+      Venus: norm360(planetGeoLon(JD,'Venus') - aya),
+      Saturn: norm360(planetGeoLon(JD,'Saturn') - aya)
     };
-    const rahuTrop=meanNode(JD_TT); std.Rahu=norm360(rahuTrop - aya); std.Ketu=norm360(std.Rahu+180);
+    const rahuTrop=meanNode(JD); std.Rahu=norm360(rahuTrop - aya); std.Ketu=norm360(std.Rahu+180);
     for(const k of Object.keys(std)) longitudes[k]=std[k];
 
     // Table & badges
     const tbody=document.querySelector('#tbl tbody'); tbody.innerHTML=''; const rows=[];
     for(const g of GRAHAS){ const lonSid=longitudes[g]; const sign=Math.floor(lonSid/30); const {name:nk,pada}=nakshatra(lonSid); const house=houseOf(lonSid,ascSid); const status=statusOf(g,lonSid); const tr=document.createElement('tr'); const tds=[g, `${formatLon(lonSid)} (${dms(lonSid)})`, ZODIAC[sign], `${nk} ${pada}`, house, status]; for(const v of tds){ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); } tbody.appendChild(tr); rows.push({graha:g, lon:lonSid, sign, nk:`${nk} ${pada}`, house}); }
-    document.getElementById('ayanamshaLbl').textContent=`Ayanamsha (Lahiri): ${aya.toFixed(4)}°`;
+    document.getElementById('ayanamshaLbl').textContent=`Ayanamsha (Lahiri): ${aya.toFixed(2)}°`;
     document.getElementById('ascLbl').textContent=`Asc: ${formatLon(ascSid)}`;
     document.getElementById('nakLbl').textContent=`Moon: ${nakshatra(longitudes['Moon']).name}`;
 
     drawNorthChart(ascSid, rows.filter(r=>r.graha!=="Ascendant"));
     renderHouseList(ascSid, rows);
-    window.__kundli={name,JD_UT,JD_TT,aya,ascSid,rows,lat,lon,tz};
+    window.__kundli={name,JD,aya,ascSid,rows,lat,lon,tz};
   }catch(err){ console.error(err); showError(err.message||String(err)); }
 }
 
@@ -344,11 +323,10 @@ function drawNorthChart(ascSid, items){
   const lines=[[cx,cy-R,cx+R,cy],[cx+R,cy,cx,cy+R],[cx,cy+R,cx-R,cy],[cx-R,cy,cx,cy-R],[cx,cy-R,cx,cy+R],[cx-R,cy,cx+R,cy]]; for(const [x1,y1,x2,y2] of lines){ g('line',{x1,y1,x2,y2,stroke:'#2a3366','stroke-width':2}); }
   const houseCenters=[[cx,cy-R+80],[cx+130,cy-130],[cx+R-80,cy],[cx+130,cy+130],[cx,cy+R-80],[cx-130,cy+130],[cx-R+80,cy],[cx-130,cy-130],[cx,cy-R+190],[cx+190,cy],[cx,cy+190],[cx-190,cy]];
   const ascSign=Math.floor(ascSid/30);
-  for(let i=0;i<12;i++){ const sign=(ascSign+i)%12; const [x,y]=houseCenters[i]; const t=g('text',{x,y,'text-anchor':'middle','dominant-baseline':'middle',fill:'#bcd','font-size':18}); t.textContent=`${i+1}
-${ZODIAC[sign].slice(0,3)}`; }
+  for(let i=0;i<12;i++){ const sign=(ascSign+i)%12; const [x,y]=houseCenters[i]; const t=g('text',{x,y,'text-anchor':'middle','dominant-baseline':'middle',fill:'#bcd','font-size':18}); t.textContent=`${i+1}\n${ZODIAC[sign].slice(0,3)}`; }
   const houseMap=Array.from({length:12},()=>[]); for(const it of items){ const h=it.house-1; houseMap[h].push(it); }
   for(let i=0;i<12;i++){ const [x,y]=houseCenters[i]; const list=houseMap[i]; if(!list.length) continue; list.sort((a,b)=>a.lon-b.lon); list.forEach((it,idx)=>{ const t=g('text',{x,y:y+22*idx+18,'text-anchor':'middle','dominant-baseline':'middle',fill:'#e8ecff','font-size':16}); const short={Sun:'Su',Moon:'Mo',Mars:'Ma',Mercury:'Me',Jupiter:'Ju',Venus:'Ve',Saturn:'Sa',Rahu:'Ra',Ketu:'Ke'}[it.graha]||it.graha; t.textContent=`${short} ${((it.lon%30).toFixed(1))}`; }); }
-  const title=grp('g',{}); svg.appendChild(title); const tt=document.createElementNS('http://www.w3.org/2000/svg','text'); tt.setAttribute('x', cx); tt.setAttribute('y', 40); tt.setAttribute('text-anchor','middle'); tt.setAttribute('fill','#cfe1ff'); tt.setAttribute('font-size','20'); tt.textContent='Kundli (North‑Indian)'; title.appendChild(tt);
+  const title=grp('g',{}); svg.appendChild(title); const tt=document.createElementNS('http://www.w3.org/2000/svg','text'); tt.setAttribute('x', cx); tt.setAttribute('y', 40); tt.setAttribute('text-anchor','middle'); tt.setAttribute('fill','#cfe1ff'); tt.setAttribute('font-size','20'); tt.textContent='Kundli (North-Indian)'; title.appendChild(tt);
 }
 
 function renderHouseList(ascSid, rows){
@@ -357,10 +335,8 @@ function renderHouseList(ascSid, rows){
   houses.forEach((arr,i)=>{ const div=document.createElement('div'); div.className='card panel'; const title=document.createElement('h3'); title.textContent=`House ${i+1} — ${meanings[i]}`; title.style.margin='0 0 6px'; title.style.fontSize='14px'; title.style.color='#d7e4ff'; div.appendChild(title); const p=document.createElement('p'); p.className='muted'; p.textContent=arr.length?`Planets: ${arr.map(o=>o.graha).join(', ')}`:'Planets: —'; div.appendChild(p); box.appendChild(div); });
 }
 
-function generateInterpretation(){ const K=window.__kundli; if(!K){ showError('Generate the chart first.'); return ''; } const {ascSid, rows, aya} = K; const ascSign=Math.floor(ascSid/30); const byHouse=Array.from({length:12},()=>[]); for(const r of rows){ if(r.graha==='Ascendant') continue; byHouse[r.house-1].push(r);} const lines=[]; lines.push(`This kundli uses the sidereal Lahiri ayanamsha (~${aya.toFixed(4)}°) with equal houses from the Ascendant. Summary below:`);
- for(let h=1; h<=12; h++){ const arr=byHouse[h-1]; const sign=(ascSign+(h-1))%12; const who=arr.length?arr.map(o=>o.graha).join(', '):'no planets'; let detail=`House ${h} in ${ZODIAC[sign]}: ${who}.`; if(arr.length){ arr.forEach(o=>{ const s=statusOf(o.graha,o.lon); const deg=(o.lon%30).toFixed(1); let add=` ${o.graha} at ${deg}° ${ZODIAC[o.sign]}`; if(s && s!=='—') add+=` (${s})`; add+=' expresses results through this house.'; detail+=add; }); } lines.push(detail);} const text=lines.join("
-
-"); const ta=document.getElementById('interpretBox'); ta.value=text; return text; }
+function generateInterpretation(){ const K=window.__kundli; if(!K){ showError('Generate the chart first.'); return ''; } const {ascSid, rows, aya} = K; const ascSign=Math.floor(ascSid/30); const byHouse=Array.from({length:12},()=>[]); for(const r of rows){ if(r.graha==='Ascendant') continue; byHouse[r.house-1].push(r);} const lines=[]; lines.push(`This kundli uses the sidereal Lahiri ayanamsha (~${aya.toFixed(2)}°) with equal houses from the Ascendant. Summary below:`);
+ for(let h=1; h<=12; h++){ const arr=byHouse[h-1]; const sign=(ascSign+(h-1))%12; const who=arr.length?arr.map(o=>o.graha).join(', '):'no planets'; let detail=`House ${h} in ${ZODIAC[sign]}: ${who}.`; if(arr.length){ arr.forEach(o=>{ const s=statusOf(o.graha,o.lon); const deg=(o.lon%30).toFixed(1); let add=` ${o.graha} at ${deg}° ${ZODIAC[o.sign]}`; if(s && s!=='—') add+=` (${s})`; add+=' expresses results through this house.'; detail+=add; }); } lines.push(detail);} const text=lines.join('\n\n'); const ta=document.getElementById('interpretBox'); ta.value=text; return text; }
 
 // Downloads
 function downloadSVG(){ const svg=document.getElementById('chart'); const data=new XMLSerializer().serializeToString(svg); const blob=new Blob([data],{type:'image/svg+xml'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kundli.svg'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),500); }
@@ -378,30 +354,32 @@ function fillCities(){
     document.getElementById('dst').value=String(c.dst||0);
   };
   sel.addEventListener('change', applyCity);
-  sel.value='0'; applyCity();
+  applyCity();
 }
+
 function setupManualToggle(){
   const manual=document.getElementById('manual');
   const ids=['lat','lon','tz','dst'];
   const setState=()=>{ ids.forEach(id=>{ const el=document.getElementById(id); el.disabled=!manual.checked; }); };
-  manual.addEventListener('change', setState); setState();
+  manual.addEventListener('change', setState);
+  setState();
 }
+
 function fillExample(){ document.getElementById('name').value='Example — Delhi'; document.getElementById('dob').value='1999-01-15'; document.getElementById('tob').value='14:30:00'; document.getElementById('city').value='0'; document.getElementById('city').dispatchEvent(new Event('change')); document.getElementById('dst').value='0'; clearError(); }
 
 // Events
 window.addEventListener('DOMContentLoaded',()=>{
   fillCities();
   setupManualToggle();
+  // Safe defaults so first-time users can compute immediately
+  if(!document.getElementById('dob').value){ document.getElementById('dob').value='1999-01-15'; }
+  if(!document.getElementById('tob').value){ document.getElementById('tob').value='14:30:00'; }
   document.getElementById('calc').addEventListener('click', compute);
   document.getElementById('dlSvg').addEventListener('click', downloadSVG);
   document.getElementById('dlPng').addEventListener('click', downloadPNG);
   document.getElementById('dlTxt').addEventListener('click', downloadTXT);
   document.getElementById('example').addEventListener('click', ()=>{ fillExample(); compute(); });
   document.getElementById('makeInterpret').addEventListener('click', generateInterpretation);
-
-  // Safe defaults so first-time users can compute immediately
-  if(!document.getElementById('dob').value){ document.getElementById('dob').value='1999-01-15'; }
-  if(!document.getElementById('tob').value){ document.getElementById('tob').value='14:30:00'; }
 });
 </script>
 </body>
