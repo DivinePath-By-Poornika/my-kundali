@@ -1,233 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Dream Kundli 🌌</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dream Kundli — Premium (No API)</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at top, #0d1b2a, #000000 80%);
-      color: #fff;
-      overflow-x: hidden;
+    :root{
+      --bg:#070a1a;--bg2:#0e1430;--card:#0b1030;--ink:#eaf1ff;--muted:#9fb3ff;--accent:#86e1ff;--glow:#63f5ff;--pink:#ff7ae0;--gold:#ffd36e
     }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Ubuntu,Arial;background:radial-gradient(1200px 800px at 70% -10%,#23326b55 0%,transparent 60%),var(--bg);color:var(--ink);overflow-x:hidden}
+    header{position:sticky;top:0;z-index:5;padding:22px 16px;background:linear-gradient(180deg,#0c1230dd,#0c123000);backdrop-filter:blur(8px);border-bottom:1px solid #223}
+    h1{margin:0;text-align:center;font-weight:800;letter-spacing:.2px;font-size:clamp(22px,3vw,30px);text-shadow:0 0 20px #4ff8ff66}
+    .wrap{max-width:1200px;margin:18px auto;padding:0 16px;display:grid;grid-template-columns:380px 1fr;gap:18px}
+    @media (max-width:1080px){.wrap{grid-template-columns:1fr}}
+    .card{background:linear-gradient(180deg,#0d133b 0%, #0a0f28 100%);border:1px solid #2a335f;border-radius:18px;box-shadow:0 20px 50px #0008}
+    .panel{padding:16px}
+    .panel h2{margin:0 0 10px;font-size:16px;font-weight:800;color:#d8e6ff}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    label{display:block;font-size:12px;color:var(--muted);margin:8px 0 6px}
+    input,select,button,textarea{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #2a335f;background:#0b1130;color:var(--ink);outline:none}
+    input:focus,select:focus,textarea:focus{border-color:#5fa8ff;box-shadow:0 0 0 3px #5fa8ff30}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .row>*{flex:1}
+    .btn{cursor:pointer;border:1px solid #3156a3;background:linear-gradient(180deg,#23408e,#1a2f6c);font-weight:800;transition:transform .2s ease, box-shadow .2s ease}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px #4ff8ff3d}
+    .btn.ghost{background:#0b1130}
+    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+    .chip{font-size:12px;border:1px dashed #3850a8;border-radius:999px;padding:6px 10px;color:#cfe1ff}
+    .muted{color:var(--muted);font-size:12px}
+    .badge{font:12px/1.2 ui-monospace,monospace;background:#0c1130;border:1px solid #384074;border-radius:8px;padding:8px 10px;color:#bcd}
 
-    header {
-      text-align: center;
-      padding: 2rem;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-    }
+    /* Galaxy background stars */
+    .star{position:fixed;width:2px;height:2px;background:#fff;border-radius:50%;opacity:.7;animation:twinkle 3.6s ease-in-out infinite}
+    @keyframes twinkle{0%,100%{opacity:.2}50%{opacity:1}}
 
-    h1 {
-      font-size: 2.5rem;
-      text-shadow: 0 0 20px cyan, 0 0 40px purple;
-    }
+    /* Traditional chart container */
+    #tradWrap{background:#070a22;border:1px solid #2a335f;border-radius:14px;padding:12px}
+    #tradChart{width:100%;height:auto}
 
-    .container {
-      max-width: 1100px;
-      margin: 2rem auto;
-      padding: 2rem;
-    }
+    /* Analysis box */
+    #analysisBox{min-height:180px;white-space:pre-wrap;background:#081033;border:1px solid #2a3d77;border-radius:12px;padding:12px}
 
-    .card {
-      background: rgba(255, 255, 255, 0.07);
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
-      margin-bottom: 2rem;
-      transition: 0.3s;
-      backdrop-filter: blur(12px);
-    }
-
-    .card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 0 35px rgba(0, 255, 255, 0.4);
-    }
-
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 600;
-    }
-
-    input, select, button {
-      margin-top: 0.5rem;
-      padding: 0.7rem;
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      outline: none;
-      font-size: 1rem;
-      background: rgba(0, 0, 0, 0.5);
-      color: #fff;
-    }
-
-    button {
-      margin-top: 1.5rem;
-      cursor: pointer;
-      background: linear-gradient(135deg, cyan, purple);
-      color: white;
-      font-weight: 600;
-      transition: 0.3s;
-      box-shadow: 0 0 20px rgba(0,255,255,0.5);
-    }
-
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
-    }
-
-    #kundliChart {
-      margin-top: 2rem;
-    }
-
-    #analysis {
-      margin-top: 2rem;
-      font-size: 1.1rem;
-      line-height: 1.8;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      padding: 1.5rem;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-    }
-
-    /* Star animations */
-    .star {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle 3s infinite ease-in-out;
-    }
-
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 1; }
-    }
+    /* Toast */
+    #toast{position:fixed;right:16px;bottom:16px;background:#0c1438;border:1px solid #325;box-shadow:0 10px 30px #0008;color:#dff;padding:10px 14px;border-radius:12px;opacity:0;transform:translateY(10px);transition:.25s}
+    #toast.show{opacity:1;transform:translateY(0)}
   </style>
 </head>
 <body>
   <header>
-    <h1>🌌 Dream Kundli Generator 🌠</h1>
-    <p>Experience astrology with precision and beauty</p>
+    <h1>🌌 Dream Kundli — Premium (No API)</h1>
   </header>
 
-  <div class="container">
-    <div class="card">
-      <h2>Enter Your Birth Details</h2>
-      <label>Name:</label>
-      <input type="text" id="name" placeholder="Enter your name">
+  <main class="wrap">
+    <!-- Left: Input -->
+    <section class="card panel">
+      <h2>Birth Details</h2>
+      <div>
+        <label>Name</label>
+        <input id="name" placeholder="e.g., Priyanshu" />
+      </div>
+      <div class="grid">
+        <div>
+          <label>Date of Birth</label>
+          <input id="dob" type="date" />
+        </div>
+        <div>
+          <label>Time of Birth</label>
+          <input id="tob" type="time" step="1" />
+        </div>
+      </div>
+      <div>
+        <label>City (preset lat/long & time zone)</label>
+        <select id="city"></select>
+      </div>
+      <p class="muted">Pick a city first; fields auto-fill. This build is API-free and runs fully in-browser.</p>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="calc">✨ Calculate Kundli</button>
+        <button class="btn ghost" id="example">Quick Example</button>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="dlChart">Download Chart (PNG)</button>
+        <button class="btn" id="dlAnalysis">Download Analysis (TXT)</button>
+        <button class="btn" id="dlBundle">Download Bundle (PNG)</button>
+      </div>
+      <div class="chips">
+        <div class="chip">Dreamy Galaxy UI</div>
+        <div class="chip">No API / No Swiss</div>
+        <div class="chip">North-Indian + Visual</div>
+      </div>
+    </section>
 
-      <label>Birth Date:</label>
-      <input type="date" id="dob">
+    <!-- Right: Outputs -->
+    <section style="display:grid;gap:16px">
+      <div class="card panel">
+        <h2>Visual House Chart</h2>
+        <canvas id="polarChart" width="640" height="640" aria-label="Chart.js Houses"></canvas>
+        <div class="chips">
+          <span class="badge" id="metaName">Name: —</span>
+          <span class="badge" id="metaCity">City: —</span>
+          <span class="badge" id="metaDOB">DOB: —</span>
+          <span class="badge" id="metaTOB">Time: —</span>
+        </div>
+      </div>
 
-      <label>Birth Time:</label>
-      <input type="time" id="tob">
+      <div class="card panel" id="tradWrap">
+        <h2>Traditional Kundli (North-Indian)</h2>
+        <svg id="tradChart" viewBox="0 0 800 800" role="img" aria-label="Traditional Kundli"></svg>
+        <p class="muted">This is a stylized North-Indian diamond chart with planets placed house‑wise.</p>
+      </div>
 
-      <label>Birth City:</label>
-      <select id="city">
-        <option value="Delhi">Delhi</option>
-        <option value="Kolkata">Kolkata</option>
-        <option value="Ranchi">Ranchi</option>
-        <option value="Hazaribagh">Hazaribagh</option>
-        <option value="Mumbai">Mumbai</option>
-      </select>
+      <div class="card panel">
+        <h2>Precise Analysis</h2>
+        <div class="row">
+          <button class="btn" id="makeInterpret">Generate Detailed Analysis</button>
+        </div>
+        <div id="analysisBox"></div>
+      </div>
+    </section>
+  </main>
 
-      <button onclick="generateKundli()">✨ Generate Kundli</button>
-    </div>
+  <div id="toast">Saved!</div>
 
-    <canvas id="kundliChart" width="500" height="500"></canvas>
-    <div id="analysis"></div>
-  </div>
+<script>
+/*****************************************
+ * Premium Kundli (Client-only, No API)
+ * - Keeps your older structure in spirit
+ * - Adds: Traditional chart + Analysis + Downloads
+ *****************************************/
+const CITIES = [
+  {name:"Delhi, India", lat:28.6139, lon:77.2090, tz:5.5},
+  {name:"Kolkata, India", lat:22.5726, lon:88.3639, tz:5.5},
+  {name:"Hazaribagh, India", lat:23.9966, lon:85.3616, tz:5.5},
+  {name:"Ranchi, India", lat:23.3441, lon:85.3096, tz:5.5},
+  {name:"Mumbai, India", lat:19.0760, lon:72.8777, tz:5.5},
+  {name:"Bengaluru, India", lat:12.9716, lon:77.5946, tz:5.5},
+  {name:"Hyderabad, India", lat:17.3850, lon:78.4867, tz:5.5},
+  {name:"Chennai, India", lat:13.0827, lon:80.2707, tz:5.5},
+  {name:"Pune, India", lat:18.5204, lon:73.8567, tz:5.5},
+  {name:"Jaipur, India", lat:26.9124, lon:75.7873, tz:5.5}
+];
 
-  <script>
-    const kundliChart = document.getElementById("kundliChart").getContext("2d");
-    let chart;
+let polarChart = null; // Chart.js instance
+let latestState = null; // store last calculation for downloads
 
-    function generateKundli() {
-      const name = document.getElementById("name").value || "User";
-      const dob = document.getElementById("dob").value;
-      const tob = document.getElementById("tob").value;
-      const city = document.getElementById("city").value;
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1500)}
 
-      if (!dob || !tob) {
-        alert("Please enter both Date of Birth and Time of Birth!");
-        return;
-      }
+function initCities(){const sel=document.getElementById('city'); sel.innerHTML=''; CITIES.forEach((c,i)=>{const o=document.createElement('option'); o.value=i; o.textContent=c.name; sel.appendChild(o)}); sel.value='0'}
 
-      // Simple house calculations simulation
-      const houses = Array.from({length: 12}, () => Math.floor(Math.random() * 30) + 1);
+function example(){
+  document.getElementById('name').value = 'Example User';
+  document.getElementById('dob').value = '1998-10-25';
+  document.getElementById('tob').value = '14:35:00';
+  document.getElementById('city').value = '0';
+}
 
-      if (chart) chart.destroy();
+function calcKundli(){
+  const name=(document.getElementById('name').value||'—').trim();
+  const dob=document.getElementById('dob').value; const tob=document.getElementById('tob').value; if(!dob||!tob){alert('Please enter Date and Time of Birth.'); return}
+  const city=CITIES[Number(document.getElementById('city').value)];
 
-      chart = new Chart(kundliChart, {
-        type: "polarArea",
-        data: {
-          labels: [
-            "House 1", "House 2", "House 3", "House 4",
-            "House 5", "House 6", "House 7", "House 8",
-            "House 9", "House 10", "House 11", "House 12"
-          ],
-          datasets: [{
-            data: houses,
-            backgroundColor: [
-              "rgba(0, 255, 255, 0.6)",
-              "rgba(255, 0, 255, 0.6)",
-              "rgba(255, 215, 0, 0.6)",
-              "rgba(0, 128, 255, 0.6)",
-              "rgba(255, 69, 0, 0.6)",
-              "rgba(138, 43, 226, 0.6)",
-              "rgba(50, 205, 50, 0.6)",
-              "rgba(255, 20, 147, 0.6)",
-              "rgba(70, 130, 180, 0.6)",
-              "rgba(255, 140, 0, 0.6)",
-              "rgba(199, 21, 133, 0.6)",
-              "rgba(127, 255, 212, 0.6)"
-            ]
-          }]
-        },
-        options: {
-          plugins: {
-            legend: {
-              labels: { color: "white" }
-            }
-          },
-          scales: {
-            r: {
-              ticks: { color: "white" },
-              grid: { color: "rgba(255,255,255,0.2)" }
-            }
-          }
-        }
-      });
+  // Simulated house strengths (deterministic from input to avoid random feel)
+  const seed = (dob+"T"+tob+city.name).split('').reduce((a,c)=>a + c.charCodeAt(0), 0);
+  const houses = Array.from({length:12},(_,i)=> ((Math.sin(seed*(i+1)) + 1)*15 + 5).toFixed(1)).map(Number);
 
-      // Auto AI-like Analysis
-      document.getElementById("analysis").innerHTML = `
-        <h3>🔮 Kundli Analysis for ${name}</h3>
-        <p><b>Date of Birth:</b> ${dob} | <b>Time:</b> ${tob} | <b>City:</b> ${city}</p>
-        <p>Your Kundli shows a unique alignment of celestial houses. 
-        Strong energy is seen in <b>House ${houses.indexOf(Math.max(...houses)) + 1}</b>, 
-        representing a powerful influence in your life journey.</p>
-        <p>This chart reflects harmony in some aspects while challenges in others — 
-        guiding you towards growth, wisdom, and opportunities.</p>
-        <p>🌟 Premium Insight: The planetary energy suggests focus on 
-        <b>self-growth, career, and relationships</b> this year.</p>
-      `;
+  renderPolar(name, dob, tob, city.name, houses);
+  renderTraditional(houses);
+
+  latestState = {name, dob, tob, city: city.name, houses};
+}
+
+function renderPolar(name,dob,tob,city,values){
+  const ctx = document.getElementById('polarChart').getContext('2d');
+  if(polarChart) polarChart.destroy();
+  polarChart = new Chart(ctx, {
+    type:'polarArea',
+    data:{
+      labels:["House 1","House 2","House 3","House 4","House 5","House 6","House 7","House 8","House 9","House 10","House 11","House 12"],
+      datasets:[{ data:values, backgroundColor:[
+        'rgba(134,225,255,.55)','rgba(255,122,224,.55)','rgba(255,211,110,.55)','rgba(120,180,255,.55)','rgba(255,140,180,.55)','rgba(120,255,190,.55)','rgba(180,140,255,.55)','rgba(255,150,120,.55)','rgba(120,220,255,.55)','rgba(255,190,120,.55)','rgba(200,150,255,.55)','rgba(160,255,230,.55)'
+      ]}]
+    },
+    options:{
+      plugins:{ legend:{ labels:{ color:'#eaf1ff' } } },
+      scales:{ r:{ ticks:{ color:'#d9e6ff' }, grid:{ color:'#ffffff22' } } }
     }
+  });
+  document.getElementById('metaName').textContent = `Name: ${name}`;
+  document.getElementById('metaCity').textContent = `City: ${city}`;
+  document.getElementById('metaDOB').textContent = `DOB: ${dob}`;
+  document.getElementById('metaTOB').textContent = `Time: ${tob}`;
+}
 
-    // Create random stars in background
-    for (let i = 0; i < 60; i++) {
-      let star = document.createElement("div");
-      star.className = "star";
-      star.style.top = Math.random() * window.innerHeight + "px";
-      star.style.left = Math.random() * window.innerWidth + "px";
-      star.style.animationDuration = (Math.random() * 3 + 2) + "s";
-      document.body.appendChild(star);
-    }
-  </script>
+// Draw North-Indian diamond chart and place simplified planet markers
+function renderTraditional(hvals){
+  const svg = document.getElementById('tradChart'); while(svg.firstChild) svg.removeChild(svg.firstChild);
+  const W=800,H=800,cx=W/2,cy=H/2,R=310;
+  const NS='http://www.w3.org/2000/svg';
+  const g=(t,a)=>{const e=document.createElementNS(NS,t); for(const k in a) e.setAttribute(k,a[k]); svg.appendChild(e); return e};
+  const group=(t,a)=>{const e=document.createElementNS(NS,t); for(const k in a) e.setAttribute(k,a[k]); return e};
+
+  // Outer diamond
+  const pts=[[cx,cy-R],[cx+R,cy],[cx,cy+R],[cx-R,cy]].map(p=>p.join(',')).join(' ');
+  g('polygon',{points:pts,fill:'#070d2a',stroke:'#3a4aa6','stroke-width':3,filter:'drop-shadow(0 8px 20px rgba(10,20,80,.6))'});
+  // Inner grid lines
+  const lines=[[cx,cy-R,cx+R,cy],[cx+R,cy,cx,cy+R],[cx,cy+R,cx-R,cy],[cx-R,cy,cx,cy-R],[cx,cy-R,cx,cy+R],[cx-R,cy,cx+R,cy]];
+  lines.forEach(([x1,y1,x2,y2])=>g('line',{x1,y1,x2,y2,stroke:'#273371','stroke-width':2}));
+
+  // House center anchors
+  const C=[[cx,cy-R+80],[cx+130,cy-130],[cx+R-80,cy],[cx+130,cy+130],[cx,cy+R-80],[cx-130,cy+130],[cx-R+80,cy],[cx-130,cy-130],[cx,cy-R+190],[cx+190,cy],[cx,cy+190],[cx-190,cy]];
+
+  // House numbers + short sign label (visual only)
+  const Z=["Ari","Tau","Gem","Can","Leo","Vir","Lib","Sco","Sag","Cap","Aqu","Pis"];
+  const ascSign = 0; // visual placeholder
+  for(let i=0;i<12;i++){
+    const t = g('text',{x:C[i][0], y:C[i][1], 'text-anchor':'middle','dominant-baseline':'middle', fill:'#bcd', 'font-size':18});
+    t.textContent = `${i+1}\n${Z[(ascSign+i)%12]}`;
+  }
+
+  // Simplified planet placement (choose top houses visually)
+  const planets=["Su","Mo","Ma","Me","Ju","Ve","Sa","Ra","Ke"];
+  const order = [...hvals].map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v).slice(0,planets.length);
+  order.forEach((o,idx)=>{
+    const [x,y]=C[o.i];
+    const t=g('text',{x, y:y+22, 'text-anchor':'middle','dominant-baseline':'middle', fill:'#eaf1ff', 'font-size':16});
+    t.textContent = `${planets[idx]} ${hvals[o.i].toFixed(1)}`;
+  });
+
+  // Title
+  const title = group('g',{}); svg.appendChild(title);
+  const tt = document.createElementNS(NS,'text'); tt.setAttribute('x',cx); tt.setAttribute('y',40); tt.setAttribute('text-anchor','middle'); tt.setAttribute('fill','#cfe1ff'); tt.setAttribute('font-size','20'); tt.textContent='North‑Indian Traditional Chart'; title.appendChild(tt);
+}
+
+function makeAnalysis(){
+  if(!latestState){ alert('Please calculate the kundli first.'); return; }
+  const {name,dob,tob,city,houses} = latestState;
+  const strongest = houses.indexOf(Math.max(...houses)) + 1;
+  const weak = houses.indexOf(Math.min(...houses)) + 1;
+  const sections = [];
+  sections.push(`Profile for ${name} — ${dob} ${tob}, ${city}`);
+  sections.push(`Overall Focus: House ${strongest} shows the most pronounced energy, indicating a period of emphasis on its themes.`);
+  sections.push(`Balance & Lessons: House ${weak} invites conscious effort; developing this area can unlock stability.`);
+  sections.push(`Career & Direction: Steady traction comes from responsibilities symbolized by houses 10 and 6. Discipline converts potential to outcomes.`);
+  sections.push(`Relationships: Houses 7 and 11 point to alliances and networks. Honest agreements strengthen results; reactive decisions dilute them.`);
+  sections.push(`Health & Habits: House 6 suggests routine. Small, repeatable improvements outperform occasional intensity.`);
+  sections.push(`Growth Theme: Align daily actions with long‑term intention. Choose one priority for 90 days and track it weekly.`);
+  const txt = sections.join("\n\n");
+  document.getElementById('analysisBox').textContent = txt;
+}
+
+// --- Downloads ---
+function downloadChartPNG(){
+  const canvas = document.getElementById('polarChart');
+  canvas.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='kundli_chart.png'; a.click(); URL.revokeObjectURL(a.href); });
+  toast('Chart PNG downloaded');
+}
+function downloadAnalysisTXT(){
+  const text = document.getElementById('analysisBox').textContent || 'No analysis yet. Click "Generate Detailed Analysis" first.';
+  const blob = new Blob([text], {type:'text/plain'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='kundli_analysis.txt'; a.click(); URL.revokeObjectURL(a.href);
+  toast('Analysis TXT downloaded');
+}
+// Bundle: render traditional SVG + analysis to a single PNG image
+function downloadBundlePNG(){
+  if(!latestState){ alert('Please calculate first.'); return; }
+  const svg = document.getElementById('tradChart');
+  const xml = new XMLSerializer().serializeToString(svg);
+  const img = new Image();
+  const svg64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(xml)));
+  img.onload = function(){
+    const canvas = document.createElement('canvas');
+    canvas.width = 1000; canvas.height = 1400;
+    const ctx = canvas.getContext('2d');
+    // backdrop
+    ctx.fillStyle = '#081033'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    // title
+    ctx.fillStyle = '#dff'; ctx.font = '700 28px Inter, sans-serif';
+    ctx.fillText('Dream Kundli — Report', 28, 48);
+    // chart
+    ctx.drawImage(img, 100, 80, 800, 800);
+    // analysis
+    const text = (document.getElementById('analysisBox').textContent||'').trim();
+    ctx.fillStyle = '#bfe0ff'; ctx.font = '16px Inter, sans-serif';
+    const lines = wrapText(ctx, text || 'Click "Generate Detailed Analysis" and then try again.', 28, 920, 944, 26);
+    // footer
+    ctx.fillStyle = '#88aaff'; ctx.font = '12px Inter, sans-serif';
+    ctx.fillText('Generated offline • No API • © Your Brand', 28, 1368);
+
+    canvas.toBlob(b=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='kundli_bundle.png'; a.click(); URL.revokeObjectURL(a.href); });
+    toast('Bundle PNG downloaded');
+  };
+  img.src = svg64;
+}
+function wrapText(ctx, text, x, y, maxWidth, lineHeight){
+  const words = text.split(/\s+/); let line = ''; let yy = y; let lines=0;
+  for(let n=0;n<words.length;n++){
+    const test = line + words[n] + ' ';
+    const w = ctx.measureText(test).width;
+    if(w > maxWidth && n>0){ ctx.fillText(line, x, yy); line = words[n] + ' '; yy += lineHeight; lines++; }
+    else line = test;
+  }
+  if(line) { ctx.fillText(line, x, yy); lines++; }
+  return lines;
+}
+
+// --- Events ---
+window.addEventListener('DOMContentLoaded',()=>{
+  initCities();
+  document.getElementById('calc').addEventListener('click', calcKundli);
+  document.getElementById('example').addEventListener('click', example);
+  document.getElementById('makeInterpret').addEventListener('click', makeAnalysis);
+  document.getElementById('dlChart').addEventListener('click', downloadChartPNG);
+  document.getElementById('dlAnalysis').addEventListener('click', downloadAnalysisTXT);
+  document.getElementById('dlBundle').addEventListener('click', downloadBundlePNG);
+
+  // add soft galaxy stars
+  for(let i=0;i<60;i++){ const s=document.createElement('div'); s.className='star'; s.style.top=Math.random()*100+'vh'; s.style.left=Math.random()*100+'vw'; s.style.animationDuration=(2+Math.random()*3)+'s'; document.body.appendChild(s);}  
+});
+</script>
 </body>
 </html>
