@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Divine Kundli Astrology Calculator</title>
+<title>Premium Divine Kundli Astrology Calculator</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
-  /* -- Basic body and container styles -- */
   body {
     margin: 0;
     background: #0e1127;
@@ -20,80 +19,81 @@
     user-select: none;
   }
   header h1 {
-    font-size: 2.4rem;
+    font-size: 2.6rem;
     font-weight: 600;
     margin-bottom: 6px;
     color: #24e1da;
-    text-shadow: 0 0 12px #00ffe8bb;
+    text-shadow: 0 0 14px #00ffe8bb;
     text-align:center;
   }
   header p {
     font-weight: 400;
     color: #a6e6e3cc;
-    font-size: 1rem;
-    margin-bottom: 25px;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
     text-align:center;
   }
   form {
     background: #162040cc;
     border-radius: 18px;
     width: 100%;
-    max-width: 480px;
-    padding: 25px 30px;
-    box-shadow: 0 0 40px #14c3c7aa;
+    max-width: 500px;
+    padding: 28px 35px;
+    box-shadow: 0 0 48px #14c3c7aa;
     transition: box-shadow 0.3s ease;
   }
   form:hover {
-    box-shadow: 0 0 70px #30d7deff;
+    box-shadow: 0 0 90px #30d7deff;
   }
   label {
-    font-weight: 600;
-    font-size: 0.94rem;
+    font-weight: 700;
+    font-size: 1rem;
     color: #0ff5ff;
     display: block;
+    user-select:none;
   }
   input, select {
-    margin: 8px 0 18px 0;
-    border-radius: 14px;
+    margin: 10px 0 22px 0;
+    border-radius: 16px;
     border: none;
-    padding: 11px 14px;
-    font-size: 1rem;
+    padding: 14px 16px;
+    font-size: 1.1rem;
     font-family: 'Poppins', sans-serif;
     background: #0a0f1f;
     color: #eee;
-    box-shadow: inset 0 0 8px #00d8dcaa;
-    transition: box-shadow 0.3s ease;
+    box-shadow: inset 0 0 11px #00d8dcaa;
+    transition: box-shadow 0.4s ease;
   }
   input:focus, select:focus {
     outline: none;
-    box-shadow: 0 0 18px #00e8fddd;
+    box-shadow: 0 0 22px #00e8fddd;
     background: #001e27;
     color: #b3ffff;
   }
   button {
     width: 100%;
-    padding: 14px 0;
-    border-radius: 20px;
+    padding: 16px 0;
+    border-radius: 50px;
     background: linear-gradient(45deg, #00f2ff, #00bfff);
-    color: #005962cc;
-    font-weight: 800;
-    font-size: 1.18rem;
-    letter-spacing: 1.5px;
+    color: #00353f;
+    font-weight: 900;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
     border: none;
     cursor: pointer;
-    box-shadow: 0 0 12px #00f0ffff;
+    box-shadow: 0 0 18px #00e8fddd;
     transition: all 0.3s ease;
     user-select: none;
   }
   button:hover {
     background: linear-gradient(45deg, #00e8ff, #00ffff);
-    color: #00353f;
-    box-shadow: 0 0 25px #0ff6ffff;
+    color: #001f26;
+    box-shadow: 0 0 35px #0ff6ffff;
   }
   main {
     width: 100%;
-    max-width: 900px;
-    margin-top: 35px;
+    max-width: 960px;
+    margin-top: 45px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -101,11 +101,12 @@
   #chart-container {
     width: 100%;
     background:#161a3eee;
-    border-radius: 24px;
-    box-shadow: 0 0 30px #008caa99;
-    padding: 30px 30px 40px 30px;
-    margin-bottom: 10px;
+    border-radius: 28px;
+    box-shadow: 0 0 48px #008caa99;
+    padding: 36px 36px 48px 36px;
+    margin-bottom: 18px;
     position: relative;
+    user-select:none;
   }
   svg {
     width: 100%;
@@ -113,77 +114,79 @@
   }
   .house-label {
     fill: #15fff9cc;
-    font-weight: 700;
-    font-size: 18px;
+    font-weight: 800;
+    font-size: 20px;
     user-select: none;
-    text-shadow: 0 0 7px #04b0b8bb;
+    text-shadow: 0 0 12px #04b0b8bb;
   }
   .planet-text {
     fill: #ff487eee;
-    font-weight: 700;
-    font-size: 16px;
-    text-shadow: 0 0 8px #ff487ea0;
+    font-weight: 800;
+    font-size: 18px;
+    text-shadow: 0 0 9px #ff487ea0;
     pointer-events: none;
     user-select: none;
   }
   .planet-circle {
     fill: #ff477e;
     stroke: #fff;
-    stroke-width: 2;
+    stroke-width: 2.5;
     cursor: pointer;
-    filter: drop-shadow(0 0 6px #ff487ebb);
+    filter: drop-shadow(0 0 8px #ff487ebb);
     transform-origin: center;
     transition: all 0.5s ease;
     animation: orbit-pulse 3.5s ease-in-out infinite;
   }
   .planet-circle:hover {
     fill: #fff;
-    filter: drop-shadow(0 0 15px #ff88aad4);
+    filter: drop-shadow(0 0 22px #ff88aad4);
     transform: scale(1.3);
   }
   @keyframes orbit-pulse {
-    0%   { filter: drop-shadow(0 0 6px #ff477eee); }
-    50%  { filter: drop-shadow(0 0 18px #ff668aaa); }
-    100% { filter: drop-shadow(0 0 6px #ff477eee); }
+    0%   { filter: drop-shadow(0 0 8px #ff477eee); }
+    50%  { filter: drop-shadow(0 0 24px #ff668aaa); }
+    100% { filter: drop-shadow(0 0 8px #ff477eee); }
   }
   #analysis, #analysis-detailed {
     width: 100%;
-    max-width: 900px;
+    max-width: 960px;
     background: #0e152b;
     color: #87dede;
-    padding: 25px 30px;
-    border-radius: 18px;
+    padding: 30px 35px;
+    border-radius: 20px;
     font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: 1.05rem;
+    line-height: 1.6;
     white-space: pre-line;
-    box-shadow: 0 0 20px #00e8fddd;
-    margin-bottom: 32px;
+    box-shadow: 0 0 26px #00e8fddd;
+    margin-bottom: 40px;
+    user-select:none;
   }
   #btnAnalysis {
-    background: #00f6ffbb;
+    background: #00f6ffdd;
     border: none;
-    padding: 14px 28px;
-    border-radius: 50px;
-    font-weight: 700;
-    font-size: 1.04rem;
+    padding: 16px 36px;
+    border-radius: 60px;
+    font-weight: 900;
+    font-size: 1.1rem;
     cursor: pointer;
-    box-shadow: 0 0 30px #00c4d4cc;
+    box-shadow: 0 0 40px #00c4d4cc;
     color: #00353f;
     transition: background-color 0.3s ease;
-    margin-bottom: 22px;
+    margin-bottom: 30px;
+    user-select:none;
   }
   #btnAnalysis:hover {
     background: #00d8f7;
   }
   /* Responsive */
-  @media (max-width: 700px) {
+  @media (max-width: 720px) {
     main {
       max-width: 100%;
     }
     form {
       max-width: 100%;
-      padding: 20px;
+      padding: 25px 20px;
     }
   }
 </style>
@@ -232,7 +235,6 @@
 </main>
 
 <script>
-  // Update lat and lng fields if city selected
   const citySelect = document.getElementById("city");
   const latInput = document.getElementById("lat");
   const lngInput = document.getElementById("lng");
@@ -245,7 +247,6 @@
     }
   });
 
-  // Astronomy utility class with precise approximate formulas
   class Astronomy {
     static toJulianDay(year, month, day, hour, minute) {
       if(month <= 2) {
@@ -313,7 +314,7 @@
       const T0 = 6.697374558 + 2400.051336 * T + 0.000025862 * T * T;
       const UT = (JD - JD0) * 24;
       let GST = T0 + UT * 1.002737909;
-      GST = (GST % 24) * 15; // Convert hours to degrees
+      GST = (GST % 24) * 15;
       if (GST < 0) GST += 360;
       return GST;
     }
@@ -339,16 +340,14 @@
     svg.setAttribute("viewBox", "0 0 600 600");
     svg.style.maxWidth = "100%";
     container.appendChild(svg);
-    // Diamond diamond shape for houses
     const pts = "300,20 580,300 300,580 20,300";
     const diamond = document.createElementNS(svgNS, "polygon");
     diamond.setAttribute("points", pts);
     diamond.setAttribute("stroke", "#00fff7");
     diamond.setAttribute("stroke-width", "5");
     diamond.setAttribute("fill", "none");
-    diamond.setAttribute("filter", "drop-shadow(0 0 6px #00fff7cc)");
+    diamond.setAttribute("filter", "drop-shadow(0 0 8px #00fff7cc)");
     svg.appendChild(diamond);
-    // House lines
     const lines = [
       [20, 300, 300, 580],
       [300, 580, 580, 300],
@@ -365,7 +364,6 @@
       line.setAttribute("stroke-width", "3");
       svg.appendChild(line);
     });
-    // House number locations
     const houseCenters = [
       [300,125],[420,195],[455,335],[420,465],[300,525],[180,460],
       [145,325],[180,190],[300,300],[360,230],[300,180],[240,230]
@@ -378,13 +376,12 @@
       text.setAttribute("x",x);
       text.setAttribute("y",y-20);
       text.setAttribute("fill","#00fff7");
-      text.setAttribute("font-size","18");
-      text.setAttribute("font-weight","700");
+      text.setAttribute("font-size","20");
+      text.setAttribute("font-weight","900");
       text.setAttribute("text-anchor","middle");
       text.textContent = houseNum;
       svg.appendChild(text);
     }
-    // Planet positions
     const cx = 300, cy = 300, radius = 230;
     planets.forEach(({name, longitude})=>{
       const relAngle = (longitude - asc + 360) % 360;
@@ -394,16 +391,16 @@
       const circle = document.createElementNS(svgNS,"circle");
       circle.setAttribute("cx",px);
       circle.setAttribute("cy",py);
-      circle.setAttribute("r",18);
+      circle.setAttribute("r",20);
       circle.setAttribute("class","planet-circle");
       circle.setAttribute("title", `${name}: ${formatLongitude(longitude)}`);
       svg.appendChild(circle);
       const text = document.createElementNS(svgNS,"text");
       text.setAttribute("x", px);
-      text.setAttribute("y", py + 37);
+      text.setAttribute("y", py + 40);
       text.setAttribute("fill","#ff467e");
-      text.setAttribute("font-weight","700");
-      text.setAttribute("font-size","15");
+      text.setAttribute("font-weight","800");
+      text.setAttribute("font-size","16");
       text.setAttribute("text-anchor","middle");
       text.style.userSelect = "none";
       text.textContent = name;
@@ -455,32 +452,28 @@
       const radLat = Astronomy.degToRad(lat);
       const radEps = Astronomy.degToRad(eps);
       const radLST = Astronomy.degToRad(LST);
-      let asc = Math.atan2(-Math.cos(radLST), Math.sin(radLST)*Math.cos(radEps)-Math.tan(radLat)*Math.sin(radEps));
+      let asc = Math.atan2(-Math.cos(radLST), Math.sin(radLST)*Math.cos(radEps) - Math.tan(radLat)*Math.sin(radEps));
       if(asc < 0) asc += 2*Math.PI;
       return Astronomy.radToDeg(asc);
     })(jd, lat, lng);
 
     drawChart(planets, ascendant, chartContainer);
 
-    // Basic summary
-    analysisBasic.textContent = `आपका जन्म विवरण:\n- तिथि: ${dob}\n- समय: ${tob}\n- अक्षांश: ${lat.toFixed(4)}\n- देशांतर: ${lng.toFixed(4)}\n\n` +
-      `उदय राशि (Ascendant): ${formatLongitude(ascendant)}\n\n` +
-      `ग्राहों की स्थिति:\n` + planets.map(p => `• ${p.name}: ${formatLongitude(p.longitude)}`).join("\n");
+    analysisBasic.textContent = `आपका जन्म विवरण:\n- तिथि: ${dob}\n- समय: ${tob}\n- अक्षांश: ${lat.toFixed(4)}\n- देशांतर: ${lng.toFixed(4)}\n\n`+
+      `उदय राशि (Ascendant): ${formatLongitude(ascendant)}\n\n`+
+      `ग्रहों की स्थिति:\n` + planets.map(p => `• ${p.name}: ${formatLongitude(p.longitude)}`).join("\n");
 
-    // Show analysis button and clear detailed on new generate
     btnAnalysis.style.display = "block";
     analysisDetailed.style.display = "none";
     analysisDetailed.textContent = "";
   });
 
   btnAnalysis.addEventListener("click", () => {
-    // Construct detailed natural language analysis
     let textLines = [];
     textLines.push("✨ विस्तृत kundli विश्लेषण ✨\n");
     textLines.push(analysisBasic.textContent);
     textLines.push("\nग्रहों का प्रभाव और संकेत:");
-    
-    // Example brief interpretation with sample rules, encourage deep customizations
+
     function planetSignEffect(name, lon){
       let signIndex = Math.floor(lon/30);
       let sign = signs[signIndex];
@@ -504,11 +497,9 @@
       }
     }
 
-    // Retrieve planets and asc info from last generate
     const ascText = analysisBasic.textContent.split("\n").find(l => l.startsWith("उदय राशि"));
     textLines.push(ascText.replace("उदय राशि (Ascendant):", "उदय राशि:"));
 
-    // planets line parsing
     const planetLines = analysisBasic.textContent.split("\n").filter(l=>l.startsWith("•"));
     planetLines.forEach(planetLine => {
       const [pname, plong] = planetLine.replace("• ","").split(":");
@@ -525,7 +516,6 @@
     analysisDetailed.textContent = textLines.join("\n");
     analysisDetailed.style.display = "block";
     btnAnalysis.style.display = "none";
-    // Smooth scroll detailed section form ke niche visible ho
     setTimeout(() => {
       analysisDetailed.scrollIntoView({behavior:"smooth"});
     }, 80);
