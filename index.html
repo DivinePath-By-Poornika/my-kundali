@@ -2,37 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Swiss Ephemeris Demo 🚀</title>
+  <title>Swiss Ephemeris Demo</title>
 </head>
 <body>
-  <h1>Swiss Ephemeris Demo 🚀</h1>
+  <h1>🌞 Swiss Ephemeris Sun Calculation</h1>
   <pre id="output">Loading...</pre>
 
-  <!-- Swiss Ephemeris load -->
-  <script src="swe/swisseph.js"></script>
+  <!-- Swiss Ephemeris JS (via CDN) -->
+  <script src="https://cdn.jsdelivr.net/gh/aloisdeniel/swiss_ephemeris_wasm/dist/swisseph.js"></script>
+
   <script>
-    // Ensure Swiss Ephemeris runs only after fully ready
+    // Swiss Ephemeris module config
     window.Module = {
+      locateFile: function (path) {
+        if (path.endsWith(".wasm")) {
+          // CDN se wasm load karna
+          return "https://cdn.jsdelivr.net/gh/aloisdeniel/swiss_ephemeris_wasm/dist/swisseph.wasm";
+        }
+        return path;
+      },
       onRuntimeInitialized: function () {
         const swe = Module;
         const out = document.getElementById("output");
 
         try {
-          // Example Julian Date (J2000 epoch)
+          // Example: Julian Date (2000-01-01 12:00 UT)
           const jd = 2451545.0;
           const iflag = swe.SEFLG_SWIEPH;
-          let xx = new Float64Array(6); // positions
+          let xx = new Float64Array(6);
           let serr = "";
 
-          // Call Swiss Ephemeris
+          // Sun calculation
           const result = swe.swe_calc_ut(jd, swe.SE_SUN, iflag, xx, serr);
 
           out.textContent =
             "Julian Date: " + jd + "\n" +
             "Result Code: " + result + "\n" +
-            "Sun Longitude: " + xx[0] + "°\n" +
-            "Sun Latitude: " + xx[1] + "°\n" +
-            "Distance (AU): " + xx[2] + "\n" +
+            "Sun Longitude: " + xx[0].toFixed(6) + "°\n" +
+            "Sun Latitude: " + xx[1].toFixed(6) + "°\n" +
+            "Distance (AU): " + xx[2].toFixed(6) + "\n" +
             "Error: " + serr;
         } catch (err) {
           out.textContent = "⚠️ Error: " + err;
